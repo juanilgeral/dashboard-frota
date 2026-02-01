@@ -2500,7 +2500,7 @@
             filterTable();
         }
 
-        // TOGGLE FINALIZAÇÃO MANUAL
+        // TOGGLE FINALIZAÇÃO MANUAL - CORRIGIDO
         function toggleFinalization(id) {
             const item = frotaData.find(item => item.id === id);
             if (!item) return;
@@ -2524,7 +2524,12 @@
             }
             
             saveManualFinalizations();
-            filterTable();
+            
+            // ATUALIZAR TODAS AS SEÇÕES DO DASHBOARD
+            filterTable(); // Já estava aqui
+            loadControleDiario(); // ADICIONE ESTA LINHA - Atualiza o status do dia
+            calculateAdvancedStatistics(); // ADICIONE ESTA LINHA - Recalcula estatísticas
+            updateRotaFrequente(); // ADICIONE ESTA LINHA - Atualiza rotas
             
             showNotification(
                 item.FINALIZADO_MANUALMENTE ? 
