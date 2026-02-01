@@ -189,7 +189,7 @@
             border-radius: 8px;
             font-weight: 800;
             font-size: 1.1rem;
-            color: white !important; /* TEXTO BRANCO */
+            color: white !important;
             flex-shrink: 0;
         }
 
@@ -221,7 +221,7 @@
             font-weight: 600;
         }
 
-        /* OPERAÇÕES SUMMARY - AGRUPADO POR DIA (APENAS 3 ÚLTIMOS DIAS) */
+        /* OPERAÇÕES SUMMARY */
         .day-operations {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -297,7 +297,7 @@
             font-size: 1.1rem;
             margin-right: 15px;
             flex-shrink: 0;
-            color: white !important; /* TEXTO BRANCO */
+            color: white !important;
         }
 
         .op-badge.LS { 
@@ -339,7 +339,6 @@
             gap: 5px;
         }
 
-        /* Borda esquerda colorida nos itens */
         .op-item.LS { border-left-color: var(--ls-color); }
         .op-item.HT { border-left-color: var(--ht-color); }
         .op-item.TL { border-left-color: var(--tl-color); }
@@ -510,7 +509,7 @@
             opacity: 0.9;
         }
 
-        /* DASHBOARD LAYOUT - APENAS TABELA AGORA */
+        /* DASHBOARD LAYOUT */
         .dashboard-main {
             display: grid;
             grid-template-columns: 1fr;
@@ -630,7 +629,6 @@
             background: #fffde7;
         }
 
-        /* Linha sem destino */
         tbody tr.sem-destino {
             background: #f5f5f5;
             opacity: 0.7;
@@ -640,7 +638,6 @@
             background: #eeeeee;
         }
 
-        /* NOVO: Linhas com veículos finalizados */
         tbody tr.veiculo-finalizado {
             background: #fff8e1 !important;
         }
@@ -649,7 +646,6 @@
             background: #ffecb3 !important;
         }
 
-        /* Célula de operação na tabela */
         td .op-cell {
             padding: 8px 16px;
             border-radius: 8px;
@@ -658,7 +654,7 @@
             display: inline-block;
             text-align: center;
             min-width: 50px;
-            color: white !important; /* TEXTO BRANCO */
+            color: white !important;
         }
 
         .op-cell.LS { background: var(--ls-color); }
@@ -667,7 +663,6 @@
         .op-cell.CV { background: var(--cv-color); }
         .op-cell.NL { background: var(--nl-color); }
 
-        /* STATUS BADGES */
         .status-indicator {
             padding: 8px 16px;
             border-radius: 20px;
@@ -704,7 +699,6 @@
             border: 2px solid #e0e0e0;
         }
 
-        /* BOTÃO DE FINALIZAR */
         .finalizar-btn {
             padding: 8px 20px;
             border: none;
@@ -752,7 +746,6 @@
             opacity: 0.7;
         }
 
-        /* VIAGENS MÚLTIPLAS */
         .trip-badge {
             background: #ff9800;
             color: white;
@@ -1283,19 +1276,18 @@
             </div>
         </div>
 
-        <!-- RESUMO DOS ÚLTIMOS 3 DIAS (APENAS VIAGENS COM DESTINO VÁLIDO) -->
+        <!-- RESUMO DOS ÚLTIMOS 3 DIAS -->
         <div class="day-operations" id="last3DaysSummary">
-            <!-- Carregado dinamicamente - apenas últimos 3 dias e apenas viagens com destino válido -->
+            <!-- Carregado dinamicamente -->
         </div>
 
-        <!-- CONTROLE DIÁRIO DA FROTA - CARD DO DIA ATUAL -->
+        <!-- CONTROLE DIÁRIO DA FROTA -->
         <div class="controle-diario-card" id="controleDiario">
-            <!-- Carregado dinamicamente - informações do dia atual -->
+            <!-- Carregado dinamicamente -->
         </div>
 
         <!-- DASHBOARD PRINCIPAL -->
         <div class="dashboard-main">
-            <!-- TABELA PRINCIPAL -->
             <div class="table-card">
                 <div class="card-header">
                     <div class="card-title">
@@ -1358,7 +1350,7 @@
             </div>
         </div>
 
-        <!-- ESTATÍSTICAS DE ROTAS FREQUENTES (APENAS VIAGENS COM DESTINO VÁLIDO) -->
+        <!-- ESTATÍSTICAS DE ROTAS FREQUENTES -->
         <div class="rota-stats">
             <div class="stats-header">
                 <div class="stats-title">
@@ -1396,7 +1388,7 @@
                 </p>
             </div>
             
-            <input type="file" id="fileInput" accept=".csv" style="display: none;" onchange="handleFileUpload(this.files[0])">
+            <input type="file" id="fileInput" accept=".csv" style="display: none;" onchange="handleFileUpload(event)">
             
             <div class="upload-instructions">
                 <div class="instructions-title">📋 Como funciona:</div>
@@ -1467,7 +1459,9 @@
     </div>
 
     <script>
-        // DADOS INICIAIS DA PLANILHA (EXEMPLO COMPLETO)
+        // ============================================
+        // DADOS INICIAIS DA PLANILHA (EXEMPLO)
+        // ============================================
         const initialFrotaData = `DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,C,x,SAÍDA_VEÍCULO_CD
 02/01/26,sex.,LS,064 LUV 9296,MARTINS,05:13:00,10:13:00,14:09:00,01:09:00,069 - CAXIAS / 774 - SHOP. CAXIAS,06:10:00
 02/01/26,sex.,LS,065 KZQ 9648,JOEL,09:48:00,14:48:00,,,GARAGEM X LASA,10:14:00
@@ -1515,13 +1509,11 @@
 31/01/26,sáb.,CV,105 KPU 7450,EDUARDO,,,,,GUANABARA PENHA-385   TREINAMENTO DIAS,04:30:00
 31/01/26,sáb.,CV,121 KRZ 8143,HERIBERTO,,,,,NILOPOLIS-259/BELFORD ROXO-654    TREINAMENTO MÁRCIO,04:30:00`;
 
+        // ============================================
         // VARIÁVEIS GLOBAIS
+        // ============================================
         let frotaData = [];
         let manualFinalizations = {};
-        let currentDateFilter = '31/01/26';
-        let currentOpFilter = 'all';
-        let currentStatusFilter = 'all';
-        let currentDestinoFilter = 'com-destino'; // Filtro padrão: apenas com destino válido
         let allDates = [];
         let driverStatistics = {};
         let routeStatistics = {};
@@ -1529,25 +1521,28 @@
 
         // Mapeamento das operações
         const operacoesMap = {
-            'LS': { nome: 'Lasa', cor: 'var(--ls-color)', corVar: '--ls-color' },
-            'HT': { nome: 'Hortifruti', cor: 'var(--ht-color)', corVar: '--ht-color' },
-            'TL': { nome: 'Tele Rio', cor: 'var(--tl-color)', corVar: '--tl-color' },
-            'CV': { nome: 'Casa & Vídeo', cor: 'var(--cv-color)', corVar: '--cv-color' },
-            'NL': { nome: 'Nalin', cor: 'var(--nl-color)', corVar: '--nl-color' }
+            'LS': { nome: 'Lasa', cor: '#c62828' },
+            'HT': { nome: 'Hortifruti', cor: '#2e7d32' },
+            'TL': { nome: 'Tele Rio', cor: '#4caf50' },
+            'CV': { nome: 'Casa & Vídeo', cor: '#ff9800' },
+            'NL': { nome: 'Nalin', cor: '#e57373' }
         };
+
+        // ============================================
+        // FUNÇÕES PRINCIPAIS
+        // ============================================
 
         // INICIALIZAR SISTEMA
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('Dashboard inicializando...');
             initializeSystem();
-            setInterval(updateTimestamp, 60000); // Atualizar tempo a cada minuto
         });
 
-        // INICIALIZAR SISTEMA
         async function initializeSystem() {
             showLoading();
             
             try {
-                // Carregar dados do localStorage ou usar dados iniciais
+                // Carregar dados do localStorage
                 await loadDataFromStorage();
                 
                 // Carregar finalizações manuais
@@ -1556,18 +1551,18 @@
                 // Aplicar finalizações manuais aos dados
                 applyManualFinalizations();
                 
-                // Identificar viagens múltiplas (apenas para viagens com destino válido)
+                // Identificar viagens múltiplas
                 identifyMultipleTrips();
                 
-                // Extrair todas as datas únicas (apenas de viagens com destino válido)
+                // Extrair todas as datas únicas
                 extractAllDates();
                 
-                // Calcular estatísticas avançadas (apenas viagens com destino válido)
+                // Calcular estatísticas avançadas
                 calculateAdvancedStatistics();
                 
                 // Carregar interface
-                loadLast3DaysSummary(); // ALTERADO: Agora são 3 dias
-                loadControleDiario(); // NOVO: Carregar controle diário
+                loadLast3DaysSummary();
+                loadControleDiario();
                 updateDateFilterOptions();
                 loadTableData();
                 updateRotaFrequente();
@@ -1578,7 +1573,7 @@
                 
             } catch (error) {
                 console.error('Erro ao inicializar:', error);
-                alert('Erro ao carregar dados da planilha: ' + error.message);
+                showNotification('Erro ao carregar dados: ' + error.message, 'error');
             } finally {
                 hideLoading();
             }
@@ -1589,10 +1584,8 @@
             const savedData = localStorage.getItem('frotaCSVData');
             
             if (savedData) {
-                // Usar dados salvos
                 await processCSVData(savedData);
             } else {
-                // Usar dados iniciais
                 await processCSVData(initialFrotaData);
             }
         }
@@ -1602,55 +1595,26 @@
             localStorage.setItem('frotaCSVData', csvData);
         }
 
-        // FUNÇÃO PARA VERIFICAR SE É UMA VIAGEM VÁLIDA (COM DESTINO REAL)
+        // FUNÇÃO PARA VERIFICAR SE É UMA VIAGEM VÁLIDA
         function isViagemValida(item) {
-            // Tenta encontrar o campo de destino em diferentes nomes possíveis
-            let destino = '';
+            const destino = item.x ? item.x.trim().toUpperCase() : '';
             
-            if (item.x) {
-                destino = item.x;
-            } else if (item.C) {
-                destino = item.C;
-            } else if (item.destino) {
-                destino = item.destino;
-            } else if (item.DESTINO) {
-                destino = item.DESTINO;
-            }
-            
-            destino = destino ? destino.trim().toUpperCase() : '';
-            
-            // Se o destino estiver vazio, não é viagem válida
             if (!destino) return false;
             
-            // Verificar se contém padrões inválidos
             const destinosInvalidos = [
                 destino.includes('COBRANÇA 50%'),
-                destino.includes('COBRANCA 50%'), // sem acento
+                destino.includes('COBRANCA 50%'),
                 destino.startsWith('GARAGEM X'),
                 destino.includes(' X GARAGEM'),
                 destino === '',
                 destino === '-',
-                destino === '--',
-                destino.includes('GARAGEM X LASA'),
-                destino.includes('GARAGEM X TELERIO'),
-                destino.includes('GARAGEM X TELERIO')
+                destino === '--'
             ];
             
-            // Se qualquer um dos padrões inválidos for verdadeiro, não é viagem válida
             return !destinosInvalidos.some(invalido => invalido === true);
         }
 
-        // FUNÇÃO PARA VERIFICAR SE HORÁRIO É APÓS 14H
-        function isHorarioTarde(horario) {
-            if (!horario || horario.trim() === '') return false;
-            
-            const [horaStr, minutoStr, segundoStr] = horario.split(':');
-            const hora = parseInt(horaStr);
-            
-            return hora >= 14;
-        }
-
-        // PROCESSAR DADOS DO CSV - CORRIGIDA E ROBUSTA
+        // PROCESSAR DADOS DO CSV
         async function processCSVData(csvString) {
             console.log("Processando dados CSV...");
             
@@ -1660,7 +1624,7 @@
                 throw new Error('Arquivo CSV vazio');
             }
             
-            // Verificar se há cabeçalhos - buscar a linha que contém "DATA" ou "VEICULO"
+            // Detectar cabeçalhos
             let headerIndex = 0;
             for (let i = 0; i < Math.min(3, lines.length); i++) {
                 if (lines[i].toUpperCase().includes('DATA') && 
@@ -1673,12 +1637,9 @@
             const headersLine = lines[headerIndex];
             const headers = headersLine.split(',').map(h => h.trim());
             
-            console.log("Headers encontrados:", headers);
-            console.log("Número total de linhas:", lines.length);
-            
             frotaData = [];
             
-            // Processar cada linha (começando após o cabeçalho)
+            // Processar cada linha
             for (let i = headerIndex + 1; i < lines.length; i++) {
                 const line = lines[i].trim();
                 if (!line) continue;
@@ -1696,9 +1657,9 @@
                         }
                     });
                     
-                    // Verificar se temos os campos mínimos necessários
+                    // Verificar campos mínimos
                     if (!item.DATA && !item.data) {
-                        console.warn(`Linha ${i + 1} ignorada - campo DATA faltando:`, item);
+                        console.warn(`Linha ${i + 1} ignorada - campo DATA faltando`);
                         continue;
                     }
                     
@@ -1711,36 +1672,28 @@
                     if (item.Op && !item.OP) item.OP = item.Op;
                     if (item.op && !item.OP) item.OP = item.op;
                     
-                    // Verificar se é uma operação conhecida
+                    // Verificar operação
                     const op = item.OP || '';
                     if (!operacoesMap[op]) {
-                        // Tentar inferir a operação pelo destino
                         if (item.x && item.x.toUpperCase().includes('LASA')) {
                             item.OP = 'LS';
                         } else if (item.x && item.x.toUpperCase().includes('HORTIFRUTI')) {
                             item.OP = 'HT';
-                        } else if (item.x && (item.x.toUpperCase().includes('TELERIO') || 
-                                   item.x.toUpperCase().includes('TELE RIO'))) {
+                        } else if (item.x && item.x.toUpperCase().includes('TELERIO')) {
                             item.OP = 'TL';
-                        } else if (item.x && (item.x.toUpperCase().includes('CASA & VÍDEO') || 
-                                   item.x.toUpperCase().includes('CASA E VÍDEO'))) {
+                        } else if (item.x && item.x.toUpperCase().includes('CASA & VÍDEO')) {
                             item.OP = 'CV';
                         } else if (item.x && item.x.toUpperCase().includes('NALIN')) {
                             item.OP = 'NL';
                         } else {
-                            // Se não conseguir identificar, usar LS como padrão
-                            item.OP = 'LS';
+                            item.OP = 'LS'; // Padrão
                         }
                     }
                     
-                    // MODIFICAÇÃO: Usar a função isViagemValida para verificar destino
+                    // Verificar se é viagem válida
                     item.TEM_DESTINO = isViagemValida(item);
                     
-                    // NOVO: Verificar se horário de saída é tarde
-                    const saidaField = item['SAÍDA_VEÍCULO_CD'] || item['SAIDA_VEICULO_CD'] || item['SAÍDA_CD'] || item['SAIDA_CD'] || '';
-                    item.SAIDA_TARDE = isHorarioTarde(saidaField);
-                    
-                    // Gerar ID único baseado nos dados
+                    // Gerar ID único
                     item.id = generateUniqueId(item);
                     
                     // Determinar status automático
@@ -1751,8 +1704,8 @@
                     // Formatar data para exibição
                     item.DATA_DISPLAY = formatDateForDisplay(item.DATA);
                     
-                    // Extrair número da loja (apenas se tiver destino válido)
-                    item.LOJA_NUMERO = item.TEM_DESTINO ? extractLojaNumber(item.x || item.C || item.destino || '') : '';
+                    // Extrair número da loja
+                    item.LOJA_NUMERO = item.TEM_DESTINO ? extractLojaNumber(item.x) : '';
                     
                     // Obter informações da operação
                     item.OP_INFO = operacoesMap[item.OP] || { nome: item.OP, cor: '#666' };
@@ -1760,17 +1713,14 @@
                     frotaData.push(item);
                 } catch (error) {
                     console.error(`Erro ao processar linha ${i + 1}:`, error);
-                    console.error("Linha:", line);
                 }
             }
             
             console.log(`Dados processados: ${frotaData.length} registros`);
-            
-            // Salvar no localStorage
             saveDataToStorage(csvString);
         }
 
-        // PARSE CORRETO DE LINHA CSV (lida com vírgulas dentro de campos)
+        // PARSE DE LINHA CSV
         function parseCSVLine(line) {
             const result = [];
             let current = '';
@@ -1793,28 +1743,156 @@
             return result.map(val => val.trim());
         }
 
-        // CALCULAR ESTATÍSTICAS AVANÇADAS (APENAS VIAGENS COM DESTINO VÁLIDO)
-        function calculateAdvancedStatistics() {
-            console.log("Calculando estatísticas avançadas...");
+        // GERAR ID ÚNICO
+        function generateUniqueId(item) {
+            const baseId = `${item.DATA}_${item.OP}_${item.VEICULO}_${item.MOTORISTA}_${item['PONTO_ON_MOT.'] || ''}_${item.x || ''}`
+                .replace(/\s+/g, '_')
+                .replace(/[^a-zA-Z0-9_]/g, '');
             
-            // Reinicializar estatísticas
+            let hash = 0;
+            for (let i = 0; i < baseId.length; i++) {
+                const char = baseId.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            
+            return `${baseId}_${Math.abs(hash)}`;
+        }
+
+        // DETERMINAR STATUS AUTOMÁTICO
+        function determineAutoStatus(item) {
+            if (item['PONTO_OFF_MOTO.'] && item['PONTO_OFF_MOTO.'].trim()) {
+                return 'finalizado';
+            } else if (item['SAÍDA_VEÍCULO_CD'] && item['SAÍDA_VEÍCULO_CD'].trim()) {
+                return 'em-rota';
+            } else {
+                return 'pendente';
+            }
+        }
+
+        // FORMATAR DATA PARA EXIBIÇÃO
+        function formatDateForDisplay(dateStr) {
+            if (!dateStr) return '';
+            const [day, month, year] = dateStr.split('/');
+            const date = new Date(`20${year}`, month - 1, day);
+            return date.toLocaleDateString('pt-BR', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+        }
+
+        // EXTRAIR NÚMERO DA LOJA
+        function extractLojaNumber(destino) {
+            if (!destino) return '';
+            const match = destino.match(/(\d+)/);
+            return match ? match[0] : '';
+        }
+
+        // CARREGAR FINALIZAÇÕES MANUAIS
+        function loadManualFinalizations() {
+            const saved = localStorage.getItem('frotaManualFinalizations');
+            if (saved) {
+                try {
+                    manualFinalizations = JSON.parse(saved);
+                } catch (e) {
+                    manualFinalizations = {};
+                }
+            } else {
+                manualFinalizations = {};
+            }
+        }
+
+        // SALVAR FINALIZAÇÕES MANUAIS
+        function saveManualFinalizations() {
+            localStorage.setItem('frotaManualFinalizations', JSON.stringify(manualFinalizations));
+        }
+
+        // APLICAR FINALIZAÇÕES MANUAIS
+        function applyManualFinalizations() {
+            frotaData.forEach(item => {
+                item.STATUS_MANUAL = null;
+                item.FINALIZADO_MANUALMENTE = false;
+            });
+            
+            frotaData.forEach(item => {
+                if (manualFinalizations[item.id]) {
+                    item.STATUS_MANUAL = 'finalizado';
+                    item.FINALIZADO_MANUALMENTE = true;
+                }
+            });
+        }
+
+        // IDENTIFICAR VIAGENS MÚLTIPLAS
+        function identifyMultipleTrips() {
+            const tripsByVehicleDriverDate = {};
+            
+            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
+            
+            viagensComDestino.forEach(item => {
+                const key = `${item.VEICULO}_${item.MOTORISTA}_${item.DATA}`;
+                if (!tripsByVehicleDriverDate[key]) {
+                    tripsByVehicleDriverDate[key] = [];
+                }
+                tripsByVehicleDriverDate[key].push(item);
+            });
+            
+            frotaData.forEach(item => {
+                item.VIAGEM_NUMERO = 1;
+                item.TOTAL_VIAGENS = 1;
+                item.VIAGEM_MULTIPLA = false;
+            });
+            
+            Object.values(tripsByVehicleDriverDate).forEach(trips => {
+                if (trips.length > 1) {
+                    trips.forEach((trip, index) => {
+                        trip.VIAGEM_NUMERO = index + 1;
+                        trip.TOTAL_VIAGENS = trips.length;
+                        trip.VIAGEM_MULTIPLA = true;
+                    });
+                }
+            });
+        }
+
+        // EXTRAIR TODAS AS DATAS ÚNICAS
+        function extractAllDates() {
+            const datesSet = new Set();
+            
+            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
+            
+            viagensComDestino.forEach(item => {
+                if (item.DATA) {
+                    datesSet.add(item.DATA);
+                }
+            });
+            
+            allDates = Array.from(datesSet).sort((a, b) => {
+                const dateA = parseDate(a);
+                const dateB = parseDate(b);
+                return dateB - dateA;
+            });
+        }
+
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const [day, month, year] = dateStr.split('/');
+            return new Date(2000 + parseInt(year), parseInt(month) - 1, parseInt(day));
+        }
+
+        // CALCULAR ESTATÍSTICAS AVANÇADAS
+        function calculateAdvancedStatistics() {
             driverStatistics = {};
             routeStatistics = {};
             vehicleStatistics = {};
             
-            // Filtrar apenas viagens com destino válido
             const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
-            
-            console.log(`Viagens com destino válido: ${viagensComDestino.length}`);
             
             viagensComDestino.forEach(item => {
                 const motorista = item.MOTORISTA;
                 const veiculo = item.VEICULO;
-                const rota = item.x || item.C || item.destino || 'Não especificada';
-                const rotaTruncada = rota.substring(0, 50);
+                const rota = item.x ? item.x.substring(0, 50) : 'Não especificada';
                 const lojaNumero = item.LOJA_NUMERO;
-                const horaOn = item['PONTO_ON_MOT.'] || item['PONTO_ON'] || '';
-                const horaOff = item['PONTO_OFF_MOTO.'] || item['PONTO_OFF'] || '';
                 
                 // Estatísticas por motorista
                 if (motorista) {
@@ -1824,9 +1902,7 @@
                             totalViagens: 0,
                             totalDias: new Set(),
                             rotasFrequentes: {},
-                            horariosFrequentes: {},
                             veiculosUtilizados: new Set(),
-                            tempoMedio: 0,
                             viagensConcluidas: 0,
                             operacoes: {}
                         };
@@ -1837,60 +1913,45 @@
                     stats.totalDias.add(item.DATA);
                     stats.veiculosUtilizados.add(veiculo);
                     
-                    // Contar operações
                     if (!stats.operacoes[item.OP]) {
                         stats.operacoes[item.OP] = 0;
                     }
                     stats.operacoes[item.OP]++;
                     
-                    if (item.STATUS_MANUAL === 'finalizado' || item.STATUS_AUTO === 'finalizado') {
+                    if (item.STATUS_AUTO === 'finalizado' || item.STATUS_MANUAL === 'finalizado') {
                         stats.viagensConcluidas++;
                     }
                     
-                    // Contar rotas frequentes
                     if (rota && rota !== 'Não especificada') {
-                        if (!stats.rotasFrequentes[rotaTruncada]) {
-                            stats.rotasFrequentes[rotaTruncada] = 0;
+                        if (!stats.rotasFrequentes[rota]) {
+                            stats.rotasFrequentes[rota] = 0;
                         }
-                        stats.rotasFrequentes[rotaTruncada]++;
-                    }
-                    
-                    // Contar horários frequentes
-                    if (horaOn) {
-                        const hora = horaOn.split(':')[0];
-                        if (!stats.horariosFrequentes[hora]) {
-                            stats.horariosFrequentes[hora] = 0;
-                        }
-                        stats.horariosFrequentes[hora]++;
+                        stats.rotasFrequentes[rota]++;
                     }
                 }
                 
                 // Estatísticas por rota
                 if (rota && rota !== 'Não especificada') {
-                    if (!routeStatistics[rotaTruncada]) {
-                        routeStatistics[rotaTruncada] = {
-                            nome: rotaTruncada,
-                            nomeCompleto: rota,
+                    if (!routeStatistics[rota]) {
+                        routeStatistics[rota] = {
+                            nome: rota,
                             totalViagens: 0,
                             veiculosUtilizados: {},
                             motoristasUtilizados: {},
                             diasOperacao: new Set(),
-                            horaMedia: '',
                             operacoes: {}
                         };
                     }
                     
-                    const stats = routeStatistics[rotaTruncada];
+                    const stats = routeStatistics[rota];
                     stats.totalViagens++;
                     stats.diasOperacao.add(item.DATA);
                     
-                    // Contar operações na rota
                     if (!stats.operacoes[item.OP]) {
                         stats.operacoes[item.OP] = 0;
                     }
                     stats.operacoes[item.OP]++;
                     
-                    // Contar veículos por rota
                     if (veiculo) {
                         if (!stats.veiculosUtilizados[veiculo]) {
                             stats.veiculosUtilizados[veiculo] = 0;
@@ -1898,7 +1959,6 @@
                         stats.veiculosUtilizados[veiculo]++;
                     }
                     
-                    // Contar motoristas por rota
                     if (motorista) {
                         if (!stats.motoristasUtilizados[motorista]) {
                             stats.motoristasUtilizados[motorista] = 0;
@@ -1925,305 +1985,27 @@
                     stats.diasOperacao.add(item.DATA);
                     stats.motoristasUtilizados.add(motorista);
                     
-                    // Contar operações do veículo
                     if (!stats.operacoes[item.OP]) {
                         stats.operacoes[item.OP] = 0;
                     }
                     stats.operacoes[item.OP]++;
                     
-                    // Contar rotas frequentes
                     if (rota && rota !== 'Não especificada') {
-                        if (!stats.rotasFrequentes[rotaTruncada]) {
-                            stats.rotasFrequentes[rotaTruncada] = 0;
+                        if (!stats.rotasFrequentes[rota]) {
+                            stats.rotasFrequentes[rota] = 0;
                         }
-                        stats.rotasFrequentes[rotaTruncada]++;
+                        stats.rotasFrequentes[rota]++;
                     }
                 }
             });
-            
-            console.log(`Estatísticas calculadas: ${Object.keys(routeStatistics).length} rotas, ${Object.keys(driverStatistics).length} motoristas, ${Object.keys(vehicleStatistics).length} veículos`);
-            
-            // Calcular estatísticas finais
-            Object.values(driverStatistics).forEach(stats => {
-                // Encontrar rota mais frequente
-                let rotaMaisFrequente = '';
-                let maxFrequencia = 0;
-                Object.entries(stats.rotasFrequentes).forEach(([rota, count]) => {
-                    if (count > maxFrequencia) {
-                        maxFrequencia = count;
-                        rotaMaisFrequente = rota;
-                    }
-                });
-                stats.rotaMaisFrequente = rotaMaisFrequente;
-                stats.frequenciaRota = maxFrequencia;
-                
-                // Encontrar horário mais frequente
-                let horaMaisFrequente = '';
-                let maxHoraFrequencia = 0;
-                Object.entries(stats.horariosFrequentes).forEach(([hora, count]) => {
-                    if (count > maxHoraFrequencia) {
-                        maxHoraFrequencia = count;
-                        horaMaisFrequente = hora;
-                    }
-                });
-                stats.horaMaisFrequente = horaMaisFrequente;
-                
-                // Encontrar operação mais frequente
-                let operacaoMaisFrequente = '';
-                let maxOpFrequencia = 0;
-                Object.entries(stats.operacoes).forEach(([op, count]) => {
-                    if (count > maxOpFrequencia) {
-                        maxOpFrequencia = count;
-                        operacaoMaisFrequente = op;
-                    }
-                });
-                stats.operacaoMaisFrequente = operacaoMaisFrequente;
-                
-                // Calcular taxa de conclusão
-                stats.taxaConclusao = stats.totalViagens > 0 ? 
-                    Math.round((stats.viagensConcluidas / stats.totalViagens) * 100) : 0;
-            });
-            
-            // Calcular veículo mais utilizado por rota
-            Object.values(routeStatistics).forEach(stats => {
-                // Encontrar veículo mais utilizado na rota
-                let veiculoMaisUtilizado = '';
-                let maxUso = 0;
-                Object.entries(stats.veiculosUtilizados).forEach(([veiculo, count]) => {
-                    if (count > maxUso) {
-                        maxUso = count;
-                        veiculoMaisUtilizado = veiculo;
-                    }
-                });
-                stats.veiculoMaisUtilizado = veiculoMaisUtilizado;
-                stats.veiculoUsoCount = maxUso;
-                
-                // Encontrar motorista mais frequente na rota
-                let motoristaMaisFrequente = '';
-                let maxMotoristaUso = 0;
-                Object.entries(stats.motoristasUtilizados).forEach(([motorista, count]) => {
-                    if (count > maxMotoristaUso) {
-                        maxMotoristaUso = count;
-                        motoristaMaisFrequente = motorista;
-                    }
-                });
-                stats.motoristaMaisFrequente = motoristaMaisFrequente;
-                
-                // Encontrar operação mais frequente na rota
-                let operacaoMaisFrequente = '';
-                let maxOpUso = 0;
-                Object.entries(stats.operacoes).forEach(([op, count]) => {
-                    if (count > maxOpUso) {
-                        maxOpUso = count;
-                        operacaoMaisFrequente = op;
-                    }
-                });
-                stats.operacaoMaisFrequente = operacaoMaisFrequente;
-            });
-            
-            // Calcular rota mais frequente por veículo
-            Object.values(vehicleStatistics).forEach(stats => {
-                // Encontrar rota mais frequente
-                let rotaMaisFrequente = '';
-                let maxFrequencia = 0;
-                Object.entries(stats.rotasFrequentes).forEach(([rota, count]) => {
-                    if (count > maxFrequencia) {
-                        maxFrequencia = count;
-                        rotaMaisFrequente = rota;
-                    }
-                });
-                stats.rotaMaisFrequente = rotaMaisFrequente;
-                stats.frequenciaRota = maxFrequencia;
-                
-                // Encontrar operação mais frequente
-                let operacaoMaisFrequente = '';
-                let maxOpFrequencia = 0;
-                Object.entries(stats.operacoes).forEach(([op, count]) => {
-                    if (count > maxOpFrequencia) {
-                        maxOpFrequencia = count;
-                        operacaoMaisFrequente = op;
-                    }
-                });
-                stats.operacaoMaisFrequente = operacaoMaisFrequente;
-            });
         }
 
-        // GERAR ID ÚNICO
-        function generateUniqueId(item) {
-            // Criar ID baseado nos dados do registro para manter consistência
-            const baseId = `${item.DATA}_${item.OP}_${item.VEICULO}_${item.MOTORISTA}_${item['PONTO_ON_MOT.'] || ''}_${item.x || ''}`
-                .replace(/\s+/g, '_')
-                .replace(/[^a-zA-Z0-9_]/g, '');
-            
-            // Gerar hash para evitar colisões
-            let hash = 0;
-            for (let i = 0; i < baseId.length; i++) {
-                const char = baseId.charCodeAt(i);
-                hash = ((hash << 5) - hash) + char;
-                hash = hash & hash;
-            }
-            
-            return `${baseId}_${Math.abs(hash)}`;
-        }
-
-        // DETERMINAR STATUS AUTOMÁTICO
-        function determineAutoStatus(item) {
-            const pontoOff = item['PONTO_OFF_MOTO.'] || item['PONTO_OFF'] || '';
-            const saidaCd = item['SAÍDA_VEÍCULO_CD'] || item['SAIDA_VEICULO_CD'] || item['SAÍDA_CD'] || item['SAIDA_CD'] || '';
-            
-            if (pontoOff && pontoOff.trim()) {
-                return 'finalizado';
-            } else if (saidaCd && saidaCd.trim()) {
-                return 'em-rota';
-            } else {
-                return 'pendente';
-            }
-        }
-
-        // FORMATAR DATA PARA EXIBIÇÃO
-        function formatDateForDisplay(dateStr) {
-            if (!dateStr) return '';
-            const [day, month, year] = dateStr.split('/');
-            const date = new Date(`20${year}`, month - 1, day);
-            return date.toLocaleDateString('pt-BR', { 
-                weekday: 'long', 
-                day: 'numeric', 
-                month: 'long', 
-                year: 'numeric' 
-            });
-        }
-
-        // CONVERTER DATA PARA OBJETO DATE PARA ORDENAÇÃO
-        function parseDate(dateStr) {
-            if (!dateStr) return null;
-            const [day, month, year] = dateStr.split('/');
-            return new Date(2000 + parseInt(year), parseInt(month) - 1, parseInt(day));
-        }
-
-        // EXTRAIR NÚMERO DA LOJA
-        function extractLojaNumber(destino) {
-            if (!destino) return '';
-            const match = destino.match(/(\d+)/);
-            return match ? match[0] : '';
-        }
-
-        // CARREGAR FINALIZAÇÕES MANUAIS
-        function loadManualFinalizations() {
-            const saved = localStorage.getItem('frotaManualFinalizations');
-            if (saved) {
-                try {
-                    manualFinalizations = JSON.parse(saved);
-                } catch (e) {
-                    manualFinalizations = {};
-                    console.warn("Erro ao carregar finalizações manuais:", e);
-                }
-            } else {
-                manualFinalizations = {};
-            }
-            console.log(`Finalizações manuais carregadas: ${Object.keys(manualFinalizations).length}`);
-        }
-
-        // SALVAR FINALIZAÇÕES MANUAIS
-        function saveManualFinalizations() {
-            localStorage.setItem('frotaManualFinalizations', JSON.stringify(manualFinalizations));
-        }
-
-        // APLICAR FINALIZAÇÕES MANUAIS
-        function applyManualFinalizations() {
-            console.log("Aplicando finalizações manuais...");
-            
-            // Primeiro, limpar todos os status manuais
-            frotaData.forEach(item => {
-                item.STATUS_MANUAL = null;
-                item.FINALIZADO_MANUALMENTE = false;
-            });
-            
-            // Aplicar finalizações baseadas nos IDs
-            frotaData.forEach(item => {
-                // Verificar se este item tem uma finalização manual
-                if (manualFinalizations[item.id]) {
-                    item.STATUS_MANUAL = 'finalizado';
-                    item.FINALIZADO_MANUALMENTE = true;
-                }
-            });
-            
-            console.log(`Finalizações aplicadas: ${frotaData.filter(item => item.FINALIZADO_MANUALMENTE).length} viagens`);
-        }
-
-        // IDENTIFICAR VIAGENS MÚLTIPLAS (APENAS VIAGENS COM DESTINO VÁLIDO)
-        function identifyMultipleTrips() {
-            const tripsByVehicleDriverDate = {};
-            
-            // Filtrar apenas viagens com destino válido para identificação de múltiplas
-            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
-            
-            viagensComDestino.forEach(item => {
-                const key = `${item.VEICULO}_${item.MOTORISTA}_${item.DATA}`;
-                if (!tripsByVehicleDriverDate[key]) {
-                    tripsByVehicleDriverDate[key] = [];
-                }
-                tripsByVehicleDriverDate[key].push(item);
-            });
-            
-            // Primeiro, limpar todas as classificações de múltiplas
-            frotaData.forEach(item => {
-                item.VIAGEM_NUMERO = 1;
-                item.TOTAL_VIAGENS = 1;
-                item.VIAGEM_MULTIPLA = false;
-            });
-            
-            // Atualizar contagem de viagens apenas para viagens com destino válido
-            Object.values(tripsByVehicleDriverDate).forEach(trips => {
-                if (trips.length > 1) {
-                    trips.forEach((trip, index) => {
-                        trip.VIAGEM_NUMERO = index + 1;
-                        trip.TOTAL_VIAGENS = trips.length;
-                        trip.VIAGEM_MULTIPLA = true;
-                    });
-                } else if (trips.length === 1) {
-                    trips[0].VIAGEM_NUMERO = 1;
-                    trips[0].TOTAL_VIAGENS = 1;
-                    trips[0].VIAGEM_MULTIPLA = false;
-                }
-            });
-            
-            const totalMultiplas = frotaData.filter(item => item.VIAGEM_MULTIPLA).length;
-            console.log(`Viagens múltiplas identificadas: ${totalMultiplas}`);
-        }
-
-        // EXTRAIR TODAS AS DATAS ÚNICAS (APENAS DE VIAGENS COM DESTINO VÁLIDO)
-        function extractAllDates() {
-            const datesSet = new Set();
-            
-            // Filtrar apenas viagens com destino válido
-            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
-            
-            viagensComDestino.forEach(item => {
-                if (item.DATA) {
-                    datesSet.add(item.DATA);
-                }
-            });
-            
-            // Ordenar datas do mais recente para o mais antigo
-            allDates = Array.from(datesSet).sort((a, b) => {
-                const dateA = parseDate(a);
-                const dateB = parseDate(b);
-                return dateB - dateA; // Mais recente primeiro
-            });
-            
-            console.log(`Datas únicas extraídas: ${allDates.length}`);
-        }
-
-        // CARREGAR RESUMO DOS ÚLTIMOS 3 DIAS (APENAS VIAGENS COM DESTINO VÁLIDO) - MODIFICADO
+        // CARREGAR RESUMO DOS ÚLTIMOS 3 DIAS
         function loadLast3DaysSummary() {
-            console.log("Carregando resumo dos últimos 3 dias...");
-            
             const daysSummary = {};
             
-            // Filtrar apenas viagens com destino válido
             const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
             
-            // Agrupar por data (apenas viagens com destino válido)
             viagensComDestino.forEach(item => {
                 if (!item.DATA) return;
                 
@@ -2243,7 +2025,6 @@
                 day.vehicles.add(item.VEICULO);
                 day.drivers.add(item.MOTORISTA);
                 
-                // Contar por operação
                 if (!day.operations[item.OP]) {
                     day.operations[item.OP] = {
                         count: 0,
@@ -2256,19 +2037,12 @@
                 day.operations[item.OP].vehicles.add(item.VEICULO);
             });
             
-            // MODIFICAÇÃO: Pegar apenas os últimos 3 dias (ao invés de 6)
             const last3Dates = allDates.slice(0, 3);
             
-            console.log(`Últimas 3 datas: ${last3Dates.join(', ')}`);
-            
-            // Gerar HTML apenas para os últimos 3 dias
             let html = '';
             last3Dates.forEach(date => {
                 const day = daysSummary[date];
-                if (!day) {
-                    console.log(`Nenhum dado para a data: ${date}`);
-                    return;
-                }
+                if (!day) return;
                 
                 const operationsList = Object.entries(day.operations)
                     .sort((a, b) => b[1].count - a[1].count)
@@ -2311,7 +2085,6 @@
                 `;
             });
             
-            // Adicionar mensagem se não houver dados suficientes
             if (last3Dates.length === 0 || html === '') {
                 html = `
                     <div class="day-card">
@@ -2320,34 +2093,23 @@
                             <div class="day-count">0 viagens</div>
                         </div>
                         <div style="text-align: center; padding: 30px; color: #666;">
-                            Nenhuma viagem com destino válido encontrada para os últimos 3 dias
+                            Nenhuma viagem com destino válido encontrada
                         </div>
                     </div>
                 `;
             }
             
-            // MODIFICAÇÃO: Mudar o ID para last3DaysSummary
             document.getElementById('last3DaysSummary').innerHTML = html;
-            console.log("Resumo dos últimos 3 dias carregado");
         }
 
         // CARREGAR CONTROLE DIÁRIO DA FROTA
         function loadControleDiario() {
-            console.log("Carregando controle diário...");
-            
-            // Determinar qual data mostrar (usar filtro atual ou data de hoje)
             const dateFilter = document.getElementById('dateFilter').value;
             let targetDate = dateFilter !== 'all' ? dateFilter : '31/01/26';
             
-            console.log(`Data do controle diário: ${targetDate}`);
-            
-            // Filtrar viagens da data específica (apenas com destino válido)
             const viagensDoDia = frotaData.filter(item => item.DATA === targetDate && item.TEM_DESTINO);
             
-            console.log(`Viagens do dia: ${viagensDoDia.length}`);
-            
             if (viagensDoDia.length === 0) {
-                // Se não houver viagens para esta data, mostrar mensagem
                 document.getElementById('controleDiario').innerHTML = `
                     <div class="controle-diario-header">
                         <div class="controle-diario-titulo">
@@ -2363,7 +2125,6 @@
                 return;
             }
             
-            // Calcular estatísticas do dia
             const totalViagens = viagensDoDia.length;
             const veiculosSet = new Set();
             const motoristasSet = new Set();
@@ -2386,7 +2147,6 @@
             const totalVeiculos = veiculosSet.size;
             const totalMotoristas = motoristasSet.size;
             
-            // Calcular status
             const finalizadasCount = viagensDoDia.filter(item => 
                 item.STATUS_MANUAL === 'finalizado' || item.STATUS_AUTO === 'finalizado'
             ).length;
@@ -2399,12 +2159,10 @@
                 (item.STATUS_MANUAL || item.STATUS_AUTO) === 'pendente'
             ).length;
             
-            // Calcular porcentagens
             const finalizadasPercent = totalViagens > 0 ? Math.round((finalizadasCount / totalViagens) * 100) : 0;
             const emRotaPercent = totalViagens > 0 ? Math.round((emRotaCount / totalViagens) * 100) : 0;
             const pendentesPercent = totalViagens > 0 ? Math.round((pendentesCount / totalViagens) * 100) : 0;
             
-            // Gerar HTML para estatísticas
             const statsHtml = `
                 <div class="controle-stat-item">
                     <div class="controle-stat-label">
@@ -2455,7 +2213,6 @@
                 </div>
             `;
             
-            // Gerar HTML para operações
             const operationsHtml = Object.entries(operacoesCount)
                 .sort((a, b) => b[1].count - a[1].count)
                 .map(([op, data]) => {
@@ -2479,7 +2236,6 @@
                     `;
                 }).join('');
             
-            // Gerar HTML completo
             const html = `
                 <div class="controle-diario-header">
                     <div class="controle-diario-titulo">
@@ -2511,13 +2267,10 @@
             `;
             
             document.getElementById('controleDiario').innerHTML = html;
-            console.log("Controle diário carregado");
         }
 
-        // ATUALIZAR OPÇÕES DO FILTRO DE DATA (APENAS DATAS COM VIAGENS COM DESTINO VÁLIDO)
+        // ATUALIZAR OPÇÕES DO FILTRO DE DATA
         function updateDateFilterOptions() {
-            console.log("Atualizando opções de filtro de data...");
-            
             const select = document.getElementById('dateFilter');
             select.innerHTML = '<option value="all">Todas as Datas</option>';
             
@@ -2530,7 +2283,6 @@
                     year: 'numeric'
                 });
                 
-                // Contar apenas viagens com destino válido para esta data
                 const count = frotaData.filter(item => item.DATA === date && item.TEM_DESTINO).length;
                 
                 const option = document.createElement('option');
@@ -2541,29 +2293,20 @@
                 }
                 select.appendChild(option);
             });
-            
-            console.log(`Opções de filtro atualizadas: ${allDates.length} datas`);
         }
 
         // CARREGAR DADOS DA TABELA
         function loadTableData() {
-            console.log("Carregando dados da tabela...");
-            
             const filteredData = getFilteredData();
             const tableBody = document.getElementById('tableBody');
-            
-            console.log(`Dados filtrados: ${filteredData.length} registros`);
             
             let html = '';
             
             filteredData.forEach((item, index) => {
-                // Determinar status final (manual tem prioridade)
                 const statusFinal = item.STATUS_MANUAL || item.STATUS_AUTO;
                 const isFinalizadoManualmente = item.FINALIZADO_MANUALMENTE;
                 const temDestino = item.TEM_DESTINO;
-                const saidaTarde = item.SAIDA_TARDE;
                 
-                // Definir classes CSS
                 let rowClass = '';
                 let statusClass = '';
                 
@@ -2575,31 +2318,18 @@
                     statusClass = `status-${statusFinal.replace(' ', '-')}`;
                 }
                 
-                // NOVO: Adicionar classe para veículos finalizados
                 if (isFinalizadoManualmente) {
                     rowClass += ' veiculo-finalizado';
                 }
                 
-                // Formatar destino
-                const destino = formatDestination(item.x || item.C || '');
-                
-                // Verificar se é viagem múltipla (apenas se tiver destino válido)
+                const destino = formatDestination(item.x);
                 const isMultipleTrip = temDestino && item.VIAGEM_MULTIPLA;
-                
-                // Obter informações da operação
                 const opInfo = item.OP_INFO || operacoesMap[item.OP] || { nome: item.OP, cor: '#666' };
                 
-                // Texto do status
                 let statusText = statusFinal.toUpperCase();
                 if (!temDestino) {
                     statusText = 'SEM DESTINO VÁLIDO';
                 }
-                
-                // Formatar horário de saída com destaque se for tarde
-                const saidaField = item['SAÍDA_VEÍCULO_CD'] || item['SAIDA_VEICULO_CD'] || item['SAÍDA_CD'] || item['SAIDA_CD'] || '-';
-                const saidaDisplay = saidaTarde ? 
-                    `<span style="background: #fff8e1; padding: 2px 8px; border-radius: 4px; color: #ff8f00; font-weight: 700;">${saidaField} ⏰</span>` : 
-                    saidaField;
                 
                 html += `
                     <tr class="${rowClass}" data-id="${item.id}">
@@ -2612,10 +2342,10 @@
                         </td>
                         <td style="font-weight: 600; color: ${temDestino ? '#1a237e' : '#9e9e9e'};">${item.VEICULO}</td>
                         <td style="font-weight: 600; color: ${temDestino ? '#1a237e' : '#9e9e9e'};">${item.MOTORISTA}</td>
-                        <td>${item['PONTO_ON_MOT.'] || item['PONTO_ON'] || '-'}</td>
-                        <td>${saidaDisplay}</td>
+                        <td>${item['PONTO_ON_MOT.'] || '-'}</td>
+                        <td>${item['SAÍDA_VEÍCULO_CD'] || '-'}</td>
                         <td style="color: ${temDestino ? '#1a237e' : '#9e9e9e'};">${destino}</td>
-                        <td>${item['PONTO_OFF_MOTO.'] || item['PONTO_OFF'] || '-'}</td>
+                        <td>${item['PONTO_OFF_MOTO.'] || '-'}</td>
                         <td>
                             <span class="status-indicator ${statusClass}">
                                 ${isFinalizadoManualmente ? '✓ ' : ''}
@@ -2657,67 +2387,53 @@
                 </tr>
             `;
             
-            // Atualizar contador de viagens na tabela
             const viagensComDestinoCount = filteredData.filter(item => item.TEM_DESTINO).length;
             const totalViagensCount = filteredData.length;
+            const destinoFilter = document.getElementById('destinoFilter').value;
             
-            if (currentDestinoFilter === 'com-destino') {
+            if (destinoFilter === 'com-destino') {
                 document.getElementById('tripCount').textContent = `(${viagensComDestinoCount} viagens com destino válido)`;
-            } else if (currentDestinoFilter === 'sem-destino') {
+            } else if (destinoFilter === 'sem-destino') {
                 document.getElementById('tripCount').textContent = `(${totalViagensCount - viagensComDestinoCount} viagens sem destino válido)`;
             } else {
                 document.getElementById('tripCount').textContent = `(${totalViagensCount} viagens total)`;
             }
-            
-            console.log("Tabela carregada");
         }
 
         // OBTER DADOS FILTRADOS
         function getFilteredData() {
             let filtered = [...frotaData];
             
-            // Filtrar por data
             const dateFilter = document.getElementById('dateFilter').value;
             if (dateFilter !== 'all') {
                 filtered = filtered.filter(item => item.DATA === dateFilter);
-                currentDateFilter = dateFilter;
             }
             
-            // Filtrar por operação
             const opFilter = document.getElementById('opFilter').value;
             if (opFilter !== 'all') {
                 filtered = filtered.filter(item => item.OP === opFilter);
-                currentOpFilter = opFilter;
             }
             
-            // Filtrar por status
             const statusFilter = document.getElementById('statusFilter').value;
             if (statusFilter !== 'all') {
                 filtered = filtered.filter(item => {
-                    // Se for filtro "com-destino" ou "sem-destino"
                     if (statusFilter === 'com-destino') {
                         return item.TEM_DESTINO;
                     } else if (statusFilter === 'sem-destino') {
                         return !item.TEM_DESTINO;
                     } else {
-                        // Para outros status, verificar status normal
                         const status = item.STATUS_MANUAL || item.STATUS_AUTO;
                         return status === statusFilter;
                     }
                 });
-                currentStatusFilter = statusFilter;
             }
             
-            // Filtrar por destino (novo filtro)
             const destinoFilter = document.getElementById('destinoFilter').value;
-            currentDestinoFilter = destinoFilter;
-            
             if (destinoFilter === 'com-destino') {
                 filtered = filtered.filter(item => item.TEM_DESTINO);
             } else if (destinoFilter === 'sem-destino') {
                 filtered = filtered.filter(item => !item.TEM_DESTINO);
             }
-            // Se for "all", não filtra por destino
             
             return filtered;
         }
@@ -2726,7 +2442,6 @@
         function formatDestination(destino) {
             if (!destino || destino.trim() === '') return '<span style="color: #9e9e9e; font-style: italic;">Sem destino</span>';
             
-            // Verificar se é um destino inválido
             const destinoUpper = destino.toUpperCase();
             if (destinoUpper.includes('COBRANÇA 50%') || 
                 destinoUpper.includes('COBRANCA 50%') ||
@@ -2735,7 +2450,6 @@
                 return `<span style="color: #9e9e9e; font-style: italic;">${destino} (inválido)</span>`;
             }
             
-            // Extrair número da loja
             const lojaMatch = destino.match(/(\d+)/);
             if (lojaMatch) {
                 const lojaNum = lojaMatch[0];
@@ -2749,9 +2463,8 @@
 
         // FILTRAR TABELA
         function filterTable() {
-            console.log("Filtrando tabela...");
             loadTableData();
-            loadControleDiario(); // ATUALIZAR: Carregar controle diário
+            loadControleDiario();
             calculateAdvancedStatistics();
             updateRotaFrequente();
         }
@@ -2759,53 +2472,49 @@
         // CARREGAR DATA ESPECÍFICA
         function loadDate(type) {
             let targetDate = '';
+            let displayText = '';
             
             switch(type) {
                 case 'today':
                     targetDate = '31/01/26';
-                    document.getElementById('currentDateDisplay').textContent = '31 de Janeiro de 2026';
+                    displayText = '31 de Janeiro de 2026';
                     break;
                 case 'yesterday':
                     targetDate = '30/01/26';
-                    document.getElementById('currentDateDisplay').textContent = '30 de Janeiro de 2026';
+                    displayText = '30 de Janeiro de 2026';
                     break;
                 case 'all':
                     targetDate = 'all';
-                    document.getElementById('currentDateDisplay').textContent = 'Todas as Datas';
+                    displayText = 'Todas as Datas';
                     break;
             }
             
-            // Atualizar botões ativos
             document.querySelectorAll('.date-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             event.target.classList.add('active');
             
-            // Atualizar filtro de data
+            document.getElementById('currentDateDisplay').textContent = displayText;
             document.getElementById('dateFilter').value = targetDate;
             
-            // Recarregar dados
             filterTable();
         }
 
-        // TOGGLE FINALIZAÇÃO MANUAL (APENAS PARA VIAGENS COM DESTINO VÁLIDO)
+        // TOGGLE FINALIZAÇÃO MANUAL
         function toggleFinalization(id) {
             const item = frotaData.find(item => item.id === id);
             if (!item) return;
             
-            // Verificar se tem destino válido
             if (!item.TEM_DESTINO) {
                 showNotification('Não é possível finalizar uma viagem sem destino válido', 'error');
                 return;
             }
             
             if (manualFinalizations[id]) {
-                // Remover finalização manual
                 delete manualFinalizations[id];
                 item.STATUS_MANUAL = null;
                 item.FINALIZADO_MANUALMENTE = false;
             } else {
-                // Adicionar finalização manual
                 manualFinalizations[id] = {
                     timestamp: new Date().toISOString(),
                     autoStatus: item.STATUS_AUTO
@@ -2814,13 +2523,9 @@
                 item.FINALIZADO_MANUALMENTE = true;
             }
             
-            // Salvar no localStorage
             saveManualFinalizations();
-            
-            // Recarregar a tabela
             filterTable();
             
-            // Mostrar confirmação
             showNotification(
                 item.FINALIZADO_MANUALMENTE ? 
                 `Viagem finalizada manualmente` :
@@ -2829,16 +2534,11 @@
             );
         }
 
-        // ATUALIZAR ROTAS FREQUENTES (APENAS VIAGENS COM DESTINO VÁLIDO)
+        // ATUALIZAR ROTAS FREQUENTES
         function updateRotaFrequente() {
-            console.log("Atualizando rotas frequentes...");
-            
-            // Usar estatísticas gerais de rotas (já filtradas para apenas viagens com destino válido)
             const routes = Object.values(routeStatistics)
                 .sort((a, b) => b.totalViagens - a.totalViagens)
-                .slice(0, 10); // Aumentei para 10 rotas para ter mais dados para exportar
-            
-            console.log(`Rotas frequentes encontradas: ${routes.length}`);
+                .slice(0, 10);
             
             let html = '';
             
@@ -2848,7 +2548,6 @@
                 const veiculoMaisUtilizado = route.veiculoMaisUtilizado || 'Não definido';
                 const motoristaMaisFrequente = route.motoristaMaisFrequente || 'Não definido';
                 
-                // Obter operação mais frequente na rota
                 const opMaisFrequente = route.operacaoMaisFrequente || 'Não definida';
                 const opInfo = operacoesMap[opMaisFrequente] || { nome: opMaisFrequente, cor: '#666' };
                 
@@ -2898,20 +2597,38 @@
             }
             
             document.getElementById('rotaFrequenteContent').innerHTML = html;
-            console.log("Rotas frequentes atualizadas");
         }
 
-        // GERAR DADOS PARA EXPORTAÇÃO EM FORMATO CSV (Excel/Google Sheets)
+        // ABRIR MODAL DE EXPORTAÇÃO
+        function openExportModal() {
+            if (Object.keys(routeStatistics).length === 0) {
+                showNotification('Nenhuma rota encontrada para exportar.', 'error');
+                return;
+            }
+            
+            const excelData = generateExcelExportData();
+            const jsonData = generateJsonExportData();
+            
+            document.getElementById('exportExcelData').value = excelData;
+            document.getElementById('exportJsonData').value = jsonData;
+            
+            document.getElementById('exportModal').style.display = 'flex';
+        }
+
+        // FECHAR MODAL DE EXPORTAÇÃO
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
+        // GERAR DADOS PARA EXPORTAÇÃO EM FORMATO CSV
         function generateExcelExportData() {
             const routes = Object.values(routeStatistics)
                 .sort((a, b) => b.totalViagens - a.totalViagens);
             
-            // Cabeçalhos
             let csvData = "Rota,Total Viagens,Dias Operação,Veículo Mais Usado,Veículo Uso Count,Motorista Mais Frequente,Operação Principal\n";
             
-            // Dados das rotas
             routes.forEach(route => {
-                const rota = (route.nomeCompleto || route.nome).replace(/,/g, ';'); // Substituir vírgulas para evitar problemas no CSV
+                const rota = route.nome.replace(/,/g, ';');
                 const totalViagens = route.totalViagens;
                 const diasOperacao = route.diasOperacao.size;
                 const veiculoMaisUtilizado = route.veiculoMaisUtilizado || 'N/A';
@@ -2922,7 +2639,6 @@
                 csvData += `"${rota}",${totalViagens},${diasOperacao},"${veiculoMaisUtilizado}",${veiculoUsoCount},"${motoristaMaisFrequente}","${operacaoPrincipal}"\n`;
             });
             
-            // Adicionar metadados
             const exportDate = new Date().toLocaleString('pt-BR');
             const totalRotas = routes.length;
             const totalViagensTotal = routes.reduce((sum, route) => sum + route.totalViagens, 0);
@@ -2937,12 +2653,12 @@
             return csvData;
         }
 
-        // GERAR DADOS JSON PARA EXPORTAÇÃO DETALHADA
+        // GERAR DADOS JSON PARA EXPORTAÇÃO
         function generateJsonExportData() {
             const routes = Object.values(routeStatistics)
                 .sort((a, b) => b.totalViagens - a.totalViagens)
                 .map(route => ({
-                    rota: route.nomeCompleto || route.nome,
+                    rota: route.nome,
                     totalViagens: route.totalViagens,
                     diasOperacao: Array.from(route.diasOperacao),
                     veiculoMaisUtilizado: route.veiculoMaisUtilizado,
@@ -2969,45 +2685,16 @@
             return JSON.stringify(exportData, null, 2);
         }
 
-        // ABRIR MODAL DE EXPORTAÇÃO
-        function openExportModal() {
-            console.log("Abrindo modal de exportação...");
-            
-            // Verificar se há dados para exportar
-            if (Object.keys(routeStatistics).length === 0) {
-                showNotification('Nenhuma rota encontrada para exportar. Verifique os dados.', 'error');
-                return;
-            }
-            
-            // Gerar dados para exportação
-            const excelData = generateExcelExportData();
-            const jsonData = generateJsonExportData();
-            
-            // Preencher textareas
-            document.getElementById('exportExcelData').value = excelData;
-            document.getElementById('exportJsonData').value = jsonData;
-            
-            // Mostrar modal
-            document.getElementById('exportModal').style.display = 'flex';
-            console.log("Modal de exportação aberto");
-        }
-
-        // FECHAR MODAL DE EXPORTAÇÃO
-        function closeExportModal() {
-            document.getElementById('exportModal').style.display = 'none';
-        }
-
         // COPIAR DADOS PARA EXCEL
         function copyExcelData() {
             const textarea = document.getElementById('exportExcelData');
             textarea.select();
-            textarea.setSelectionRange(0, 99999); // Para mobile
+            textarea.setSelectionRange(0, 99999);
             
             try {
                 document.execCommand('copy');
                 showNotification('Dados copiados para a área de transferência! Cole na célula A1 do Excel ou Google Sheets.', 'success');
             } catch (err) {
-                console.error('Erro ao copiar:', err);
                 showNotification('Erro ao copiar dados. Use Ctrl+C manualmente.', 'error');
             }
         }
@@ -3016,22 +2703,21 @@
         function copyJsonData() {
             const textarea = document.getElementById('exportJsonData');
             textarea.select();
-            textarea.setSelectionRange(0, 99999); // Para mobile
+            textarea.setSelectionRange(0, 99999);
             
             try {
                 document.execCommand('copy');
                 showNotification('Dados JSON copiados para a área de transferência!', 'success');
             } catch (err) {
-                console.error('Erro ao copiar:', err);
                 showNotification('Erro ao copiar dados. Use Ctrl+C manualmente.', 'error');
             }
         }
 
-        // COPIAR ROTAS DIRETAMENTE PARA PLANILHA (formato simplificado)
+        // COPIAR ROTAS PARA PLANILHA
         function copyRoutesToClipboard() {
             const routes = Object.values(routeStatistics)
                 .sort((a, b) => b.totalViagens - a.totalViagens)
-                .slice(0, 20); // Limitar a 20 rotas para não ficar muito grande
+                .slice(0, 20);
             
             if (routes.length === 0) {
                 showNotification('Nenhuma rota encontrada para copiar.', 'error');
@@ -3041,22 +2727,19 @@
             let clipboardData = "ROTA\tTOTAL VIAGENS\tDIAS OPERAÇÃO\tVEÍCULO MAIS USADO\tMOTORISTA FREQUENTE\tOPERAÇÃO PRINCIPAL\n";
             
             routes.forEach(route => {
-                clipboardData += `${route.nomeCompleto || route.nome}\t${route.totalViagens}\t${route.diasOperacao.size}\t${route.veiculoMaisUtilizado || 'N/A'}\t${route.motoristaMaisFrequente || 'N/A'}\t${route.operacaoMaisFrequente || 'N/A'}\n`;
+                clipboardData += `${route.nome}\t${route.totalViagens}\t${route.diasOperacao.size}\t${route.veiculoMaisUtilizado || 'N/A'}\t${route.motoristaMaisFrequente || 'N/A'}\t${route.operacaoMaisFrequente || 'N/A'}\n`;
             });
             
-            // Adicionar informações extras
             clipboardData += `\nExportado em: ${new Date().toLocaleString('pt-BR')}\n`;
             clipboardData += `Total de rotas: ${routes.length}\n`;
             clipboardData += `Apenas viagens com destino válido`;
             
-            // Usar API moderna de clipboard se disponível
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(clipboardData)
                     .then(() => {
                         showNotification('Dados copiados para a área de transferência! Cole em qualquer planilha.', 'success');
                     })
                     .catch(err => {
-                        console.error('Erro ao copiar:', err);
                         fallbackCopyTextToClipboard(clipboardData);
                     });
             } else {
@@ -3064,7 +2747,7 @@
             }
         }
 
-        // FALLBACK PARA COPIAR TEXTO (para navegadores mais antigos)
+        // FALLBACK PARA COPIAR TEXTO
         function fallbackCopyTextToClipboard(text) {
             const textArea = document.createElement("textarea");
             textArea.value = text;
@@ -3079,43 +2762,15 @@
                 document.execCommand('copy');
                 showNotification('Dados copiados para a área de transferência! Cole em qualquer planilha.', 'success');
             } catch (err) {
-                console.error('Erro ao copiar:', err);
                 showNotification('Erro ao copiar dados. Tente manualmente com Ctrl+C.', 'error');
             }
             
             document.body.removeChild(textArea);
         }
 
-        // ATUALIZAR CONTADORES
-        function updateCounters() {
-            const totalRegistros = frotaData.length;
-            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO).length;
-            
-            document.getElementById('totalRecords').textContent = totalRegistros;
-            document.getElementById('totalViagensComDestino').textContent = viagensComDestino;
-            
-            console.log(`Contadores atualizados: ${totalRegistros} registros, ${viagensComDestino} com destino válido`);
-        }
-
-        // ATUALIZAR TIMESTAMP
-        function updateTimestamp() {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('pt-BR', { 
-                hour: '2-digit', 
-                minute: '2-digit',
-                second: '2-digit'
-            });
-            const dateStr = now.toLocaleDateString('pt-BR', {
-                day: '2-digit',
-                month: 'long',
-                year: 'numeric'
-            });
-            
-            document.getElementById('lastUpdate').textContent = `${dateStr} às ${timeStr}`;
-        }
-
-        // HANDLE FILE UPLOAD - AGORA PROCESSA REALMENTE O CSV
-        function handleFileUpload(file) {
+        // HANDLE FILE UPLOAD - CORRIGIDA!
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
             if (!file) return;
             
             if (!file.name.toLowerCase().endsWith('.csv')) {
@@ -3131,47 +2786,27 @@
                 try {
                     const csvData = e.target.result;
                     
-                    console.log("Arquivo carregado, tamanho:", csvData.length);
-                    
-                    // Verificar se o CSV tem dados
                     if (!csvData || csvData.trim().length === 0) {
                         throw new Error('Arquivo CSV vazio');
                     }
                     
-                    // Processar o CSV
                     await processCSVData(csvData);
-                    
-                    // Aplicar finalizações manuais aos novos dados
                     applyManualFinalizations();
-                    
-                    // Identificar viagens múltiplas (apenas para viagens com destino válido)
                     identifyMultipleTrips();
-                    
-                    // Extrair todas as datas únicas (apenas de viagens com destino válido)
                     extractAllDates();
-                    
-                    // Calcular estatísticas avançadas (apenas viagens com destino válido)
                     calculateAdvancedStatistics();
-                    
-                    // Atualizar interface
-                    loadLast3DaysSummary(); // ALTERADO: Agora são 3 dias
-                    loadControleDiario(); // ATUALIZAR: Carregar controle diário
+                    loadLast3DaysSummary();
+                    loadControleDiario();
                     updateDateFilterOptions();
                     loadTableData();
                     updateRotaFrequente();
                     updateTimestamp();
-                    
-                    // Atualizar contadores
                     updateCounters();
                     
-                    // Mostrar sucesso
                     showNotification(
                         `Dados atualizados com sucesso! ${frotaData.length} registros carregados (${frotaData.filter(item => item.TEM_DESTINO).length} com destino válido).`,
                         'success'
                     );
-                    
-                    // Atualizar timestamp de atualização
-                    updateTimestamp();
                     
                 } catch (error) {
                     console.error('Erro ao processar arquivo:', error);
@@ -3216,6 +2851,32 @@
             }, 3000);
         }
 
+        // ATUALIZAR CONTADORES
+        function updateCounters() {
+            const totalRegistros = frotaData.length;
+            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO).length;
+            
+            document.getElementById('totalRecords').textContent = totalRegistros;
+            document.getElementById('totalViagensComDestino').textContent = viagensComDestino;
+        }
+
+        // ATUALIZAR TIMESTAMP
+        function updateTimestamp() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('pt-BR', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const dateStr = now.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            document.getElementById('lastUpdate').textContent = `${dateStr} às ${timeStr}`;
+        }
+
         // MOSTRAR LOADING
         function showLoading() {
             document.getElementById('loadingOverlay').style.display = 'flex';
@@ -3225,25 +2886,22 @@
         function hideLoading() {
             document.getElementById('loadingOverlay').style.display = 'none';
         }
-    </script>
-// Código de teste simplificado para verificar funções básicas
-console.log("Dashboard carregado - versão de teste");
 
-// 1. Forçar o clique no input de arquivo
-document.addEventListener('DOMContentLoaded', function() {
-    const uploadBox = document.querySelector('.upload-box');
-    const fileInput = document.getElementById('fileInput');
-    
-    if(uploadBox && fileInput) {
-        uploadBox.onclick = function() {
-            console.log("Clicou na área de upload!");
-            fileInput.click();
-        };
-    }
-    
-    // 2. Tornar os filtros clicáveis (solução temporária)
-    console.log("Dashboard pronto para uso básico");
-});
-</script>
+        // Adicionar eventos para upload box (garantir funcionamento)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Garantir que o upload box funcione
+            const uploadBox = document.querySelector('.upload-box');
+            const fileInput = document.getElementById('fileInput');
+            
+            if (uploadBox && fileInput) {
+                uploadBox.addEventListener('click', function() {
+                    fileInput.click();
+                });
+            }
+            
+            console.log('Dashboard totalmente carregado e funcional!');
+        });
+
+    </script>
 </body>
 </html>
