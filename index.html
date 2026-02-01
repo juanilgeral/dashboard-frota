@@ -3226,5 +3226,24 @@
             document.getElementById('loadingOverlay').style.display = 'none';
         }
     </script>
+// Código de teste simplificado para verificar funções básicas
+console.log("Dashboard carregado - versão de teste");
+
+// 1. Forçar o clique no input de arquivo
+document.addEventListener('DOMContentLoaded', function() {
+    const uploadBox = document.querySelector('.upload-box');
+    const fileInput = document.getElementById('fileInput');
+    
+    if(uploadBox && fileInput) {
+        uploadBox.onclick = function() {
+            console.log("Clicou na área de upload!");
+            fileInput.click();
+        };
+    }
+    
+    // 2. Tornar os filtros clicáveis (solução temporária)
+    console.log("Dashboard pronto para uso básico");
+});
+</script>
 </body>
 </html>
