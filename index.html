@@ -505,6 +505,115 @@
             opacity: 0.9;
         }
 
+        /* NECESSIDADE DE CONTRATAÇÃO */
+        .contratacao-status {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            position: relative;
+            z-index: 2;
+        }
+
+        .contratacao-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .contratacao-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contratacao-icon {
+            font-size: 1.5rem;
+        }
+
+        .contratacao-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .contratacao-item {
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .contratacao-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .contratacao-value {
+            font-size: 1.4rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .contratacao-difference {
+            font-size: 0.9rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .contratacao-difference.positive {
+            background: rgba(46, 125, 50, 0.3);
+            color: #a5d6a7;
+        }
+
+        .contratacao-difference.negative {
+            background: rgba(198, 40, 40, 0.3);
+            color: #ffabab;
+        }
+
+        .contratacao-difference.neutral {
+            background: rgba(255, 152, 0, 0.3);
+            color: #ffcc80;
+        }
+
+        .contratacao-status-badge {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 10px;
+        }
+
+        .contratacao-status-badge.sufficient {
+            background: rgba(46, 125, 50, 0.3);
+            color: #a5d6a7;
+            border: 2px solid rgba(76, 175, 80, 0.3);
+        }
+
+        .contratacao-status-badge.insufficient {
+            background: rgba(198, 40, 40, 0.3);
+            color: #ffabab;
+            border: 2px solid rgba(244, 67, 54, 0.3);
+        }
+
+        .contratacao-status-badge.marginal {
+            background: rgba(255, 152, 0, 0.3);
+            color: #ffcc80;
+            border: 2px solid rgba(255, 193, 7, 0.3);
+        }
+
         /* RELAÇÃO VEÍCULOS/MOTORISTAS */
         .relacao-veiculos-card {
             background: white;
@@ -1675,6 +1784,10 @@
             .two-columns-layout {
                 grid-template-columns: 1fr;
             }
+            
+            .contratacao-content {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -2834,7 +2947,7 @@ Carlos Oliveira"></textarea>
             document.getElementById('last3DaysSummary').innerHTML = html;
         }
 
-        // CARREGAR CONTROLE DIÁRIO DA FROTA
+        // CARREGAR CONTROLE DIÁRIO DA FROTA COM ANÁLISE DE CONTRATAÇÃO
         function loadControleDiario() {
             const dateFilter = document.getElementById('dateFilter').value;
             let targetDate = dateFilter !== 'all' ? dateFilter : allDates[0] || '31/01/26';
@@ -2895,6 +3008,37 @@ Carlos Oliveira"></textarea>
             const emRotaPercent = totalViagens > 0 ? Math.round((emRotaCount / totalViagens) * 100) : 0;
             const pendentesPercent = totalViagens > 0 ? Math.round((pendentesCount / totalViagens) * 100) : 0;
             
+            // ANÁLISE DE NECESSIDADE DE CONTRATAÇÃO
+            const totalMotoristasDisponiveis = motoristasData.total;
+            const necessidadeContratacao = totalMotoristas > totalMotoristasDisponiveis ? 
+                totalMotoristas - totalMotoristasDisponiveis : 0;
+            
+            const diferencaMotoristas = totalMotoristasDisponiveis - totalMotoristas;
+            const percentualUtilizacao = totalMotoristasDisponiveis > 0 ? 
+                Math.round((totalMotoristas / totalMotoristasDisponiveis) * 100) : 100;
+            
+            let statusContratacao = '';
+            let statusClasse = '';
+            let statusIcon = '';
+            let statusTexto = '';
+            
+            if (necessidadeContratacao > 0) {
+                statusContratacao = 'insufficient';
+                statusClasse = 'contratacao-status-badge insufficient';
+                statusIcon = '⚠️';
+                statusTexto = `NECESSIDADE DE CONTRATAÇÃO: +${necessidadeContratacao} motoristas`;
+            } else if (diferencaMotoristas <= 2) {
+                statusContratacao = 'marginal';
+                statusClasse = 'contratacao-status-badge marginal';
+                statusIcon = '📊';
+                statusTexto = 'CAPACIDADE NO LIMITE - Monitorar';
+            } else {
+                statusContratacao = 'sufficient';
+                statusClasse = 'contratacao-status-badge sufficient';
+                statusIcon = '✅';
+                statusTexto = 'CAPACIDADE SUFICIENTE';
+            }
+            
             const statsHtml = `
                 <div class="controle-stat-item">
                     <div class="controle-stat-label">
@@ -2920,7 +3064,7 @@ Carlos Oliveira"></textarea>
                         Motoristas Ativos
                     </div>
                     <div class="controle-stat-value">${totalMotoristas}</div>
-                    <div class="controle-stat-sub">em operação</div>
+                    <div class="controle-stat-sub">em operação (${percentualUtilizacao}% da capacidade)</div>
                 </div>
                 
                 <div class="controle-stat-item">
@@ -2968,6 +3112,48 @@ Carlos Oliveira"></textarea>
                     `;
                 }).join('');
             
+            // HTML PARA ANÁLISE DE CONTRATAÇÃO
+            const contratacaoHtml = `
+                <div class="contratacao-status">
+                    <div class="contratacao-header">
+                        <div class="contratacao-title">
+                            <span class="contratacao-icon">👥</span>
+                            Análise de Capacidade de Motoristas
+                        </div>
+                    </div>
+                    
+                    <div class="contratacao-content">
+                        <div class="contratacao-item">
+                            <div class="contratacao-label">Motoristas em Operação</div>
+                            <div class="contratacao-value">${totalMotoristas}</div>
+                        </div>
+                        
+                        <div class="contratacao-item">
+                            <div class="contratacao-label">Motoristas Disponíveis</div>
+                            <div class="contratacao-value">${totalMotoristasDisponiveis}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 15px;">
+                        <div class="${statusClasse}">
+                            ${statusIcon} ${statusTexto}
+                        </div>
+                        
+                        <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.9;">
+                            ${necessidadeContratacao > 0 ? 
+                                `<span style="color: #ffabab;">⚠️ Capacidade insuficiente para a demanda atual. 
+                                Recomendado contratar ${necessidadeContratacao} motorista(s).</span>` :
+                            diferencaMotoristas <= 2 ? 
+                                `<span style="color: #ffcc80;">📊 Capacidade próxima do limite. 
+                                Diferença: ${diferencaMotoristas} motorista(s) disponível(eis).</span>` :
+                                `<span style="color: #a5d6a7;">✅ Capacidade adequada. 
+                                ${diferencaMotoristas} motorista(s) disponível(eis) para demanda extra.</span>`
+                            }
+                        </div>
+                    </div>
+                </div>
+            `;
+            
             const html = `
                 <div class="controle-diario-header">
                     <div class="controle-diario-titulo">
@@ -2982,6 +3168,8 @@ Carlos Oliveira"></textarea>
                 <div class="controle-diario-stats">
                     ${statsHtml}
                 </div>
+                
+                ${contratacaoHtml}
                 
                 <div style="margin-top: 20px;">
                     <div class="controle-operations-title">
@@ -3093,6 +3281,9 @@ Carlos Oliveira"></textarea>
             
             // Salvar dados atualizados
             saveVeiculosMotoristasData();
+            
+            // Atualizar também o Controle Diário para refletir os novos totais
+            loadControleDiario();
         }
 
         // ATUALIZAR OPÇÕES DO FILTRO DE DATA
