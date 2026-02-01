@@ -1,0 +1,3230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Completo - Todas as Operações</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #1a237e;
+            --secondary: #283593;
+            --success: #2e7d32;
+            --warning: #f57c00;
+            --danger: #c62828;
+            --info: #0277bd;
+            --light: #f5f5f5;
+            --dark: #212121;
+            
+            /* Cores das operações */
+            --ls-color: #c62828; /* Vermelho */
+            --ht-color: #2e7d32; /* Verde */
+            --tl-color: #4caf50; /* Verde claro */
+            --cv-color: #ff9800; /* Amarelo */
+            --nl-color: #e57373; /* Vermelho claro */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1920px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            font-size: 2.8rem;
+            color: #1a237e;
+        }
+
+        .logo h1 {
+            color: #1a237e;
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .logo-subtitle {
+            color: #666;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .date-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .date-btn {
+            background: #f5f5f5;
+            border: 2px solid #e0e0e0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            color: #424242;
+        }
+
+        .date-btn:hover {
+            background: #e0e0e0;
+            transform: translateY(-2px);
+        }
+
+        .date-btn.active {
+            background: #1a237e;
+            color: white;
+            border-color: #1a237e;
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+        }
+
+        #currentDateDisplay {
+            font-weight: 700;
+            color: #1a237e;
+            font-size: 1.3rem;
+            text-align: center;
+            min-width: 280px;
+        }
+
+        .status-badge {
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* LEGENDA DAS OPERAÇÕES */
+        .operacoes-legend {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .legend-title {
+            color: #1a237e;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid;
+            transition: all 0.3s;
+        }
+
+        .legend-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .legend-badge {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: white !important; /* TEXTO BRANCO */
+            flex-shrink: 0;
+        }
+
+        .legend-badge.LS { background: var(--ls-color); }
+        .legend-badge.HT { background: var(--ht-color); }
+        .legend-badge.TL { background: var(--tl-color); }
+        .legend-badge.CV { background: var(--cv-color); }
+        .legend-badge.NL { background: var(--nl-color); }
+
+        .legend-info {
+            flex: 1;
+        }
+
+        .legend-sigla {
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 2px;
+        }
+
+        .legend-sigla.LS { color: var(--ls-color); }
+        .legend-sigla.HT { color: var(--ht-color); }
+        .legend-sigla.TL { color: var(--tl-color); }
+        .legend-sigla.CV { color: var(--cv-color); }
+        .legend-sigla.NL { color: var(--nl-color); }
+
+        .legend-nome {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 600;
+        }
+
+        /* OPERAÇÕES SUMMARY - AGRUPADO POR DIA (APENAS 3 ÚLTIMOS DIAS) */
+        .day-operations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .day-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+
+        .day-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .day-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .day-date {
+            font-weight: 700;
+            color: #1a237e;
+            font-size: 1.2rem;
+        }
+
+        .day-count {
+            background: #1a237e;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .operations-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .op-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            transition: all 0.2s;
+            border-left: 4px solid;
+        }
+
+        .op-item:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        .op-badge {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-right: 15px;
+            flex-shrink: 0;
+            color: white !important; /* TEXTO BRANCO */
+        }
+
+        .op-badge.LS { 
+            background: var(--ls-color); 
+            border: 2px solid #b71c1c;
+        }
+        .op-badge.HT { 
+            background: var(--ht-color);
+            border: 2px solid #1b5e20;
+        }
+        .op-badge.TL { 
+            background: var(--tl-color);
+            border: 2px solid #388e3c;
+        }
+        .op-badge.CV { 
+            background: var(--cv-color);
+            border: 2px solid #f57c00;
+        }
+        .op-badge.NL { 
+            background: var(--nl-color);
+            border: 2px solid #d32f2f;
+        }
+
+        .op-info {
+            flex: 1;
+        }
+
+        .op-main {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .op-vehicles {
+            font-size: 0.85rem;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Borda esquerda colorida nos itens */
+        .op-item.LS { border-left-color: var(--ls-color); }
+        .op-item.HT { border-left-color: var(--ht-color); }
+        .op-item.TL { border-left-color: var(--tl-color); }
+        .op-item.CV { border-left-color: var(--cv-color); }
+        .op-item.NL { border-left-color: var(--nl-color); }
+
+        /* CONTROLE DIÁRIO DA FROTA */
+        .controle-diario-card {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .controle-diario-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4caf50, #ff9800, #c62828);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .controle-diario-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .controle-diario-titulo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .controle-diario-titulo span {
+            font-size: 2rem;
+        }
+
+        .controle-diario-data {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .controle-diario-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .controle-stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s;
+        }
+
+        .controle-stat-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .controle-stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .controle-stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .controle-stat-sub {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        .controle-diario-operations {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .controle-operations-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controle-operations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .controle-op-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-left: 4px solid;
+            transition: all 0.2s;
+        }
+
+        .controle-op-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .controle-op-badge {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            color: white !important;
+        }
+
+        .controle-op-info {
+            flex: 1;
+        }
+
+        .controle-op-sigla {
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 2px;
+        }
+
+        .controle-op-count {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        /* DASHBOARD LAYOUT - APENAS TABELA AGORA */
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        /* TABELA PRINCIPAL */
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            min-height: 700px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card-title {
+            color: #1a237e;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title-icon {
+            font-size: 1.8rem;
+        }
+
+        .filters-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-select {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            font-weight: 600;
+            color: #424242;
+            cursor: pointer;
+            min-width: 180px;
+            font-size: 0.95rem;
+        }
+
+        .filter-select:focus {
+            outline: none;
+            border-color: #1a237e;
+        }
+
+        .table-container {
+            border-radius: 8px;
+            border: 1px solid #f0f0f0;
+            overflow-y: visible;
+            overflow-x: auto;
+            max-height: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1400px;
+        }
+
+        th {
+            background: #f5f5f5;
+            padding: 18px 20px;
+            text-align: left;
+            color: #424242;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #e0e0e0;
+            white-space: nowrap;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            vertical-align: middle;
+            font-size: 0.95rem;
+        }
+
+        tbody tr {
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f9f9f9;
+        }
+
+        tbody tr.finalizado {
+            background: #f1f8e9;
+        }
+
+        tbody tr.em-rota {
+            background: #e3f2fd;
+        }
+
+        tbody tr.pendente {
+            background: #fffde7;
+        }
+
+        /* Linha sem destino */
+        tbody tr.sem-destino {
+            background: #f5f5f5;
+            opacity: 0.7;
+        }
+
+        tbody tr.sem-destino:hover {
+            background: #eeeeee;
+        }
+
+        /* NOVO: Linhas com veículos finalizados */
+        tbody tr.veiculo-finalizado {
+            background: #fff8e1 !important;
+        }
+
+        tbody tr.veiculo-finalizado:hover {
+            background: #ffecb3 !important;
+        }
+
+        /* Célula de operação na tabela */
+        td .op-cell {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1rem;
+            display: inline-block;
+            text-align: center;
+            min-width: 50px;
+            color: white !important; /* TEXTO BRANCO */
+        }
+
+        .op-cell.LS { background: var(--ls-color); }
+        .op-cell.HT { background: var(--ht-color); }
+        .op-cell.TL { background: var(--tl-color); }
+        .op-cell.CV { background: var(--cv-color); }
+        .op-cell.NL { background: var(--nl-color); }
+
+        /* STATUS BADGES */
+        .status-indicator {
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-finalizado {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #c8e6c9;
+        }
+
+        .status-em-rota {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 2px solid #bbdefb;
+        }
+
+        .status-pendente {
+            background: #fff8e1;
+            color: #ff8f00;
+            border: 2px solid #ffecb3;
+        }
+
+        .status-sem-destino {
+            background: #f5f5f5;
+            color: #757575;
+            border: 2px solid #e0e0e0;
+        }
+
+        /* BOTÃO DE FINALIZAR */
+        .finalizar-btn {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .finalizar-btn:not(.finalized) {
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+        }
+
+        .finalizar-btn:not(.finalized):hover {
+            background: linear-gradient(135deg, #1b5e20 0%, #388e3c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
+        }
+
+        .finalizar-btn.finalized {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #c8e6c9;
+            cursor: default;
+        }
+
+        .finalizar-btn.finalized::before {
+            content: "✓";
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .finalizar-btn.sem-destino {
+            background: #e0e0e0;
+            color: #757575;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* VIAGENS MÚLTIPLAS */
+        .trip-badge {
+            background: #ff9800;
+            color: white;
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 700;
+            margin-left: 6px;
+        }
+
+        /* ESTATÍSTICAS DE ROTA */
+        .rota-stats {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-top: 25px;
+        }
+
+        .stats-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .stats-title {
+            color: #1a237e;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .export-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .export-btn {
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .export-btn:hover {
+            background: linear-gradient(135deg, #1b5e20 0%, #388e3c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: linear-gradient(135deg, #283593 0%, #3949ab 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+        }
+
+        .rota-card {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #1a237e;
+        }
+
+        .rota-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .rota-titulo {
+            font-weight: 700;
+            color: #1a237e;
+            font-size: 1.1rem;
+        }
+
+        .rota-metricas {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .rota-veiculos {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed #e0e0e0;
+        }
+
+        /* MODAL DE EXPORTAÇÃO */
+        .export-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .export-modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .export-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .export-modal-title {
+            color: #1a237e;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-btn:hover {
+            background: #f5f5f5;
+            color: #c62828;
+        }
+
+        .export-options {
+            margin-bottom: 25px;
+        }
+
+        .export-option {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #1a237e;
+        }
+
+        .export-option h3 {
+            color: #1a237e;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .export-option p {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 0.95rem;
+        }
+
+        .export-textarea {
+            width: 100%;
+            height: 200px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            resize: vertical;
+            margin-bottom: 15px;
+        }
+
+        .export-textarea:focus {
+            outline: none;
+            border-color: #1a237e;
+        }
+
+        .export-instructions {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .export-instructions h4 {
+            color: #1a237e;
+            margin-bottom: 10px;
+        }
+
+        .export-instructions ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .export-instructions li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .export-instructions li::before {
+            content: "•";
+            color: #1a237e;
+            position: absolute;
+            left: 0;
+        }
+
+        /* UPLOAD SECTION */
+        .upload-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+
+        .upload-title {
+            color: #1a237e;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .upload-box {
+            border: 3px dashed #e0e0e0;
+            border-radius: 12px;
+            padding: 50px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 25px;
+        }
+
+        .upload-box:hover {
+            border-color: #1a237e;
+            background: #f5f5f5;
+        }
+
+        .upload-icon {
+            font-size: 4rem;
+            color: #1a237e;
+            margin-bottom: 20px;
+        }
+
+        .upload-instructions {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .instructions-title {
+            color: #1a237e;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .instructions-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .instructions-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            color: #666;
+        }
+
+        .instructions-list li::before {
+            content: "•";
+            color: #1a237e;
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        /* LOADING */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            display: none;
+        }
+
+        .spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #1a237e;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 30px;
+            padding: 20px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .header {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .date-controls {
+                justify-content: center;
+            }
+            
+            #currentDateDisplay {
+                min-width: auto;
+            }
+            
+            .legend-grid {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+            
+            .stats-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .export-controls {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .day-operations {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-select {
+                width: 100%;
+            }
+            
+            .upload-box {
+                padding: 30px 20px;
+            }
+            
+            .legend-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controle-diario-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .controle-operations-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .controle-diario-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .export-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .export-btn, .copy-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .controle-diario-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .controle-operations-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">🚛</div>
+                <div>
+                    <h1>Sistema de Controle de Frota</h1>
+                    <div class="logo-subtitle">Todas as operações • Controle manual • Dados completos</div>
+                </div>
+            </div>
+            
+            <div class="date-controls">
+                <button class="date-btn active" onclick="loadDate('today')">HOJE</button>
+                <button class="date-btn" onclick="loadDate('yesterday')">ONTEM</button>
+                <button class="date-btn" onclick="loadDate('all')">TODOS</button>
+                <div id="currentDateDisplay">31 de Janeiro de 2026</div>
+            </div>
+            
+            <div class="status-badge">
+                <span>📊</span> TODAS OPERAÇÕES
+            </div>
+        </div>
+
+        <!-- LEGENDA DAS OPERAÇÕES -->
+        <div class="operacoes-legend">
+            <div class="legend-title">
+                <span>🎯</span>
+                Legenda das Operações
+            </div>
+            <div class="legend-grid">
+                <div class="legend-item LS">
+                    <div class="legend-badge LS">LS</div>
+                    <div class="legend-info">
+                        <div class="legend-sigla LS">LS</div>
+                        <div class="legend-nome">Lasa</div>
+                    </div>
+                </div>
+                <div class="legend-item HT">
+                    <div class="legend-badge HT">HT</div>
+                    <div class="legend-info">
+                        <div class="legend-sigla HT">HT</div>
+                        <div class="legend-nome">Hortifruti</div>
+                    </div>
+                </div>
+                <div class="legend-item TL">
+                    <div class="legend-badge TL">TL</div>
+                    <div class="legend-info">
+                        <div class="legend-sigla TL">TL</div>
+                        <div class="legend-nome">Tele Rio</div>
+                    </div>
+                </div>
+                <div class="legend-item CV">
+                    <div class="legend-badge CV">CV</div>
+                    <div class="legend-info">
+                        <div class="legend-sigla CV">CV</div>
+                        <div class="legend-nome">Casa & Vídeo</div>
+                    </div>
+                </div>
+                <div class="legend-item NL">
+                    <div class="legend-badge NL">NL</div>
+                    <div class="legend-info">
+                        <div class="legend-sigla NL">NL</div>
+                        <div class="legend-nome">Nalin</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RESUMO DOS ÚLTIMOS 3 DIAS (APENAS VIAGENS COM DESTINO VÁLIDO) -->
+        <div class="day-operations" id="last3DaysSummary">
+            <!-- Carregado dinamicamente - apenas últimos 3 dias e apenas viagens com destino válido -->
+        </div>
+
+        <!-- CONTROLE DIÁRIO DA FROTA - CARD DO DIA ATUAL -->
+        <div class="controle-diario-card" id="controleDiario">
+            <!-- Carregado dinamicamente - informações do dia atual -->
+        </div>
+
+        <!-- DASHBOARD PRINCIPAL -->
+        <div class="dashboard-main">
+            <!-- TABELA PRINCIPAL -->
+            <div class="table-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">📋</span>
+                        Todas as Viagens
+                        <span id="tripCount" style="font-size: 0.95rem; color: #666; font-weight: normal;">(0 viagens com destino válido)</span>
+                    </div>
+                    <div class="filters-row">
+                        <select class="filter-select" id="dateFilter" onchange="filterTable()">
+                            <option value="all">Todas as Datas</option>
+                            <!-- Datas carregadas dinamicamente -->
+                        </select>
+                        <select class="filter-select" id="opFilter" onchange="filterTable()">
+                            <option value="all">Todas Operações</option>
+                            <option value="LS">LS</option>
+                            <option value="HT">HT</option>
+                            <option value="TL">TL</option>
+                            <option value="CV">CV</option>
+                            <option value="NL">NL</option>
+                        </select>
+                        <select class="filter-select" id="statusFilter" onchange="filterTable()">
+                            <option value="all">Todos Status</option>
+                            <option value="com-destino">Com Destino Válido</option>
+                            <option value="sem-destino">Sem Destino Válido</option>
+                            <option value="pendente">Pendentes</option>
+                            <option value="em-rota">Em Rota</option>
+                            <option value="finalizado">Finalizados</option>
+                        </select>
+                        <select class="filter-select" id="destinoFilter" onchange="filterTable()">
+                            <option value="all">Todos (com/sem destino)</option>
+                            <option value="com-destino" selected>Apenas com Destino Válido</option>
+                            <option value="sem-destino">Apenas sem Destino Válido</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table id="mainTable">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>DATA</th>
+                                <th>OP</th>
+                                <th>Veículo</th>
+                                <th>Motorista</th>
+                                <th>Ponto ON</th>
+                                <th>Saída CD</th>
+                                <th>Destino</th>
+                                <th>Ponto OFF</th>
+                                <th>Status</th>
+                                <th>Controle</th>
+                                <th>Viagem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Dados carregados aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- ESTATÍSTICAS DE ROTAS FREQUENTES (APENAS VIAGENS COM DESTINO VÁLIDO) -->
+        <div class="rota-stats">
+            <div class="stats-header">
+                <div class="stats-title">
+                    <span>📈</span>
+                    Estatísticas de Rotas Frequentes (Apenas viagens com destino válido)
+                </div>
+                <div class="export-controls">
+                    <button class="export-btn" onclick="openExportModal()">
+                        📊 Exportar Dados
+                    </button>
+                    <button class="copy-btn" onclick="copyRoutesToClipboard()">
+                        📋 Copiar para Planilha
+                    </button>
+                </div>
+            </div>
+            <div id="rotaFrequenteContent">
+                <!-- Rotas frequentes carregadas aqui -->
+            </div>
+        </div>
+
+        <!-- UPLOAD E CONTROLE -->
+        <div class="upload-section">
+            <div class="upload-title">
+                <span>📤</span>
+                Atualização de Dados Completa
+            </div>
+            
+            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">📁</div>
+                <p style="font-size: 1.2rem; margin-bottom: 10px; color: #1a237e; font-weight: 700;">
+                    Importar Planilha Completa
+                </p>
+                <p style="color: #666;">
+                    Clique para importar todos os dados da sua planilha
+                </p>
+            </div>
+            
+            <input type="file" id="fileInput" accept=".csv" style="display: none;" onchange="handleFileUpload(this.files[0])">
+            
+            <div class="upload-instructions">
+                <div class="instructions-title">📋 Como funciona:</div>
+                <ul class="instructions-list">
+                    <li><strong>Todos os dados</strong> da planilha são processados e atualizados</li>
+                    <li><strong>Viagens consideradas:</strong> Apenas registros com campo Destino válido</li>
+                    <li><strong>Destinos inválidos:</strong> COBRANÇA 50%, Garagem X..., ... X Garagem, campos vazios</li>
+                    <li><strong>Controle manual</strong> de finalização preservado</li>
+                    <li><strong>Últimos 3 dias</strong> mostrados no resumo acima</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer">
+            <p>Sistema Completo de Controle de Frota • Todas as operações • Apenas viagens com destino válido</p>
+            <p>Total de registros: <span id="totalRecords">0</span> • Viagens com destino válido: <span id="totalViagensComDestino">0</span> • Última atualização: <span id="lastUpdate">Carregando...</span></p>
+        </div>
+    </div>
+
+    <!-- MODAL DE EXPORTAÇÃO -->
+    <div class="export-modal" id="exportModal">
+        <div class="export-modal-content">
+            <div class="export-modal-header">
+                <div class="export-modal-title">
+                    <span>📊</span>
+                    Exportar Dados das Rotas Frequentes
+                </div>
+                <button class="close-btn" onclick="closeExportModal()">×</button>
+            </div>
+            
+            <div class="export-options">
+                <div class="export-option">
+                    <h3>📋 Formato Excel/Planilha Google</h3>
+                    <p>Cole os dados abaixo diretamente na primeira célula (A1) de uma planilha Excel ou Google Sheets:</p>
+                    <textarea class="export-textarea" id="exportExcelData" readonly></textarea>
+                    <button class="copy-btn" onclick="copyExcelData()">
+                        📋 Copiar Dados para Excel
+                    </button>
+                </div>
+                
+                <div class="export-option">
+                    <h3>📊 Dados Detalhados (JSON)</h3>
+                    <p>Dados completos em formato JSON para análise avançada:</p>
+                    <textarea class="export-textarea" id="exportJsonData" readonly></textarea>
+                    <button class="copy-btn" onclick="copyJsonData()">
+                        📋 Copiar Dados JSON
+                    </button>
+                </div>
+                
+                <div class="export-instructions">
+                    <h4>📝 Como usar os dados exportados:</h4>
+                    <ul>
+                        <li><strong>Excel:</strong> Cole na célula A1, selecione "Dados" → "Texto para Colunas" → Delimitado → Vírgula</li>
+                        <li><strong>Google Sheets:</strong> Cole na célula A1, selecione "Dados" → "Dividir texto em colunas" → Vírgula</li>
+                        <li><strong>Data de exportação:</strong> Os dados incluem a data atual para referência</li>
+                        <li><strong>Filtros aplicados:</strong> Apenas viagens com destino válido são incluídas</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LOADING OVERLAY -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div style="font-size: 1.2rem; color: #1a237e; font-weight: 700;">Carregando todas as operações...</div>
+    </div>
+
+    <script>
+        // DADOS INICIAIS DA PLANILHA (EXEMPLO COMPLETO)
+        const initialFrotaData = `DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,C,x,SAÍDA_VEÍCULO_CD
+02/01/26,sex.,LS,064 LUV 9296,MARTINS,05:13:00,10:13:00,14:09:00,01:09:00,069 - CAXIAS / 774 - SHOP. CAXIAS,06:10:00
+02/01/26,sex.,LS,065 KZQ 9648,JOEL,09:48:00,14:48:00,,,GARAGEM X LASA,10:14:00
+02/01/26,sex.,LS,066 LUB 1400,JOEL,09:48:00,14:48:00,16:18:00,03:18:00,GARAGEM X LASA,14:19:00
+02/01/26,sex.,LS,067 LUX 9063,CÉLIO,05:00:00,10:00:00,16:25:00,03:25:00,164 - SHOP. CARIOCA / 258 - SHOP. MADUREIRA,06:20:00
+02/01/26,sex.,TL,108 LSM 7748,CLAUDINEI,06:30:00,11:30:00,17:20:00,04:20:00,GARAGEM X TELERIO (COBRANÇA DEVIDA),06:45:00
+02/01/26,sex.,TL,113 KXU 6988,NOGUEIRA,06:43:00,11:43:00,17:20:00,04:20:00,03 - CAMPO GRANDE(Pablo e Pablo Winicius),12:50:00
+02/01/26,sex.,TL,116 LSQ 6092,ALEXANDRE,06:36:00,11:36:00,17:17:00,04:17:00,03 - CAMPO GRANDE (João Vitor e Rafael),10:10:00
+02/01/26,sex.,TL,117 KRR 2728,ANDERSON,05:44:00,10:44:00,,,GARAGEM X TELERIO,06:10:00
+02/01/26,sex.,TL,117 KRR 2728,ANDERSON,05:44:00,10:44:00,17:20:00,04:20:00,09 - MÉIER ( Wesley e Gabriel),10:50:00
+02/01/26,sex.,TL,118 LSQ 6093,EDILSON,06:47:00,11:47:00,17:20:00,04:20:00,COBRANÇA 50%,06:50:00
+02/01/26,sex.,HT,048 LSZ 0790,ROGÉRIO,03:00:00,08:00:00,11:20:00,22:20:00,MARACANÃ / CONDE DE BONFIM / CB 648 / TIJUCA / CONDE 99 / ILHA,05:30:00
+02/01/26,sex.,HT,093 KVF 3715,WALMIR,03:19:00,08:19:00,12:38:00,23:38:00,BARRA BLUE / A5 / RECREIO / AMERICAS / ABELARDO BUENO / FREGUESIA,05:12:00
+02/01/26,sex.,HT,122 DPF 7I23,VALDIR,03:00:00,08:00:00,14:05:00,01:05:00,ABRANTES / PRADO JUNIOR / SIQUEIRA CAMPOS / DIAS DA ROCHA / ADALBERTO / SÃO CONRADO / LEBLON / JARDIM BOTÂNICO,05:32:00
+02/01/26,sex.,HT,125 OWO 2F73,NEVES,03:05:00,08:05:00,11:15:00,22:15:00,M. PARANA / REGIÃO OCEÂNICA / ITAIPU / SANTA ROSA,05:37:00
+02/01/26,sex.,CV,124 ATI 4G85,ROSENDO,04:07:00,09:07:00,12:01:00,23:01:00,SÃO GONÇALO I - 374,04:47:00
+02/01/26,sex.,CV,097 LRX 4831,GILMAR,13:25:00,18:25:00,19:30:00,06:30:00,SHOP MADUREIRA-255,13:30:00
+02/01/26,sex.,CV,101 LRX 4832,LUIZ,13:00:00,18:00:00,19:00:00,06:00:00,NORTE SHOP-240,13:30:00
+02/01/26,sex.,CV,105 KPU 7450,SERGIO SILVA,13:30:00,18:30:00,18:40:00,05:40:00,SHOP CAXIAS-327,13:30:00
+02/01/26,sex.,CV,098 LRX 4828,MEDEIROS,15:30:00,20:30:00,22:25:00,09:25:00,PETROPOLIS-312,16:30:00
+02/01/26,sex.,CV,075 KUT 8573,SERGIO,16:00:00,21:00:00,21:15:00,08:15:00,MESQUITA-362/BELFORD ROXO-288,16:30:00
+03/01/26,sáb.,LS,064 LUV 9296,GUILHERME,07:00:00,12:00:00,19:00:00,06:00:00,020 - COPACABANA,07:30:00
+03/01/26,sáb.,LS,065 KZQ 9648,VAGNER,05:45:00,10:45:00,16:02:00,03:02:00,017 - VOLTA REDONDA,06:00:00
+03/01/26,sáb.,LS,066 LUB 1400,OLIVEIRA,06:45:00,11:45:00,17:10:00,04:10:00,057 - NILÓPOLIS,07:45:00
+03/01/26,sáb.,TL,108 LSM 7748,CLAUDINEI,06:53:00,11:53:00,11:08:00,22:08:00,06 - CENTRO URUGUAIANA (Leonardo e Luciano),07:20:00
+03/01/26,sáb.,TL,113 KXU 6988,NOGUEIRA,06:40:00,11:40:00,13:25:00,00:25:00,43 - SHOPPING MADUREIRA (João Vitor e Pablo Winicius),10:49:00
+03/01/26,sáb.,TL,116 LSQ 6092,ALEXANDRE,05:55:00,10:55:00,12:41:00,23:41:00,06 - CENTRO URUGUAIANA (Marcos e Rafael),07:20:00
+03/01/26,sáb.,TL,117 KRR 2728,ANDERSON,06:07:00,11:07:00,12:39:00,23:39:00,06 - CENTRO URUGUAIANA (Wesley e Gabriel),07:47:00
+03/01/26,sáb.,TL,118 LSQ 6093,EDILSON,06:02:00,11:02:00,13:25:00,00:25:00,06 - CENTRO URUGUAIANA (Pablo e Ederson),07:50:00
+03/01/26,sáb.,HT,048 LSZ 0790,ROGÉRIO,03:00:00,08:00:00,12:00:00,23:00:00,ABRANTES / PRADO JUNIOR / SIQUEIRA CAMPOS / DIAS DA ROCHA / GAVEA / ADALBERTO / SÃO CONRADO / LEBLON / JARDIM BOTÂNICO,05:55:00
+03/01/26,sáb.,HT,093 KVF 3715,WALMIR,03:01:00,08:01:00,11:35:00,22:35:00,BARRA BLUE / A5 / RECREIO / AMERICAS / BARRA GARDEN / BARRA / ABELARDO BUENO / FREGUESIA,05:36:00
+03/01/26,sáb.,HT,122 DPF 7I23,VALDIR,03:00:00,08:00:00,11:33:00,22:33:00,SIQUEIRA CAMPOS,05:03:00
+03/01/26,sáb.,HT,125 OWO 2F73,NEVES,03:12:00,08:12:00,10:48:00,21:48:00,M. PARANA / REGIÃO OCEÂNICA / ITAIPU / SANTA ROSA,05:06:00
+03/01/26,sáb.,CV,102 LRT 4821,SANDRO,04:00:00,09:00:00,13:30:00,00:30:00,PARTAGE-365/JARDIM CATARINA-691,04:35:00
+03/01/26,sáb.,CV,099 LRX 4830,ROSENDO,04:03:00,09:03:00,10:13:00,21:13:00,PLAZA SHOP-381,04:55:00
+03/01/26,sáb.,CV,104 LRC 3089,HERIBERTO,04:05:00,09:05:00,10:14:00,21:14:00,NITEROI -266,04:30:00
+31/01/26,sáb.,LS,063 LBW 8156,ANDRÉ,05:00:00,10:00:00,,,597 - SÃO CRISTOVÃO SM 399194,05:30:00
+31/01/26,sáb.,LS,064 LUV 9296,CÉLIO,05:00:00,10:00:00,,,1033 - SHOP. AMÉRICAS RECREIO - REENTREGA  SM 399206,05:30:00
+31/01/26,sáb.,LS,068 LSN 1702,MARTINS,05:00:00,10:00:00,,,623 - SHOP. ESTAÇÃO DE QUEIMADOS / 5240 - MESQUITA SM 399209,05:30:00
+31/01/26,sáb.,HT,048 LSZ 0790,ROGÉRIO,01:40:00,06:40:00,,,,05:00:00
+31/01/26,sáb.,HT,093 KVF 3715,WALMIR,01:40:00,06:40:00,,,,05:00:00
+31/01/26,sáb.,HT,122 DPF 7I23,CAMARA,01:40:00,06:40:00,,,,05:00:00
+31/01/26,sáb.,HT,125 OWO 2F73,NEVES,01:40:00,06:40:00,,,,05:00:00
+31/01/26,sáb.,CV,115 KXW 7716,ROSENDO,,,,,PLAZA SHOP-381/NITEROI-266,04:30:00
+31/01/26,sáb.,CV,105 KPU 7450,EDUARDO,,,,,GUANABARA PENHA-385   TREINAMENTO DIAS,04:30:00
+31/01/26,sáb.,CV,121 KRZ 8143,HERIBERTO,,,,,NILOPOLIS-259/BELFORD ROXO-654    TREINAMENTO MÁRCIO,04:30:00`;
+
+        // VARIÁVEIS GLOBAIS
+        let frotaData = [];
+        let manualFinalizations = {};
+        let currentDateFilter = '31/01/26';
+        let currentOpFilter = 'all';
+        let currentStatusFilter = 'all';
+        let currentDestinoFilter = 'com-destino'; // Filtro padrão: apenas com destino válido
+        let allDates = [];
+        let driverStatistics = {};
+        let routeStatistics = {};
+        let vehicleStatistics = {};
+
+        // Mapeamento das operações
+        const operacoesMap = {
+            'LS': { nome: 'Lasa', cor: 'var(--ls-color)', corVar: '--ls-color' },
+            'HT': { nome: 'Hortifruti', cor: 'var(--ht-color)', corVar: '--ht-color' },
+            'TL': { nome: 'Tele Rio', cor: 'var(--tl-color)', corVar: '--tl-color' },
+            'CV': { nome: 'Casa & Vídeo', cor: 'var(--cv-color)', corVar: '--cv-color' },
+            'NL': { nome: 'Nalin', cor: 'var(--nl-color)', corVar: '--nl-color' }
+        };
+
+        // INICIALIZAR SISTEMA
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeSystem();
+            setInterval(updateTimestamp, 60000); // Atualizar tempo a cada minuto
+        });
+
+        // INICIALIZAR SISTEMA
+        async function initializeSystem() {
+            showLoading();
+            
+            try {
+                // Carregar dados do localStorage ou usar dados iniciais
+                await loadDataFromStorage();
+                
+                // Carregar finalizações manuais
+                loadManualFinalizations();
+                
+                // Aplicar finalizações manuais aos dados
+                applyManualFinalizations();
+                
+                // Identificar viagens múltiplas (apenas para viagens com destino válido)
+                identifyMultipleTrips();
+                
+                // Extrair todas as datas únicas (apenas de viagens com destino válido)
+                extractAllDates();
+                
+                // Calcular estatísticas avançadas (apenas viagens com destino válido)
+                calculateAdvancedStatistics();
+                
+                // Carregar interface
+                loadLast3DaysSummary(); // ALTERADO: Agora são 3 dias
+                loadControleDiario(); // NOVO: Carregar controle diário
+                updateDateFilterOptions();
+                loadTableData();
+                updateRotaFrequente();
+                updateTimestamp();
+                
+                // Atualizar contadores
+                updateCounters();
+                
+            } catch (error) {
+                console.error('Erro ao inicializar:', error);
+                alert('Erro ao carregar dados da planilha: ' + error.message);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        // CARREGAR DADOS DO LOCALSTORAGE
+        async function loadDataFromStorage() {
+            const savedData = localStorage.getItem('frotaCSVData');
+            
+            if (savedData) {
+                // Usar dados salvos
+                await processCSVData(savedData);
+            } else {
+                // Usar dados iniciais
+                await processCSVData(initialFrotaData);
+            }
+        }
+
+        // SALVAR DADOS NO LOCALSTORAGE
+        function saveDataToStorage(csvData) {
+            localStorage.setItem('frotaCSVData', csvData);
+        }
+
+        // FUNÇÃO PARA VERIFICAR SE É UMA VIAGEM VÁLIDA (COM DESTINO REAL)
+        function isViagemValida(item) {
+            // Tenta encontrar o campo de destino em diferentes nomes possíveis
+            let destino = '';
+            
+            if (item.x) {
+                destino = item.x;
+            } else if (item.C) {
+                destino = item.C;
+            } else if (item.destino) {
+                destino = item.destino;
+            } else if (item.DESTINO) {
+                destino = item.DESTINO;
+            }
+            
+            destino = destino ? destino.trim().toUpperCase() : '';
+            
+            // Se o destino estiver vazio, não é viagem válida
+            if (!destino) return false;
+            
+            // Verificar se contém padrões inválidos
+            const destinosInvalidos = [
+                destino.includes('COBRANÇA 50%'),
+                destino.includes('COBRANCA 50%'), // sem acento
+                destino.startsWith('GARAGEM X'),
+                destino.includes(' X GARAGEM'),
+                destino === '',
+                destino === '-',
+                destino === '--',
+                destino.includes('GARAGEM X LASA'),
+                destino.includes('GARAGEM X TELERIO'),
+                destino.includes('GARAGEM X TELERIO')
+            ];
+            
+            // Se qualquer um dos padrões inválidos for verdadeiro, não é viagem válida
+            return !destinosInvalidos.some(invalido => invalido === true);
+        }
+
+        // FUNÇÃO PARA VERIFICAR SE HORÁRIO É APÓS 14H
+        function isHorarioTarde(horario) {
+            if (!horario || horario.trim() === '') return false;
+            
+            const [horaStr, minutoStr, segundoStr] = horario.split(':');
+            const hora = parseInt(horaStr);
+            
+            return hora >= 14;
+        }
+
+        // PROCESSAR DADOS DO CSV - CORRIGIDA E ROBUSTA
+        async function processCSVData(csvString) {
+            console.log("Processando dados CSV...");
+            
+            const lines = csvString.split('\n').filter(line => line.trim() !== '');
+            
+            if (lines.length === 0) {
+                throw new Error('Arquivo CSV vazio');
+            }
+            
+            // Verificar se há cabeçalhos - buscar a linha que contém "DATA" ou "VEICULO"
+            let headerIndex = 0;
+            for (let i = 0; i < Math.min(3, lines.length); i++) {
+                if (lines[i].toUpperCase().includes('DATA') && 
+                    (lines[i].toUpperCase().includes('VEICULO') || lines[i].toUpperCase().includes('VEÍCULO'))) {
+                    headerIndex = i;
+                    break;
+                }
+            }
+            
+            const headersLine = lines[headerIndex];
+            const headers = headersLine.split(',').map(h => h.trim());
+            
+            console.log("Headers encontrados:", headers);
+            console.log("Número total de linhas:", lines.length);
+            
+            frotaData = [];
+            
+            // Processar cada linha (começando após o cabeçalho)
+            for (let i = headerIndex + 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                try {
+                    const values = parseCSVLine(line);
+                    const item = {};
+                    
+                    // Mapear valores para cabeçalhos
+                    headers.forEach((header, index) => {
+                        if (index < values.length) {
+                            item[header] = values[index] ? values[index].trim() : '';
+                        } else {
+                            item[header] = '';
+                        }
+                    });
+                    
+                    // Verificar se temos os campos mínimos necessários
+                    if (!item.DATA && !item.data) {
+                        console.warn(`Linha ${i + 1} ignorada - campo DATA faltando:`, item);
+                        continue;
+                    }
+                    
+                    // Normalizar nomes de campos
+                    if (item.data && !item.DATA) item.DATA = item.data;
+                    if (item.Veículo && !item.VEICULO) item.VEICULO = item.Veículo;
+                    if (item.veiculo && !item.VEICULO) item.VEICULO = item.veiculo;
+                    if (item.Motorista && !item.MOTORISTA) item.MOTORISTA = item.Motorista;
+                    if (item.motorista && !item.MOTORISTA) item.MOTORISTA = item.motorista;
+                    if (item.Op && !item.OP) item.OP = item.Op;
+                    if (item.op && !item.OP) item.OP = item.op;
+                    
+                    // Verificar se é uma operação conhecida
+                    const op = item.OP || '';
+                    if (!operacoesMap[op]) {
+                        // Tentar inferir a operação pelo destino
+                        if (item.x && item.x.toUpperCase().includes('LASA')) {
+                            item.OP = 'LS';
+                        } else if (item.x && item.x.toUpperCase().includes('HORTIFRUTI')) {
+                            item.OP = 'HT';
+                        } else if (item.x && (item.x.toUpperCase().includes('TELERIO') || 
+                                   item.x.toUpperCase().includes('TELE RIO'))) {
+                            item.OP = 'TL';
+                        } else if (item.x && (item.x.toUpperCase().includes('CASA & VÍDEO') || 
+                                   item.x.toUpperCase().includes('CASA E VÍDEO'))) {
+                            item.OP = 'CV';
+                        } else if (item.x && item.x.toUpperCase().includes('NALIN')) {
+                            item.OP = 'NL';
+                        } else {
+                            // Se não conseguir identificar, usar LS como padrão
+                            item.OP = 'LS';
+                        }
+                    }
+                    
+                    // MODIFICAÇÃO: Usar a função isViagemValida para verificar destino
+                    item.TEM_DESTINO = isViagemValida(item);
+                    
+                    // NOVO: Verificar se horário de saída é tarde
+                    const saidaField = item['SAÍDA_VEÍCULO_CD'] || item['SAIDA_VEICULO_CD'] || item['SAÍDA_CD'] || item['SAIDA_CD'] || '';
+                    item.SAIDA_TARDE = isHorarioTarde(saidaField);
+                    
+                    // Gerar ID único baseado nos dados
+                    item.id = generateUniqueId(item);
+                    
+                    // Determinar status automático
+                    item.STATUS_AUTO = determineAutoStatus(item);
+                    item.STATUS_MANUAL = null;
+                    item.FINALIZADO_MANUALMENTE = false;
+                    
+                    // Formatar data para exibição
+                    item.DATA_DISPLAY = formatDateForDisplay(item.DATA);
+                    
+                    // Extrair número da loja (apenas se tiver destino válido)
+                    item.LOJA_NUMERO = item.TEM_DESTINO ? extractLojaNumber(item.x || item.C || item.destino || '') : '';
+                    
+                    // Obter informações da operação
+                    item.OP_INFO = operacoesMap[item.OP] || { nome: item.OP, cor: '#666' };
+                    
+                    frotaData.push(item);
+                } catch (error) {
+                    console.error(`Erro ao processar linha ${i + 1}:`, error);
+                    console.error("Linha:", line);
+                }
+            }
+            
+            console.log(`Dados processados: ${frotaData.length} registros`);
+            
+            // Salvar no localStorage
+            saveDataToStorage(csvString);
+        }
+
+        // PARSE CORRETO DE LINHA CSV (lida com vírgulas dentro de campos)
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current);
+            return result.map(val => val.trim());
+        }
+
+        // CALCULAR ESTATÍSTICAS AVANÇADAS (APENAS VIAGENS COM DESTINO VÁLIDO)
+        function calculateAdvancedStatistics() {
+            console.log("Calculando estatísticas avançadas...");
+            
+            // Reinicializar estatísticas
+            driverStatistics = {};
+            routeStatistics = {};
+            vehicleStatistics = {};
+            
+            // Filtrar apenas viagens com destino válido
+            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
+            
+            console.log(`Viagens com destino válido: ${viagensComDestino.length}`);
+            
+            viagensComDestino.forEach(item => {
+                const motorista = item.MOTORISTA;
+                const veiculo = item.VEICULO;
+                const rota = item.x || item.C || item.destino || 'Não especificada';
+                const rotaTruncada = rota.substring(0, 50);
+                const lojaNumero = item.LOJA_NUMERO;
+                const horaOn = item['PONTO_ON_MOT.'] || item['PONTO_ON'] || '';
+                const horaOff = item['PONTO_OFF_MOTO.'] || item['PONTO_OFF'] || '';
+                
+                // Estatísticas por motorista
+                if (motorista) {
+                    if (!driverStatistics[motorista]) {
+                        driverStatistics[motorista] = {
+                            nome: motorista,
+                            totalViagens: 0,
+                            totalDias: new Set(),
+                            rotasFrequentes: {},
+                            horariosFrequentes: {},
+                            veiculosUtilizados: new Set(),
+                            tempoMedio: 0,
+                            viagensConcluidas: 0,
+                            operacoes: {}
+                        };
+                    }
+                    
+                    const stats = driverStatistics[motorista];
+                    stats.totalViagens++;
+                    stats.totalDias.add(item.DATA);
+                    stats.veiculosUtilizados.add(veiculo);
+                    
+                    // Contar operações
+                    if (!stats.operacoes[item.OP]) {
+                        stats.operacoes[item.OP] = 0;
+                    }
+                    stats.operacoes[item.OP]++;
+                    
+                    if (item.STATUS_MANUAL === 'finalizado' || item.STATUS_AUTO === 'finalizado') {
+                        stats.viagensConcluidas++;
+                    }
+                    
+                    // Contar rotas frequentes
+                    if (rota && rota !== 'Não especificada') {
+                        if (!stats.rotasFrequentes[rotaTruncada]) {
+                            stats.rotasFrequentes[rotaTruncada] = 0;
+                        }
+                        stats.rotasFrequentes[rotaTruncada]++;
+                    }
+                    
+                    // Contar horários frequentes
+                    if (horaOn) {
+                        const hora = horaOn.split(':')[0];
+                        if (!stats.horariosFrequentes[hora]) {
+                            stats.horariosFrequentes[hora] = 0;
+                        }
+                        stats.horariosFrequentes[hora]++;
+                    }
+                }
+                
+                // Estatísticas por rota
+                if (rota && rota !== 'Não especificada') {
+                    if (!routeStatistics[rotaTruncada]) {
+                        routeStatistics[rotaTruncada] = {
+                            nome: rotaTruncada,
+                            nomeCompleto: rota,
+                            totalViagens: 0,
+                            veiculosUtilizados: {},
+                            motoristasUtilizados: {},
+                            diasOperacao: new Set(),
+                            horaMedia: '',
+                            operacoes: {}
+                        };
+                    }
+                    
+                    const stats = routeStatistics[rotaTruncada];
+                    stats.totalViagens++;
+                    stats.diasOperacao.add(item.DATA);
+                    
+                    // Contar operações na rota
+                    if (!stats.operacoes[item.OP]) {
+                        stats.operacoes[item.OP] = 0;
+                    }
+                    stats.operacoes[item.OP]++;
+                    
+                    // Contar veículos por rota
+                    if (veiculo) {
+                        if (!stats.veiculosUtilizados[veiculo]) {
+                            stats.veiculosUtilizados[veiculo] = 0;
+                        }
+                        stats.veiculosUtilizados[veiculo]++;
+                    }
+                    
+                    // Contar motoristas por rota
+                    if (motorista) {
+                        if (!stats.motoristasUtilizados[motorista]) {
+                            stats.motoristasUtilizados[motorista] = 0;
+                        }
+                        stats.motoristasUtilizados[motorista]++;
+                    }
+                }
+                
+                // Estatísticas por veículo
+                if (veiculo) {
+                    if (!vehicleStatistics[veiculo]) {
+                        vehicleStatistics[veiculo] = {
+                            placa: veiculo,
+                            totalViagens: 0,
+                            rotasFrequentes: {},
+                            motoristasUtilizados: new Set(),
+                            diasOperacao: new Set(),
+                            operacoes: {}
+                        };
+                    }
+                    
+                    const stats = vehicleStatistics[veiculo];
+                    stats.totalViagens++;
+                    stats.diasOperacao.add(item.DATA);
+                    stats.motoristasUtilizados.add(motorista);
+                    
+                    // Contar operações do veículo
+                    if (!stats.operacoes[item.OP]) {
+                        stats.operacoes[item.OP] = 0;
+                    }
+                    stats.operacoes[item.OP]++;
+                    
+                    // Contar rotas frequentes
+                    if (rota && rota !== 'Não especificada') {
+                        if (!stats.rotasFrequentes[rotaTruncada]) {
+                            stats.rotasFrequentes[rotaTruncada] = 0;
+                        }
+                        stats.rotasFrequentes[rotaTruncada]++;
+                    }
+                }
+            });
+            
+            console.log(`Estatísticas calculadas: ${Object.keys(routeStatistics).length} rotas, ${Object.keys(driverStatistics).length} motoristas, ${Object.keys(vehicleStatistics).length} veículos`);
+            
+            // Calcular estatísticas finais
+            Object.values(driverStatistics).forEach(stats => {
+                // Encontrar rota mais frequente
+                let rotaMaisFrequente = '';
+                let maxFrequencia = 0;
+                Object.entries(stats.rotasFrequentes).forEach(([rota, count]) => {
+                    if (count > maxFrequencia) {
+                        maxFrequencia = count;
+                        rotaMaisFrequente = rota;
+                    }
+                });
+                stats.rotaMaisFrequente = rotaMaisFrequente;
+                stats.frequenciaRota = maxFrequencia;
+                
+                // Encontrar horário mais frequente
+                let horaMaisFrequente = '';
+                let maxHoraFrequencia = 0;
+                Object.entries(stats.horariosFrequentes).forEach(([hora, count]) => {
+                    if (count > maxHoraFrequencia) {
+                        maxHoraFrequencia = count;
+                        horaMaisFrequente = hora;
+                    }
+                });
+                stats.horaMaisFrequente = horaMaisFrequente;
+                
+                // Encontrar operação mais frequente
+                let operacaoMaisFrequente = '';
+                let maxOpFrequencia = 0;
+                Object.entries(stats.operacoes).forEach(([op, count]) => {
+                    if (count > maxOpFrequencia) {
+                        maxOpFrequencia = count;
+                        operacaoMaisFrequente = op;
+                    }
+                });
+                stats.operacaoMaisFrequente = operacaoMaisFrequente;
+                
+                // Calcular taxa de conclusão
+                stats.taxaConclusao = stats.totalViagens > 0 ? 
+                    Math.round((stats.viagensConcluidas / stats.totalViagens) * 100) : 0;
+            });
+            
+            // Calcular veículo mais utilizado por rota
+            Object.values(routeStatistics).forEach(stats => {
+                // Encontrar veículo mais utilizado na rota
+                let veiculoMaisUtilizado = '';
+                let maxUso = 0;
+                Object.entries(stats.veiculosUtilizados).forEach(([veiculo, count]) => {
+                    if (count > maxUso) {
+                        maxUso = count;
+                        veiculoMaisUtilizado = veiculo;
+                    }
+                });
+                stats.veiculoMaisUtilizado = veiculoMaisUtilizado;
+                stats.veiculoUsoCount = maxUso;
+                
+                // Encontrar motorista mais frequente na rota
+                let motoristaMaisFrequente = '';
+                let maxMotoristaUso = 0;
+                Object.entries(stats.motoristasUtilizados).forEach(([motorista, count]) => {
+                    if (count > maxMotoristaUso) {
+                        maxMotoristaUso = count;
+                        motoristaMaisFrequente = motorista;
+                    }
+                });
+                stats.motoristaMaisFrequente = motoristaMaisFrequente;
+                
+                // Encontrar operação mais frequente na rota
+                let operacaoMaisFrequente = '';
+                let maxOpUso = 0;
+                Object.entries(stats.operacoes).forEach(([op, count]) => {
+                    if (count > maxOpUso) {
+                        maxOpUso = count;
+                        operacaoMaisFrequente = op;
+                    }
+                });
+                stats.operacaoMaisFrequente = operacaoMaisFrequente;
+            });
+            
+            // Calcular rota mais frequente por veículo
+            Object.values(vehicleStatistics).forEach(stats => {
+                // Encontrar rota mais frequente
+                let rotaMaisFrequente = '';
+                let maxFrequencia = 0;
+                Object.entries(stats.rotasFrequentes).forEach(([rota, count]) => {
+                    if (count > maxFrequencia) {
+                        maxFrequencia = count;
+                        rotaMaisFrequente = rota;
+                    }
+                });
+                stats.rotaMaisFrequente = rotaMaisFrequente;
+                stats.frequenciaRota = maxFrequencia;
+                
+                // Encontrar operação mais frequente
+                let operacaoMaisFrequente = '';
+                let maxOpFrequencia = 0;
+                Object.entries(stats.operacoes).forEach(([op, count]) => {
+                    if (count > maxOpFrequencia) {
+                        maxOpFrequencia = count;
+                        operacaoMaisFrequente = op;
+                    }
+                });
+                stats.operacaoMaisFrequente = operacaoMaisFrequente;
+            });
+        }
+
+        // GERAR ID ÚNICO
+        function generateUniqueId(item) {
+            // Criar ID baseado nos dados do registro para manter consistência
+            const baseId = `${item.DATA}_${item.OP}_${item.VEICULO}_${item.MOTORISTA}_${item['PONTO_ON_MOT.'] || ''}_${item.x || ''}`
+                .replace(/\s+/g, '_')
+                .replace(/[^a-zA-Z0-9_]/g, '');
+            
+            // Gerar hash para evitar colisões
+            let hash = 0;
+            for (let i = 0; i < baseId.length; i++) {
+                const char = baseId.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            
+            return `${baseId}_${Math.abs(hash)}`;
+        }
+
+        // DETERMINAR STATUS AUTOMÁTICO
+        function determineAutoStatus(item) {
+            const pontoOff = item['PONTO_OFF_MOTO.'] || item['PONTO_OFF'] || '';
+            const saidaCd = item['SAÍDA_VEÍCULO_CD'] || item['SAIDA_VEICULO_CD'] || item['SAÍDA_CD'] || item['SAIDA_CD'] || '';
+            
+            if (pontoOff && pontoOff.trim()) {
+                return 'finalizado';
+            } else if (saidaCd && saidaCd.trim()) {
+                return 'em-rota';
+            } else {
+                return 'pendente';
+            }
+        }
+
+        // FORMATAR DATA PARA EXIBIÇÃO
+        function formatDateForDisplay(dateStr) {
+            if (!dateStr) return '';
+            const [day, month, year] = dateStr.split('/');
+            const date = new Date(`20${year}`, month - 1, day);
+            return date.toLocaleDateString('pt-BR', { 
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+        }
+
+        // CONVERTER DATA PARA OBJETO DATE PARA ORDENAÇÃO
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            const [day, month, year] = dateStr.split('/');
+            return new Date(2000 + parseInt(year), parseInt(month) - 1, parseInt(day));
+        }
+
+        // EXTRAIR NÚMERO DA LOJA
+        function extractLojaNumber(destino) {
+            if (!destino) return '';
+            const match = destino.match(/(\d+)/);
+            return match ? match[0] : '';
+        }
+
+        // CARREGAR FINALIZAÇÕES MANUAIS
+        function loadManualFinalizations() {
+            const saved = localStorage.getItem('frotaManualFinalizations');
+            if (saved) {
+                try {
+                    manualFinalizations = JSON.parse(saved);
+                } catch (e) {
+                    manualFinalizations = {};
+                    console.warn("Erro ao carregar finalizações manuais:", e);
+                }
+            } else {
+                manualFinalizations = {};
+            }
+            console.log(`Finalizações manuais carregadas: ${Object.keys(manualFinalizations).length}`);
+        }
+
+        // SALVAR FINALIZAÇÕES MANUAIS
+        function saveManualFinalizations() {
+            localStorage.setItem('frotaManualFinalizations', JSON.stringify(manualFinalizations));
+        }
+
+        // APLICAR FINALIZAÇÕES MANUAIS
+        function applyManualFinalizations() {
+            console.log("Aplicando finalizações manuais...");
+            
+            // Primeiro, limpar todos os status manuais
+            frotaData.forEach(item => {
+                item.STATUS_MANUAL = null;
+                item.FINALIZADO_MANUALMENTE = false;
+            });
+            
+            // Aplicar finalizações baseadas nos IDs
+            frotaData.forEach(item => {
+                // Verificar se este item tem uma finalização manual
+                if (manualFinalizations[item.id]) {
+                    item.STATUS_MANUAL = 'finalizado';
+                    item.FINALIZADO_MANUALMENTE = true;
+                }
+            });
+            
+            console.log(`Finalizações aplicadas: ${frotaData.filter(item => item.FINALIZADO_MANUALMENTE).length} viagens`);
+        }
+
+        // IDENTIFICAR VIAGENS MÚLTIPLAS (APENAS VIAGENS COM DESTINO VÁLIDO)
+        function identifyMultipleTrips() {
+            const tripsByVehicleDriverDate = {};
+            
+            // Filtrar apenas viagens com destino válido para identificação de múltiplas
+            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
+            
+            viagensComDestino.forEach(item => {
+                const key = `${item.VEICULO}_${item.MOTORISTA}_${item.DATA}`;
+                if (!tripsByVehicleDriverDate[key]) {
+                    tripsByVehicleDriverDate[key] = [];
+                }
+                tripsByVehicleDriverDate[key].push(item);
+            });
+            
+            // Primeiro, limpar todas as classificações de múltiplas
+            frotaData.forEach(item => {
+                item.VIAGEM_NUMERO = 1;
+                item.TOTAL_VIAGENS = 1;
+                item.VIAGEM_MULTIPLA = false;
+            });
+            
+            // Atualizar contagem de viagens apenas para viagens com destino válido
+            Object.values(tripsByVehicleDriverDate).forEach(trips => {
+                if (trips.length > 1) {
+                    trips.forEach((trip, index) => {
+                        trip.VIAGEM_NUMERO = index + 1;
+                        trip.TOTAL_VIAGENS = trips.length;
+                        trip.VIAGEM_MULTIPLA = true;
+                    });
+                } else if (trips.length === 1) {
+                    trips[0].VIAGEM_NUMERO = 1;
+                    trips[0].TOTAL_VIAGENS = 1;
+                    trips[0].VIAGEM_MULTIPLA = false;
+                }
+            });
+            
+            const totalMultiplas = frotaData.filter(item => item.VIAGEM_MULTIPLA).length;
+            console.log(`Viagens múltiplas identificadas: ${totalMultiplas}`);
+        }
+
+        // EXTRAIR TODAS AS DATAS ÚNICAS (APENAS DE VIAGENS COM DESTINO VÁLIDO)
+        function extractAllDates() {
+            const datesSet = new Set();
+            
+            // Filtrar apenas viagens com destino válido
+            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
+            
+            viagensComDestino.forEach(item => {
+                if (item.DATA) {
+                    datesSet.add(item.DATA);
+                }
+            });
+            
+            // Ordenar datas do mais recente para o mais antigo
+            allDates = Array.from(datesSet).sort((a, b) => {
+                const dateA = parseDate(a);
+                const dateB = parseDate(b);
+                return dateB - dateA; // Mais recente primeiro
+            });
+            
+            console.log(`Datas únicas extraídas: ${allDates.length}`);
+        }
+
+        // CARREGAR RESUMO DOS ÚLTIMOS 3 DIAS (APENAS VIAGENS COM DESTINO VÁLIDO) - MODIFICADO
+        function loadLast3DaysSummary() {
+            console.log("Carregando resumo dos últimos 3 dias...");
+            
+            const daysSummary = {};
+            
+            // Filtrar apenas viagens com destino válido
+            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
+            
+            // Agrupar por data (apenas viagens com destino válido)
+            viagensComDestino.forEach(item => {
+                if (!item.DATA) return;
+                
+                if (!daysSummary[item.DATA]) {
+                    daysSummary[item.DATA] = {
+                        date: item.DATA,
+                        displayDate: item.DATA_DISPLAY,
+                        total: 0,
+                        operations: {},
+                        vehicles: new Set(),
+                        drivers: new Set()
+                    };
+                }
+                
+                const day = daysSummary[item.DATA];
+                day.total++;
+                day.vehicles.add(item.VEICULO);
+                day.drivers.add(item.MOTORISTA);
+                
+                // Contar por operação
+                if (!day.operations[item.OP]) {
+                    day.operations[item.OP] = {
+                        count: 0,
+                        vehicles: new Set(),
+                        nome: item.OP_INFO.nome,
+                        cor: item.OP_INFO.cor
+                    };
+                }
+                day.operations[item.OP].count++;
+                day.operations[item.OP].vehicles.add(item.VEICULO);
+            });
+            
+            // MODIFICAÇÃO: Pegar apenas os últimos 3 dias (ao invés de 6)
+            const last3Dates = allDates.slice(0, 3);
+            
+            console.log(`Últimas 3 datas: ${last3Dates.join(', ')}`);
+            
+            // Gerar HTML apenas para os últimos 3 dias
+            let html = '';
+            last3Dates.forEach(date => {
+                const day = daysSummary[date];
+                if (!day) {
+                    console.log(`Nenhum dado para a data: ${date}`);
+                    return;
+                }
+                
+                const operationsList = Object.entries(day.operations)
+                    .sort((a, b) => b[1].count - a[1].count)
+                    .map(([op, data]) => {
+                        const opClass = op;
+                        const nomeCompleto = data.nome || op;
+                        
+                        return `
+                            <div class="op-item ${opClass}">
+                                <div class="op-badge ${opClass}" style="background: ${data.cor}">${op}</div>
+                                <div class="op-info">
+                                    <div class="op-main">
+                                        <strong style="color: ${data.cor}">${data.count} viagens</strong>
+                                        <span class="op-vehicles">🚛 ${data.vehicles.size} veículos</span>
+                                    </div>
+                                    <div style="font-size: 0.8rem; color: #666; font-weight: 600;">
+                                        ${nomeCompleto}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('');
+                
+                html += `
+                    <div class="day-card">
+                        <div class="day-header">
+                            <div class="day-date">${day.displayDate}</div>
+                            <div class="day-count">${day.total} viagens</div>
+                        </div>
+                        <div class="operations-list">
+                            ${operationsList}
+                        </div>
+                        <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #f0f0f0; font-size: 0.9rem; color: #666;">
+                            <div style="display: flex; gap: 15px;">
+                                <span>🚛 ${day.vehicles.size} veículos</span>
+                                <span>👷 ${day.drivers.size} motoristas</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Adicionar mensagem se não houver dados suficientes
+            if (last3Dates.length === 0 || html === '') {
+                html = `
+                    <div class="day-card">
+                        <div class="day-header">
+                            <div class="day-date">Sem dados disponíveis</div>
+                            <div class="day-count">0 viagens</div>
+                        </div>
+                        <div style="text-align: center; padding: 30px; color: #666;">
+                            Nenhuma viagem com destino válido encontrada para os últimos 3 dias
+                        </div>
+                    </div>
+                `;
+            }
+            
+            // MODIFICAÇÃO: Mudar o ID para last3DaysSummary
+            document.getElementById('last3DaysSummary').innerHTML = html;
+            console.log("Resumo dos últimos 3 dias carregado");
+        }
+
+        // CARREGAR CONTROLE DIÁRIO DA FROTA
+        function loadControleDiario() {
+            console.log("Carregando controle diário...");
+            
+            // Determinar qual data mostrar (usar filtro atual ou data de hoje)
+            const dateFilter = document.getElementById('dateFilter').value;
+            let targetDate = dateFilter !== 'all' ? dateFilter : '31/01/26';
+            
+            console.log(`Data do controle diário: ${targetDate}`);
+            
+            // Filtrar viagens da data específica (apenas com destino válido)
+            const viagensDoDia = frotaData.filter(item => item.DATA === targetDate && item.TEM_DESTINO);
+            
+            console.log(`Viagens do dia: ${viagensDoDia.length}`);
+            
+            if (viagensDoDia.length === 0) {
+                // Se não houver viagens para esta data, mostrar mensagem
+                document.getElementById('controleDiario').innerHTML = `
+                    <div class="controle-diario-header">
+                        <div class="controle-diario-titulo">
+                            <span>📊</span>
+                            CONTROLE DIÁRIO DA FROTA
+                        </div>
+                        <div class="controle-diario-data">${formatDateForDisplay(targetDate)}</div>
+                    </div>
+                    <div style="text-align: center; padding: 30px; font-size: 1.1rem; opacity: 0.9;">
+                        Nenhuma viagem com destino válido encontrada para este dia
+                    </div>
+                `;
+                return;
+            }
+            
+            // Calcular estatísticas do dia
+            const totalViagens = viagensDoDia.length;
+            const veiculosSet = new Set();
+            const motoristasSet = new Set();
+            const operacoesCount = {};
+            
+            viagensDoDia.forEach(item => {
+                veiculosSet.add(item.VEICULO);
+                motoristasSet.add(item.MOTORISTA);
+                
+                if (!operacoesCount[item.OP]) {
+                    operacoesCount[item.OP] = {
+                        count: 0,
+                        nome: item.OP_INFO.nome,
+                        cor: item.OP_INFO.cor
+                    };
+                }
+                operacoesCount[item.OP].count++;
+            });
+            
+            const totalVeiculos = veiculosSet.size;
+            const totalMotoristas = motoristasSet.size;
+            
+            // Calcular status
+            const finalizadasCount = viagensDoDia.filter(item => 
+                item.STATUS_MANUAL === 'finalizado' || item.STATUS_AUTO === 'finalizado'
+            ).length;
+            
+            const emRotaCount = viagensDoDia.filter(item => 
+                (item.STATUS_MANUAL || item.STATUS_AUTO) === 'em-rota'
+            ).length;
+            
+            const pendentesCount = viagensDoDia.filter(item => 
+                (item.STATUS_MANUAL || item.STATUS_AUTO) === 'pendente'
+            ).length;
+            
+            // Calcular porcentagens
+            const finalizadasPercent = totalViagens > 0 ? Math.round((finalizadasCount / totalViagens) * 100) : 0;
+            const emRotaPercent = totalViagens > 0 ? Math.round((emRotaCount / totalViagens) * 100) : 0;
+            const pendentesPercent = totalViagens > 0 ? Math.round((pendentesCount / totalViagens) * 100) : 0;
+            
+            // Gerar HTML para estatísticas
+            const statsHtml = `
+                <div class="controle-stat-item">
+                    <div class="controle-stat-label">
+                        <span>🚛</span>
+                        Total de Viagens
+                    </div>
+                    <div class="controle-stat-value">${totalViagens}</div>
+                    <div class="controle-stat-sub">com destino válido</div>
+                </div>
+                
+                <div class="controle-stat-item">
+                    <div class="controle-stat-label">
+                        <span>🚚</span>
+                        Veículos em Operação
+                    </div>
+                    <div class="controle-stat-value">${totalVeiculos}</div>
+                    <div class="controle-stat-sub">diferentes</div>
+                </div>
+                
+                <div class="controle-stat-item">
+                    <div class="controle-stat-label">
+                        <span>👷</span>
+                        Motoristas Ativos
+                    </div>
+                    <div class="controle-stat-value">${totalMotoristas}</div>
+                    <div class="controle-stat-sub">em operação</div>
+                </div>
+                
+                <div class="controle-stat-item">
+                    <div class="controle-stat-label">
+                        <span>✅</span>
+                        Status do Dia
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                            <span>Finalizadas:</span>
+                            <span style="font-weight: 700;">${finalizadasCount} (${finalizadasPercent}%)</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                            <span>Em Rota:</span>
+                            <span style="font-weight: 700; color: #bbdefb;">${emRotaCount} (${emRotaPercent}%)</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
+                            <span>Pendentes:</span>
+                            <span style="font-weight: 700; color: #fff9c4;">${pendentesCount} (${pendentesPercent}%)</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Gerar HTML para operações
+            const operationsHtml = Object.entries(operacoesCount)
+                .sort((a, b) => b[1].count - a[1].count)
+                .map(([op, data]) => {
+                    const opClass = op;
+                    const cor = data.cor;
+                    
+                    return `
+                        <div class="controle-op-item" style="border-left-color: ${cor}">
+                            <div class="controle-op-badge ${opClass}" style="background: ${cor}">
+                                ${op}
+                            </div>
+                            <div class="controle-op-info">
+                                <div class="controle-op-sigla" style="color: ${cor}">
+                                    ${data.nome}
+                                </div>
+                                <div class="controle-op-count">
+                                    ${data.count} viagens
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            
+            // Gerar HTML completo
+            const html = `
+                <div class="controle-diario-header">
+                    <div class="controle-diario-titulo">
+                        <span>📊</span>
+                        CONTROLE DIÁRIO DA FROTA
+                    </div>
+                    <div class="controle-diario-data">
+                        ${formatDateForDisplay(targetDate)}
+                    </div>
+                </div>
+                
+                <div class="controle-diario-stats">
+                    ${statsHtml}
+                </div>
+                
+                <div class="controle-diario-operations">
+                    <div class="controle-operations-title">
+                        <span>🏢</span>
+                        Operações do Dia
+                    </div>
+                    <div class="controle-operations-grid">
+                        ${operationsHtml}
+                    </div>
+                </div>
+                
+                <div style="margin-top: 15px; font-size: 0.85rem; opacity: 0.8; text-align: center;">
+                    Atualizado em: ${new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                </div>
+            `;
+            
+            document.getElementById('controleDiario').innerHTML = html;
+            console.log("Controle diário carregado");
+        }
+
+        // ATUALIZAR OPÇÕES DO FILTRO DE DATA (APENAS DATAS COM VIAGENS COM DESTINO VÁLIDO)
+        function updateDateFilterOptions() {
+            console.log("Atualizando opções de filtro de data...");
+            
+            const select = document.getElementById('dateFilter');
+            select.innerHTML = '<option value="all">Todas as Datas</option>';
+            
+            allDates.forEach(date => {
+                const [day, month, year] = date.split('/');
+                const dateObj = new Date(`20${year}`, month - 1, day);
+                const displayDate = dateObj.toLocaleDateString('pt-BR', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+                
+                // Contar apenas viagens com destino válido para esta data
+                const count = frotaData.filter(item => item.DATA === date && item.TEM_DESTINO).length;
+                
+                const option = document.createElement('option');
+                option.value = date;
+                option.textContent = `${displayDate} (${count} viagens)`;
+                if (date === '31/01/26') {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+            
+            console.log(`Opções de filtro atualizadas: ${allDates.length} datas`);
+        }
+
+        // CARREGAR DADOS DA TABELA
+        function loadTableData() {
+            console.log("Carregando dados da tabela...");
+            
+            const filteredData = getFilteredData();
+            const tableBody = document.getElementById('tableBody');
+            
+            console.log(`Dados filtrados: ${filteredData.length} registros`);
+            
+            let html = '';
+            
+            filteredData.forEach((item, index) => {
+                // Determinar status final (manual tem prioridade)
+                const statusFinal = item.STATUS_MANUAL || item.STATUS_AUTO;
+                const isFinalizadoManualmente = item.FINALIZADO_MANUALMENTE;
+                const temDestino = item.TEM_DESTINO;
+                const saidaTarde = item.SAIDA_TARDE;
+                
+                // Definir classes CSS
+                let rowClass = '';
+                let statusClass = '';
+                
+                if (!temDestino) {
+                    rowClass = 'sem-destino';
+                    statusClass = 'status-sem-destino';
+                } else {
+                    rowClass = statusFinal.replace(' ', '-');
+                    statusClass = `status-${statusFinal.replace(' ', '-')}`;
+                }
+                
+                // NOVO: Adicionar classe para veículos finalizados
+                if (isFinalizadoManualmente) {
+                    rowClass += ' veiculo-finalizado';
+                }
+                
+                // Formatar destino
+                const destino = formatDestination(item.x || item.C || '');
+                
+                // Verificar se é viagem múltipla (apenas se tiver destino válido)
+                const isMultipleTrip = temDestino && item.VIAGEM_MULTIPLA;
+                
+                // Obter informações da operação
+                const opInfo = item.OP_INFO || operacoesMap[item.OP] || { nome: item.OP, cor: '#666' };
+                
+                // Texto do status
+                let statusText = statusFinal.toUpperCase();
+                if (!temDestino) {
+                    statusText = 'SEM DESTINO VÁLIDO';
+                }
+                
+                // Formatar horário de saída com destaque se for tarde
+                const saidaField = item['SAÍDA_VEÍCULO_CD'] || item['SAIDA_VEICULO_CD'] || item['SAÍDA_CD'] || item['SAIDA_CD'] || '-';
+                const saidaDisplay = saidaTarde ? 
+                    `<span style="background: #fff8e1; padding: 2px 8px; border-radius: 4px; color: #ff8f00; font-weight: 700;">${saidaField} ⏰</span>` : 
+                    saidaField;
+                
+                html += `
+                    <tr class="${rowClass}" data-id="${item.id}">
+                        <td style="font-weight: 700; color: ${temDestino ? '#424242' : '#9e9e9e'};">${index + 1}</td>
+                        <td style="font-weight: 600; color: ${temDestino ? '#1a237e' : '#9e9e9e'};">${item.DATA}</td>
+                        <td>
+                            <div class="op-cell ${item.OP}" style="background: ${opInfo.cor}; opacity: ${temDestino ? '1' : '0.7'}">
+                                ${item.OP}
+                            </div>
+                        </td>
+                        <td style="font-weight: 600; color: ${temDestino ? '#1a237e' : '#9e9e9e'};">${item.VEICULO}</td>
+                        <td style="font-weight: 600; color: ${temDestino ? '#1a237e' : '#9e9e9e'};">${item.MOTORISTA}</td>
+                        <td>${item['PONTO_ON_MOT.'] || item['PONTO_ON'] || '-'}</td>
+                        <td>${saidaDisplay}</td>
+                        <td style="color: ${temDestino ? '#1a237e' : '#9e9e9e'};">${destino}</td>
+                        <td>${item['PONTO_OFF_MOTO.'] || item['PONTO_OFF'] || '-'}</td>
+                        <td>
+                            <span class="status-indicator ${statusClass}">
+                                ${isFinalizadoManualmente ? '✓ ' : ''}
+                                ${statusText}
+                            </span>
+                        </td>
+                        <td>
+                            ${temDestino ? `
+                                <button class="finalizar-btn ${isFinalizadoManualmente ? 'finalized' : ''}" 
+                                        onclick="toggleFinalization('${item.id}')"
+                                        ${isFinalizadoManualmente ? 'disabled' : ''}>
+                                    ${isFinalizadoManualmente ? 'Finalizado' : 'Finalizar'}
+                                </button>
+                            ` : `
+                                <button class="finalizar-btn sem-destino" disabled>
+                                    Sem Destino Válido
+                                </button>
+                            `}
+                        </td>
+                        <td>
+                            ${temDestino ? (
+                                isMultipleTrip ? 
+                                    `<span style="color: #ff9800; font-weight: 700;">
+                                        ${item.VIAGEM_NUMERO}ª de ${item.TOTAL_VIAGENS}
+                                        <span class="trip-badge">MÚLTIPLA</span>
+                                    </span>` : 
+                                    '1ª viagem'
+                            ) : 'N/A'}
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableBody.innerHTML = html || `
+                <tr>
+                    <td colspan="12" style="text-align: center; padding: 50px; color: #666; font-size: 1.1rem;">
+                        Nenhuma viagem encontrada com os filtros atuais
+                    </td>
+                </tr>
+            `;
+            
+            // Atualizar contador de viagens na tabela
+            const viagensComDestinoCount = filteredData.filter(item => item.TEM_DESTINO).length;
+            const totalViagensCount = filteredData.length;
+            
+            if (currentDestinoFilter === 'com-destino') {
+                document.getElementById('tripCount').textContent = `(${viagensComDestinoCount} viagens com destino válido)`;
+            } else if (currentDestinoFilter === 'sem-destino') {
+                document.getElementById('tripCount').textContent = `(${totalViagensCount - viagensComDestinoCount} viagens sem destino válido)`;
+            } else {
+                document.getElementById('tripCount').textContent = `(${totalViagensCount} viagens total)`;
+            }
+            
+            console.log("Tabela carregada");
+        }
+
+        // OBTER DADOS FILTRADOS
+        function getFilteredData() {
+            let filtered = [...frotaData];
+            
+            // Filtrar por data
+            const dateFilter = document.getElementById('dateFilter').value;
+            if (dateFilter !== 'all') {
+                filtered = filtered.filter(item => item.DATA === dateFilter);
+                currentDateFilter = dateFilter;
+            }
+            
+            // Filtrar por operação
+            const opFilter = document.getElementById('opFilter').value;
+            if (opFilter !== 'all') {
+                filtered = filtered.filter(item => item.OP === opFilter);
+                currentOpFilter = opFilter;
+            }
+            
+            // Filtrar por status
+            const statusFilter = document.getElementById('statusFilter').value;
+            if (statusFilter !== 'all') {
+                filtered = filtered.filter(item => {
+                    // Se for filtro "com-destino" ou "sem-destino"
+                    if (statusFilter === 'com-destino') {
+                        return item.TEM_DESTINO;
+                    } else if (statusFilter === 'sem-destino') {
+                        return !item.TEM_DESTINO;
+                    } else {
+                        // Para outros status, verificar status normal
+                        const status = item.STATUS_MANUAL || item.STATUS_AUTO;
+                        return status === statusFilter;
+                    }
+                });
+                currentStatusFilter = statusFilter;
+            }
+            
+            // Filtrar por destino (novo filtro)
+            const destinoFilter = document.getElementById('destinoFilter').value;
+            currentDestinoFilter = destinoFilter;
+            
+            if (destinoFilter === 'com-destino') {
+                filtered = filtered.filter(item => item.TEM_DESTINO);
+            } else if (destinoFilter === 'sem-destino') {
+                filtered = filtered.filter(item => !item.TEM_DESTINO);
+            }
+            // Se for "all", não filtra por destino
+            
+            return filtered;
+        }
+
+        // FORMATAR DESTINO
+        function formatDestination(destino) {
+            if (!destino || destino.trim() === '') return '<span style="color: #9e9e9e; font-style: italic;">Sem destino</span>';
+            
+            // Verificar se é um destino inválido
+            const destinoUpper = destino.toUpperCase();
+            if (destinoUpper.includes('COBRANÇA 50%') || 
+                destinoUpper.includes('COBRANCA 50%') ||
+                destinoUpper.startsWith('GARAGEM X') ||
+                destinoUpper.includes(' X GARAGEM')) {
+                return `<span style="color: #9e9e9e; font-style: italic;">${destino} (inválido)</span>`;
+            }
+            
+            // Extrair número da loja
+            const lojaMatch = destino.match(/(\d+)/);
+            if (lojaMatch) {
+                const lojaNum = lojaMatch[0];
+                const nomePart = destino.split('-').slice(1).join('-').trim();
+                const nome = nomePart.substring(0, 25);
+                return `<span title="${destino}">${lojaNum} - ${nome}${nomePart.length > 25 ? '...' : ''}</span>`;
+            }
+            
+            return destino.substring(0, 30) + (destino.length > 30 ? '...' : '');
+        }
+
+        // FILTRAR TABELA
+        function filterTable() {
+            console.log("Filtrando tabela...");
+            loadTableData();
+            loadControleDiario(); // ATUALIZAR: Carregar controle diário
+            calculateAdvancedStatistics();
+            updateRotaFrequente();
+        }
+
+        // CARREGAR DATA ESPECÍFICA
+        function loadDate(type) {
+            let targetDate = '';
+            
+            switch(type) {
+                case 'today':
+                    targetDate = '31/01/26';
+                    document.getElementById('currentDateDisplay').textContent = '31 de Janeiro de 2026';
+                    break;
+                case 'yesterday':
+                    targetDate = '30/01/26';
+                    document.getElementById('currentDateDisplay').textContent = '30 de Janeiro de 2026';
+                    break;
+                case 'all':
+                    targetDate = 'all';
+                    document.getElementById('currentDateDisplay').textContent = 'Todas as Datas';
+                    break;
+            }
+            
+            // Atualizar botões ativos
+            document.querySelectorAll('.date-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Atualizar filtro de data
+            document.getElementById('dateFilter').value = targetDate;
+            
+            // Recarregar dados
+            filterTable();
+        }
+
+        // TOGGLE FINALIZAÇÃO MANUAL (APENAS PARA VIAGENS COM DESTINO VÁLIDO)
+        function toggleFinalization(id) {
+            const item = frotaData.find(item => item.id === id);
+            if (!item) return;
+            
+            // Verificar se tem destino válido
+            if (!item.TEM_DESTINO) {
+                showNotification('Não é possível finalizar uma viagem sem destino válido', 'error');
+                return;
+            }
+            
+            if (manualFinalizations[id]) {
+                // Remover finalização manual
+                delete manualFinalizations[id];
+                item.STATUS_MANUAL = null;
+                item.FINALIZADO_MANUALMENTE = false;
+            } else {
+                // Adicionar finalização manual
+                manualFinalizations[id] = {
+                    timestamp: new Date().toISOString(),
+                    autoStatus: item.STATUS_AUTO
+                };
+                item.STATUS_MANUAL = 'finalizado';
+                item.FINALIZADO_MANUALMENTE = true;
+            }
+            
+            // Salvar no localStorage
+            saveManualFinalizations();
+            
+            // Recarregar a tabela
+            filterTable();
+            
+            // Mostrar confirmação
+            showNotification(
+                item.FINALIZADO_MANUALMENTE ? 
+                `Viagem finalizada manualmente` :
+                `Finalização manual removida`,
+                item.FINALIZADO_MANUALMENTE ? 'success' : 'info'
+            );
+        }
+
+        // ATUALIZAR ROTAS FREQUENTES (APENAS VIAGENS COM DESTINO VÁLIDO)
+        function updateRotaFrequente() {
+            console.log("Atualizando rotas frequentes...");
+            
+            // Usar estatísticas gerais de rotas (já filtradas para apenas viagens com destino válido)
+            const routes = Object.values(routeStatistics)
+                .sort((a, b) => b.totalViagens - a.totalViagens)
+                .slice(0, 10); // Aumentei para 10 rotas para ter mais dados para exportar
+            
+            console.log(`Rotas frequentes encontradas: ${routes.length}`);
+            
+            let html = '';
+            
+            routes.forEach(route => {
+                const nomeExibicao = route.nome.length > 40 ? route.nome.substring(0, 40) + '...' : route.nome;
+                const diasOperacao = route.diasOperacao.size;
+                const veiculoMaisUtilizado = route.veiculoMaisUtilizado || 'Não definido';
+                const motoristaMaisFrequente = route.motoristaMaisFrequente || 'Não definido';
+                
+                // Obter operação mais frequente na rota
+                const opMaisFrequente = route.operacaoMaisFrequente || 'Não definida';
+                const opInfo = operacoesMap[opMaisFrequente] || { nome: opMaisFrequente, cor: '#666' };
+                
+                html += `
+                    <div class="rota-card">
+                        <div class="rota-header">
+                            <div class="rota-titulo">${nomeExibicao}</div>
+                            <div style="background: ${opInfo.cor}; color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.9rem; font-weight: 700;">
+                                ${route.totalViagens} viagens
+                            </div>
+                        </div>
+                        
+                        <div class="rota-metricas">
+                            <div>
+                                <span style="color: #666; font-size: 0.85rem;">Dias de operação:</span>
+                                <div style="font-weight: 700; color: #1a237e;">${diasOperacao}</div>
+                            </div>
+                            <div>
+                                <span style="color: #666; font-size: 0.85rem;">Operação principal:</span>
+                                <div style="display: flex; align-items: center; gap: 5px; margin-top: 2px;">
+                                    <div class="op-cell ${opMaisFrequente}" style="background: ${opInfo.cor}; font-size: 0.8rem; padding: 2px 8px;">
+                                        ${opMaisFrequente}
+                                    </div>
+                                    <span style="font-size: 0.85rem; color: #666;">${opInfo.nome}</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="rota-veiculos">
+                            <div style="display: flex; gap: 20px; font-size: 0.85rem;">
+                                <div>
+                                    <span style="color: #666;">Veículo mais usado:</span>
+                                    <div class="veiculo-frequente">${veiculoMaisUtilizado}</div>
+                                </div>
+                                <div>
+                                    <span style="color: #666;">Motorista frequente:</span>
+                                    <div style="color: #1a237e; font-weight: 600;">${motoristaMaisFrequente}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (routes.length === 0) {
+                html = '<div style="text-align: center; padding: 30px; color: #666;">Nenhuma rota com destino válido encontrada</div>';
+            }
+            
+            document.getElementById('rotaFrequenteContent').innerHTML = html;
+            console.log("Rotas frequentes atualizadas");
+        }
+
+        // GERAR DADOS PARA EXPORTAÇÃO EM FORMATO CSV (Excel/Google Sheets)
+        function generateExcelExportData() {
+            const routes = Object.values(routeStatistics)
+                .sort((a, b) => b.totalViagens - a.totalViagens);
+            
+            // Cabeçalhos
+            let csvData = "Rota,Total Viagens,Dias Operação,Veículo Mais Usado,Veículo Uso Count,Motorista Mais Frequente,Operação Principal\n";
+            
+            // Dados das rotas
+            routes.forEach(route => {
+                const rota = (route.nomeCompleto || route.nome).replace(/,/g, ';'); // Substituir vírgulas para evitar problemas no CSV
+                const totalViagens = route.totalViagens;
+                const diasOperacao = route.diasOperacao.size;
+                const veiculoMaisUtilizado = route.veiculoMaisUtilizado || 'N/A';
+                const veiculoUsoCount = route.veiculoUsoCount || 0;
+                const motoristaMaisFrequente = route.motoristaMaisFrequente || 'N/A';
+                const operacaoPrincipal = route.operacaoMaisFrequente || 'N/A';
+                
+                csvData += `"${rota}",${totalViagens},${diasOperacao},"${veiculoMaisUtilizado}",${veiculoUsoCount},"${motoristaMaisFrequente}","${operacaoPrincipal}"\n`;
+            });
+            
+            // Adicionar metadados
+            const exportDate = new Date().toLocaleString('pt-BR');
+            const totalRotas = routes.length;
+            const totalViagensTotal = routes.reduce((sum, route) => sum + route.totalViagens, 0);
+            
+            csvData += `\n\nMETADADOS DA EXPORTAÇÃO\n`;
+            csvData += `Data da exportação:,${exportDate}\n`;
+            csvData += `Total de rotas únicas:,${totalRotas}\n`;
+            csvData += `Total de viagens:,${totalViagensTotal}\n`;
+            csvData += `Filtro aplicado:,Apenas viagens com destino válido\n`;
+            csvData += `Sistema:,Controle de Frota - Dashboard Completo\n`;
+            
+            return csvData;
+        }
+
+        // GERAR DADOS JSON PARA EXPORTAÇÃO DETALHADA
+        function generateJsonExportData() {
+            const routes = Object.values(routeStatistics)
+                .sort((a, b) => b.totalViagens - a.totalViagens)
+                .map(route => ({
+                    rota: route.nomeCompleto || route.nome,
+                    totalViagens: route.totalViagens,
+                    diasOperacao: Array.from(route.diasOperacao),
+                    veiculoMaisUtilizado: route.veiculoMaisUtilizado,
+                    veiculoUsoCount: route.veiculoUsoCount,
+                    motoristaMaisFrequente: route.motoristaMaisFrequente,
+                    operacaoPrincipal: route.operacaoMaisFrequente,
+                    operacoesDetalhadas: route.operacoes,
+                    veiculosUtilizados: route.veiculosUtilizados,
+                    motoristasUtilizados: route.motoristasUtilizados
+                }));
+            
+            const exportData = {
+                metadata: {
+                    exportDate: new Date().toISOString(),
+                    exportDateDisplay: new Date().toLocaleString('pt-BR'),
+                    totalRotas: routes.length,
+                    totalViagens: routes.reduce((sum, route) => sum + route.totalViagens, 0),
+                    filtroAplicado: 'Apenas viagens com destino válido',
+                    sistema: 'Controle de Frota - Dashboard Completo'
+                },
+                rotas: routes
+            };
+            
+            return JSON.stringify(exportData, null, 2);
+        }
+
+        // ABRIR MODAL DE EXPORTAÇÃO
+        function openExportModal() {
+            console.log("Abrindo modal de exportação...");
+            
+            // Verificar se há dados para exportar
+            if (Object.keys(routeStatistics).length === 0) {
+                showNotification('Nenhuma rota encontrada para exportar. Verifique os dados.', 'error');
+                return;
+            }
+            
+            // Gerar dados para exportação
+            const excelData = generateExcelExportData();
+            const jsonData = generateJsonExportData();
+            
+            // Preencher textareas
+            document.getElementById('exportExcelData').value = excelData;
+            document.getElementById('exportJsonData').value = jsonData;
+            
+            // Mostrar modal
+            document.getElementById('exportModal').style.display = 'flex';
+            console.log("Modal de exportação aberto");
+        }
+
+        // FECHAR MODAL DE EXPORTAÇÃO
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
+        // COPIAR DADOS PARA EXCEL
+        function copyExcelData() {
+            const textarea = document.getElementById('exportExcelData');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // Para mobile
+            
+            try {
+                document.execCommand('copy');
+                showNotification('Dados copiados para a área de transferência! Cole na célula A1 do Excel ou Google Sheets.', 'success');
+            } catch (err) {
+                console.error('Erro ao copiar:', err);
+                showNotification('Erro ao copiar dados. Use Ctrl+C manualmente.', 'error');
+            }
+        }
+
+        // COPIAR DADOS JSON
+        function copyJsonData() {
+            const textarea = document.getElementById('exportJsonData');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999); // Para mobile
+            
+            try {
+                document.execCommand('copy');
+                showNotification('Dados JSON copiados para a área de transferência!', 'success');
+            } catch (err) {
+                console.error('Erro ao copiar:', err);
+                showNotification('Erro ao copiar dados. Use Ctrl+C manualmente.', 'error');
+            }
+        }
+
+        // COPIAR ROTAS DIRETAMENTE PARA PLANILHA (formato simplificado)
+        function copyRoutesToClipboard() {
+            const routes = Object.values(routeStatistics)
+                .sort((a, b) => b.totalViagens - a.totalViagens)
+                .slice(0, 20); // Limitar a 20 rotas para não ficar muito grande
+            
+            if (routes.length === 0) {
+                showNotification('Nenhuma rota encontrada para copiar.', 'error');
+                return;
+            }
+            
+            let clipboardData = "ROTA\tTOTAL VIAGENS\tDIAS OPERAÇÃO\tVEÍCULO MAIS USADO\tMOTORISTA FREQUENTE\tOPERAÇÃO PRINCIPAL\n";
+            
+            routes.forEach(route => {
+                clipboardData += `${route.nomeCompleto || route.nome}\t${route.totalViagens}\t${route.diasOperacao.size}\t${route.veiculoMaisUtilizado || 'N/A'}\t${route.motoristaMaisFrequente || 'N/A'}\t${route.operacaoMaisFrequente || 'N/A'}\n`;
+            });
+            
+            // Adicionar informações extras
+            clipboardData += `\nExportado em: ${new Date().toLocaleString('pt-BR')}\n`;
+            clipboardData += `Total de rotas: ${routes.length}\n`;
+            clipboardData += `Apenas viagens com destino válido`;
+            
+            // Usar API moderna de clipboard se disponível
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(clipboardData)
+                    .then(() => {
+                        showNotification('Dados copiados para a área de transferência! Cole em qualquer planilha.', 'success');
+                    })
+                    .catch(err => {
+                        console.error('Erro ao copiar:', err);
+                        fallbackCopyTextToClipboard(clipboardData);
+                    });
+            } else {
+                fallbackCopyTextToClipboard(clipboardData);
+            }
+        }
+
+        // FALLBACK PARA COPIAR TEXTO (para navegadores mais antigos)
+        function fallbackCopyTextToClipboard(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            textArea.style.top = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                showNotification('Dados copiados para a área de transferência! Cole em qualquer planilha.', 'success');
+            } catch (err) {
+                console.error('Erro ao copiar:', err);
+                showNotification('Erro ao copiar dados. Tente manualmente com Ctrl+C.', 'error');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // ATUALIZAR CONTADORES
+        function updateCounters() {
+            const totalRegistros = frotaData.length;
+            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO).length;
+            
+            document.getElementById('totalRecords').textContent = totalRegistros;
+            document.getElementById('totalViagensComDestino').textContent = viagensComDestino;
+            
+            console.log(`Contadores atualizados: ${totalRegistros} registros, ${viagensComDestino} com destino válido`);
+        }
+
+        // ATUALIZAR TIMESTAMP
+        function updateTimestamp() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('pt-BR', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            const dateStr = now.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: 'long',
+                year: 'numeric'
+            });
+            
+            document.getElementById('lastUpdate').textContent = `${dateStr} às ${timeStr}`;
+        }
+
+        // HANDLE FILE UPLOAD - AGORA PROCESSA REALMENTE O CSV
+        function handleFileUpload(file) {
+            if (!file) return;
+            
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                alert('Por favor, selecione um arquivo CSV!');
+                return;
+            }
+            
+            showLoading();
+            
+            const reader = new FileReader();
+            
+            reader.onload = async function(e) {
+                try {
+                    const csvData = e.target.result;
+                    
+                    console.log("Arquivo carregado, tamanho:", csvData.length);
+                    
+                    // Verificar se o CSV tem dados
+                    if (!csvData || csvData.trim().length === 0) {
+                        throw new Error('Arquivo CSV vazio');
+                    }
+                    
+                    // Processar o CSV
+                    await processCSVData(csvData);
+                    
+                    // Aplicar finalizações manuais aos novos dados
+                    applyManualFinalizations();
+                    
+                    // Identificar viagens múltiplas (apenas para viagens com destino válido)
+                    identifyMultipleTrips();
+                    
+                    // Extrair todas as datas únicas (apenas de viagens com destino válido)
+                    extractAllDates();
+                    
+                    // Calcular estatísticas avançadas (apenas viagens com destino válido)
+                    calculateAdvancedStatistics();
+                    
+                    // Atualizar interface
+                    loadLast3DaysSummary(); // ALTERADO: Agora são 3 dias
+                    loadControleDiario(); // ATUALIZAR: Carregar controle diário
+                    updateDateFilterOptions();
+                    loadTableData();
+                    updateRotaFrequente();
+                    updateTimestamp();
+                    
+                    // Atualizar contadores
+                    updateCounters();
+                    
+                    // Mostrar sucesso
+                    showNotification(
+                        `Dados atualizados com sucesso! ${frotaData.length} registros carregados (${frotaData.filter(item => item.TEM_DESTINO).length} com destino válido).`,
+                        'success'
+                    );
+                    
+                    // Atualizar timestamp de atualização
+                    updateTimestamp();
+                    
+                } catch (error) {
+                    console.error('Erro ao processar arquivo:', error);
+                    showNotification(`Erro ao processar arquivo: ${error.message}`, 'error');
+                } finally {
+                    hideLoading();
+                }
+            };
+            
+            reader.onerror = function() {
+                alert('Erro ao ler o arquivo');
+                hideLoading();
+            };
+            
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        // MOSTRAR NOTIFICAÇÃO
+        function showNotification(message, type = 'info') {
+            console.log(`[${type.toUpperCase()}] ${message}`);
+            
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#4caf50' : type === 'error' ? '#f44336' : '#2196f3'};
+                color: white;
+                padding: 15px 25px;
+                border-radius: 8px;
+                font-weight: 600;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // MOSTRAR LOADING
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        // ESCONDER LOADING
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
