@@ -2090,11 +2090,12 @@
             document.getElementById('last3DaysSummary').innerHTML = html;
         }
 
-        // CARREGAR CONTROLE DIÁRIO DA FROTA
+        // CARREGAR CONTROLE DIÁRIO DA FROTA - VERSÃO CORRIGIDA
         function loadControleDiario() {
             const dateFilter = document.getElementById('dateFilter').value;
             let targetDate = dateFilter !== 'all' ? dateFilter : '31/01/26';
             
+            // CRÍTICO: Usar todos os dados, não apenas os filtrados
             const viagensDoDia = frotaData.filter(item => item.DATA === targetDate && item.TEM_DESTINO);
             
             if (viagensDoDia.length === 0) {
@@ -2118,6 +2119,11 @@
             const motoristasSet = new Set();
             const operacoesCount = {};
             
+            // CRÍTICO: Contar status corretamente considerando finalizações manuais
+            let finalizadasCount = 0;
+            let emRotaCount = 0;
+            let pendentesCount = 0;
+            
             viagensDoDia.forEach(item => {
                 veiculosSet.add(item.VEICULO);
                 motoristasSet.add(item.MOTORISTA);
@@ -2130,22 +2136,21 @@
                     };
                 }
                 operacoesCount[item.OP].count++;
+                
+                // Determinar status considerando finalizações manuais
+                const statusFinal = item.STATUS_MANUAL || item.STATUS_AUTO;
+                
+                if (statusFinal === 'finalizado') {
+                    finalizadasCount++;
+                } else if (statusFinal === 'em-rota') {
+                    emRotaCount++;
+                } else if (statusFinal === 'pendente') {
+                    pendentesCount++;
+                }
             });
             
             const totalVeiculos = veiculosSet.size;
             const totalMotoristas = motoristasSet.size;
-            
-            const finalizadasCount = viagensDoDia.filter(item => 
-                item.STATUS_MANUAL === 'finalizado' || item.STATUS_AUTO === 'finalizado'
-            ).length;
-            
-            const emRotaCount = viagensDoDia.filter(item => 
-                (item.STATUS_MANUAL || item.STATUS_AUTO) === 'em-rota'
-            ).length;
-            
-            const pendentesCount = viagensDoDia.filter(item => 
-                (item.STATUS_MANUAL || item.STATUS_AUTO) === 'pendente'
-            ).length;
             
             const finalizadasPercent = totalViagens > 0 ? Math.round((finalizadasCount / totalViagens) * 100) : 0;
             const emRotaPercent = totalViagens > 0 ? Math.round((emRotaCount / totalViagens) * 100) : 0;
@@ -2187,7 +2192,7 @@
                     <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;">
                         <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
                             <span>Finalizadas:</span>
-                            <span style="font-weight: 700;">${finalizadasCount} (${finalizadasPercent}%)</span>
+                            <span style="font-weight: 700; color: #e8f5e9;">${finalizadasCount} (${finalizadasPercent}%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
                             <span>Em Rota:</span>
@@ -2493,7 +2498,7 @@
             filterTable();
         }
 
-        // TOGGLE FINALIZAÇÃO MANUAL
+        // TOGGLE FINALIZAÇÃO MANUAL - VERSÃO CORRIGIDA
         function toggleFinalization(id) {
             const item = frotaData.find(item => item.id === id);
             if (!item) return;
@@ -2503,6 +2508,7 @@
                 return;
             }
             
+            // Alternar status de finalização
             if (manualFinalizations[id]) {
                 delete manualFinalizations[id];
                 item.STATUS_MANUAL = null;
@@ -2516,18 +2522,22 @@
                 item.FINALIZADO_MANUALMENTE = true;
             }
             
+            // Salvar alterações
             saveManualFinalizations();
             
-            // ATUALIZAR TUDO
+            // ATUALIZAR TUDO - CRÍTICO: Reaplicar as finalizações manuais
+            applyManualFinalizations();
+            
+            // Atualizar interface
             filterTable();
-            loadControleDiario();
+            loadControleDiario(); // CRÍTICO: Esta função agora usa os dados atualizados
             calculateAdvancedStatistics();
             updateRotaFrequente();
             
             showNotification(
                 item.FINALIZADO_MANUALMENTE ? 
-                `Viagem finalizada manualmente` :
-                `Finalização manual removida`,
+                `Viagem finalizada manualmente - ${item.VEICULO} (${item.DESTINO.substring(0, 30)})` :
+                `Finalização manual removida - ${item.VEICULO}`,
                 item.FINALIZADO_MANUALMENTE ? 'success' : 'info'
             );
         }
