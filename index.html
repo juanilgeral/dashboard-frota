@@ -139,6 +139,260 @@
             100% { opacity: 1; }
         }
 
+        /* QUADRO DE OPERAÇÕES E RELAÇÃO */
+        .operacoes-quadro {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        @media (max-width: 992px) {
+            .operacoes-quadro {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .quadro-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .quadro-title {
+            color: #1a237e;
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .quadro-icon {
+            font-size: 1.8rem;
+        }
+
+        /* QUADRO DE OPERAÇÕES */
+        .operacoes-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .operacao-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 15px;
+            align-items: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 4px solid;
+            transition: all 0.3s;
+        }
+
+        .operacao-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .op-sigla {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            color: white !important;
+            flex-shrink: 0;
+        }
+
+        .op-sigla.LS { background: var(--ls-color); }
+        .op-sigla.HT { background: var(--ht-color); }
+        .op-sigla.TL { background: var(--tl-color); }
+        .op-sigla.CV { background: var(--cv-color); }
+        .op-sigla.NL { background: var(--nl-color); }
+
+        .op-detalhes {
+            flex: 1;
+        }
+
+        .op-nome {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .op-nome.LS { color: var(--ls-color); }
+        .op-nome.HT { color: var(--ht-color); }
+        .op-nome.TL { color: var(--tl-color); }
+        .op-nome.CV { color: var(--cv-color); }
+        .op-nome.NL { color: var(--nl-color); }
+
+        .op-metricas {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .op-valor {
+            font-weight: 700;
+            color: #1a237e;
+        }
+
+        .op-divider {
+            color: #ddd;
+        }
+
+        .op-percent {
+            background: #e8f5e9;
+            color: #2e7d32;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* QUADRO DE RELAÇÃO VEÍCULOS/MOTORISTAS */
+        .relacao-card {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            border-radius: 12px;
+            padding: 25px;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .relacao-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .relacao-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+        }
+
+        .relacao-icon {
+            font-size: 1.8rem;
+        }
+
+        .relacao-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .relacao-stat {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .relacao-valor {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .relacao-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .relacao-total {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .relacao-total-valor {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            color: #4caf50;
+        }
+
+        .relacao-total-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .relacao-input-group {
+            margin-top: auto;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+        }
+
+        .relacao-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .relacao-input:focus {
+            outline: none;
+            border-color: #4caf50;
+        }
+
+        .update-btn {
+            background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .update-btn:hover {
+            background: linear-gradient(135deg, #388e3c 0%, #1b5e20 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
         /* LEGENDA DAS OPERAÇÕES */
         .operacoes-legend {
             background: white;
@@ -478,7 +732,7 @@
         }
 
         .controle-op-item:hover {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255,255,255,0.15);
         }
 
         .controle-op-badge {
@@ -1149,6 +1403,12 @@
             }
         }
 
+        @media (max-width: 992px) {
+            .operacoes-quadro {
+                grid-template-columns: 1fr;
+            }
+        }
+
         @media (max-width: 768px) {
             .day-operations {
                 grid-template-columns: 1fr;
@@ -1194,6 +1454,21 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            .operacao-item {
+                grid-template-columns: auto 1fr;
+                grid-template-rows: auto auto;
+            }
+            
+            .op-percent {
+                grid-column: 2;
+                justify-self: start;
+                margin-top: 10px;
+            }
+            
+            .relacao-stats {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1203,6 +1478,19 @@
             
             .controle-operations-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .operacao-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .op-sigla {
+                justify-self: center;
+            }
+            
+            .op-metricas {
+                justify-content: center;
             }
         }
     </style>
@@ -1228,6 +1516,63 @@
             
             <div class="status-badge">
                 <span>📊</span> TODAS OPERAÇÕES
+            </div>
+        </div>
+
+        <!-- QUADRO DE OPERAÇÕES E RELAÇÃO -->
+        <div class="operacoes-quadro">
+            <!-- QUADRO DE OPERAÇÕES -->
+            <div>
+                <div class="quadro-header">
+                    <div class="quadro-icon">📊</div>
+                    <div class="quadro-title">Operações por Linha (Últimos 30 dias)</div>
+                </div>
+                <div class="operacoes-lista" id="operacoesLista">
+                    <!-- Carregado dinamicamente -->
+                </div>
+            </div>
+            
+            <!-- QUADRO DE RELAÇÃO VEÍCULOS/MOTORISTAS -->
+            <div class="relacao-card">
+                <div class="relacao-header">
+                    <div class="relacao-icon">👥</div>
+                    <div class="relacao-title">Relação Veículos/Motoristas</div>
+                </div>
+                
+                <div class="relacao-stats">
+                    <div class="relacao-stat">
+                        <div class="relacao-valor" id="totalVeiculos">0</div>
+                        <div class="relacao-label">Total de Veículos</div>
+                    </div>
+                    <div class="relacao-stat">
+                        <div class="relacao-valor" id="totalMotoristas">0</div>
+                        <div class="relacao-label">Total de Motoristas</div>
+                    </div>
+                </div>
+                
+                <div class="relacao-total">
+                    <div class="relacao-total-valor" id="relacaoTotal">0.00</div>
+                    <div class="relacao-total-label">Relação Carros/Motoristas</div>
+                </div>
+                
+                <div class="relacao-input-group">
+                    <div class="input-label">Atualizar relação (veículos / motoristas):</div>
+                    <div class="input-row">
+                        <input type="number" 
+                               class="relacao-input" 
+                               id="inputRelacao" 
+                               placeholder="Ex: 1.5" 
+                               min="0.1" 
+                               max="10" 
+                               step="0.1">
+                        <button class="update-btn" onclick="updateRelacao()">
+                            <span>🔄</span> Atualizar
+                        </button>
+                    </div>
+                    <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 8px;">
+                        Padrão: cálculo automático. Insira um valor manual se necessário.
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1491,6 +1836,8 @@
         let driverStatistics = {};
         let routeStatistics = {};
         let vehicleStatistics = {};
+        let operacoesStatistics = {};
+        let relacaoVeiculosMotoristas = null;
 
         // Mapeamento das operações
         const operacoesMap = {
@@ -1521,6 +1868,9 @@
                 // Carregar finalizações manuais
                 loadManualFinalizations();
                 
+                // Carregar relação veículos/motoristas
+                loadRelacao();
+                
                 // Aplicar finalizações manuais aos dados
                 applyManualFinalizations();
                 
@@ -1534,6 +1884,7 @@
                 calculateAdvancedStatistics();
                 
                 // Carregar interface
+                loadOperacoesLista();
                 loadLast3DaysSummary();
                 loadControleDiario();
                 updateDateFilterOptions();
@@ -1543,6 +1894,9 @@
                 
                 // Atualizar contadores
                 updateCounters();
+                
+                // Atualizar relação veículos/motoristas
+                updateRelacaoDisplay();
                 
             } catch (error) {
                 console.error('Erro ao inicializar:', error);
@@ -1566,6 +1920,96 @@
         // SALVAR DADOS NO LOCALSTORAGE
         function saveDataToStorage(csvData) {
             localStorage.setItem('frotaCSVData', csvData);
+        }
+
+        // CARREGAR RELAÇÃO VEÍCULOS/MOTORISTAS
+        function loadRelacao() {
+            const saved = localStorage.getItem('frotaRelacao');
+            if (saved) {
+                try {
+                    relacaoVeiculosMotoristas = JSON.parse(saved);
+                } catch (e) {
+                    relacaoVeiculosMotoristas = {
+                        veiculos: 0,
+                        motoristas: 0,
+                        relacao: 0,
+                        manual: false
+                    };
+                }
+            } else {
+                relacaoVeiculosMotoristas = {
+                    veiculos: 0,
+                    motoristas: 0,
+                    relacao: 0,
+                    manual: false
+                };
+            }
+        }
+
+        // SALVAR RELAÇÃO VEÍCULOS/MOTORISTAS
+        function saveRelacao() {
+            localStorage.setItem('frotaRelacao', JSON.stringify(relacaoVeiculosMotoristas));
+        }
+
+        // ATUALIZAR RELAÇÃO
+        function updateRelacao() {
+            const input = document.getElementById('inputRelacao');
+            const valor = parseFloat(input.value);
+            
+            if (isNaN(valor) || valor <= 0) {
+                showNotification('Digite um valor válido (maior que 0)', 'error');
+                return;
+            }
+            
+            relacaoVeiculosMotoristas.relacao = valor;
+            relacaoVeiculosMotoristas.manual = true;
+            saveRelacao();
+            
+            updateRelacaoDisplay();
+            
+            showNotification(`Relação atualizada para: ${valor.toFixed(2)}`, 'success');
+            
+            // Limpar campo
+            input.value = '';
+        }
+
+        // ATUALIZAR DISPLAY DA RELAÇÃO
+        function updateRelacaoDisplay() {
+            // Calcular totais com base nos dados
+            const veiculosSet = new Set();
+            const motoristasSet = new Set();
+            
+            frotaData.forEach(item => {
+                if (item.VEICULO) veiculosSet.add(item.VEICULO);
+                if (item.MOTORISTA) motoristasSet.add(item.MOTORISTA);
+            });
+            
+            const totalVeiculos = veiculosSet.size;
+            const totalMotoristas = motoristasSet.size;
+            
+            // Atualizar estatísticas
+            relacaoVeiculosMotoristas.veiculos = totalVeiculos;
+            relacaoVeiculosMotoristas.motoristas = totalMotoristas;
+            
+            // Calcular relação se não for manual
+            if (!relacaoVeiculosMotoristas.manual && totalMotoristas > 0) {
+                relacaoVeiculosMotoristas.relacao = totalVeiculos / totalMotoristas;
+            }
+            
+            // Atualizar display
+            document.getElementById('totalVeiculos').textContent = totalVeiculos;
+            document.getElementById('totalMotoristas').textContent = totalMotoristas;
+            document.getElementById('relacaoTotal').textContent = relacaoVeiculosMotoristas.relacao.toFixed(2);
+            
+            // Adicionar indicador se é manual
+            const relacaoElement = document.getElementById('relacaoTotal');
+            if (relacaoVeiculosMotoristas.manual) {
+                relacaoElement.title = "Relação manual (não calculada automaticamente)";
+                relacaoElement.style.color = "#ff9800";
+            } else {
+                relacaoElement.title = "Relação calculada automaticamente (veículos ÷ motoristas)";
+                relacaoElement.style.color = "#4caf50";
+            }
         }
 
         // FUNÇÃO PARA VERIFICAR SE É UMA VIAGEM VÁLIDA (USANDO CSV REAL)
@@ -1784,13 +2228,12 @@
             localStorage.setItem('frotaManualFinalizations', JSON.stringify(manualFinalizations));
         }
 
-        // APLICAR FINALIZAÇÕES MANUAIS - VERSÃO CORRIGIDA
+        // APLICAR FINALIZAÇÕES MANUAIS
         function applyManualFinalizations() {
             frotaData.forEach(item => {
                 if (manualFinalizations[item.id]) {
                     item.STATUS_MANUAL = 'finalizado';
                     item.FINALIZADO_MANUALMENTE = true;
-                    console.log(`Aplicando finalização manual para ID: ${item.id} - Veículo: ${item.VEICULO}`);
                 } else {
                     item.STATUS_MANUAL = null;
                     item.FINALIZADO_MANUALMENTE = false;
@@ -1860,6 +2303,7 @@
             identifyMultipleTrips();
             extractAllDates();
             calculateAdvancedStatistics();
+            loadOperacoesLista();
             loadLast3DaysSummary();
             loadControleDiario();
             updateDateFilterOptions();
@@ -1867,6 +2311,100 @@
             updateRotaFrequente();
             updateTimestamp();
             updateCounters();
+            updateRelacaoDisplay();
+        }
+
+        // CARREGAR LISTA DE OPERAÇÕES
+        function loadOperacoesLista() {
+            // Calcular estatísticas das operações
+            const opStats = {};
+            const totalViagens = frotaData.filter(item => item.TEM_DESTINO).length;
+            
+            frotaData.forEach(item => {
+                if (!item.TEM_DESTINO) return;
+                
+                const op = item.OP;
+                if (!opStats[op]) {
+                    opStats[op] = {
+                        count: 0,
+                        veiculos: new Set(),
+                        motoristas: new Set(),
+                        dias: new Set()
+                    };
+                }
+                
+                opStats[op].count++;
+                opStats[op].veiculos.add(item.VEICULO);
+                opStats[op].motoristas.add(item.MOTORISTA);
+                opStats[op].dias.add(item.DATA);
+            });
+            
+            let html = '';
+            
+            Object.entries(operacoesMap).forEach(([op, info]) => {
+                const stats = opStats[op] || { count: 0, veiculos: new Set(), motoristas: new Set(), dias: new Set() };
+                const percent = totalViagens > 0 ? ((stats.count / totalViagens) * 100).toFixed(1) : '0.0';
+                const veiculosCount = stats.veiculos.size;
+                const motoristasCount = stats.motoristas.size;
+                const diasCount = stats.dias.size;
+                
+                html += `
+                    <div class="operacao-item" style="border-left-color: ${info.cor}">
+                        <div class="op-sigla ${op}" style="background: ${info.cor}">
+                            ${op}
+                        </div>
+                        <div class="op-detalhes">
+                            <div class="op-nome ${op}">${info.nome}</div>
+                            <div class="op-metricas">
+                                <div>
+                                    <span class="op-valor">${stats.count}</span>
+                                    <span style="color: #666; font-size: 0.85rem;">viagens</span>
+                                </div>
+                                <span class="op-divider">•</span>
+                                <div>
+                                    <span class="op-valor">${veiculosCount}</span>
+                                    <span style="color: #666; font-size: 0.85rem;">veículos</span>
+                                </div>
+                                <span class="op-divider">•</span>
+                                <div>
+                                    <span class="op-valor">${motoristasCount}</span>
+                                    <span style="color: #666; font-size: 0.85rem;">motoristas</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="op-percent">
+                            <span>${percent}%</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Adicionar total
+            html += `
+                <div style="margin-top: 20px; padding-top: 20px; border-top: 2px solid #f0f0f0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="font-weight: 700; color: #1a237e; font-size: 1.1rem;">
+                            TOTAL GERAL
+                        </div>
+                        <div style="display: flex; gap: 25px;">
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.2rem; font-weight: 800; color: #1a237e;">${totalViagens}</div>
+                                <div style="font-size: 0.85rem; color: #666;">viagens</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.2rem; font-weight: 800; color: #1a237e;">${new Set(frotaData.map(item => item.VEICULO)).size}</div>
+                                <div style="font-size: 0.85rem; color: #666;">veículos</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 1.2rem; font-weight: 800; color: #1a237e;">${new Set(frotaData.map(item => item.MOTORISTA)).size}</div>
+                                <div style="font-size: 0.85rem; color: #666;">motoristas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('operacoesLista').innerHTML = html;
         }
 
         // CALCULAR ESTATÍSTICAS AVANÇADAS
@@ -1907,7 +2445,7 @@
                     }
                     stats.operacoes[item.OP]++;
                     
-                    if (item.STATUS_MANUAL === 'finalizado' || item.STATUS_AUTO === 'finalizado') {
+                    if (item.STATUS_AUTO === 'finalizado' || item.STATUS_MANUAL === 'finalizado') {
                         stats.viagensConcluidas++;
                     }
                     
@@ -2091,12 +2629,11 @@
             document.getElementById('last3DaysSummary').innerHTML = html;
         }
 
-        // CARREGAR CONTROLE DIÁRIO DA FROTA - VERSÃO COMPLETAMENTE CORRIGIDA
+        // CARREGAR CONTROLE DIÁRIO DA FROTA
         function loadControleDiario() {
             const dateFilter = document.getElementById('dateFilter').value;
             let targetDate = dateFilter !== 'all' ? dateFilter : '31/01/26';
             
-            // Usar TODOS os dados da data selecionada, não apenas os filtrados
             const viagensDoDia = frotaData.filter(item => item.DATA === targetDate && item.TEM_DESTINO);
             
             if (viagensDoDia.length === 0) {
@@ -2115,11 +2652,7 @@
                 return;
             }
             
-            // CONTAGEM CORRETA DOS STATUS
-            let finalizadasCount = 0;
-            let emRotaCount = 0;
-            let pendentesCount = 0;
-            
+            const totalViagens = viagensDoDia.length;
             const veiculosSet = new Set();
             const motoristasSet = new Set();
             const operacoesCount = {};
@@ -2136,36 +2669,26 @@
                     };
                 }
                 operacoesCount[item.OP].count++;
-                
-                // DETERMINAR STATUS FINAL (MANUAL TEM PRIORIDADE SOBRE AUTO)
-                const statusFinal = item.STATUS_MANUAL || item.STATUS_AUTO;
-                
-                // DEBUG: Log para verificar status
-                console.log(`Veículo: ${item.VEICULO}, Status Auto: ${item.STATUS_AUTO}, Status Manual: ${item.STATUS_MANUAL}, Status Final: ${statusFinal}, Finalizado Manualmente: ${item.FINALIZADO_MANUALMENTE}`);
-                
-                if (statusFinal === 'finalizado') {
-                    finalizadasCount++;
-                } else if (statusFinal === 'em-rota') {
-                    emRotaCount++;
-                } else if (statusFinal === 'pendente') {
-                    pendentesCount++;
-                }
             });
             
-            const totalViagens = viagensDoDia.length;
             const totalVeiculos = veiculosSet.size;
             const totalMotoristas = motoristasSet.size;
+            
+            const finalizadasCount = viagensDoDia.filter(item => 
+                item.STATUS_MANUAL === 'finalizado' || item.STATUS_AUTO === 'finalizado'
+            ).length;
+            
+            const emRotaCount = viagensDoDia.filter(item => 
+                (item.STATUS_MANUAL || item.STATUS_AUTO) === 'em-rota'
+            ).length;
+            
+            const pendentesCount = viagensDoDia.filter(item => 
+                (item.STATUS_MANUAL || item.STATUS_AUTO) === 'pendente'
+            ).length;
             
             const finalizadasPercent = totalViagens > 0 ? Math.round((finalizadasCount / totalViagens) * 100) : 0;
             const emRotaPercent = totalViagens > 0 ? Math.round((emRotaCount / totalViagens) * 100) : 0;
             const pendentesPercent = totalViagens > 0 ? Math.round((pendentesCount / totalViagens) * 100) : 0;
-            
-            // DEBUG: Log das contagens
-            console.log(`Controle Diário - Data: ${targetDate}`);
-            console.log(`Total Viagens: ${totalViagens}`);
-            console.log(`Finalizadas: ${finalizadasCount} (${finalizadasPercent}%)`);
-            console.log(`Em Rota: ${emRotaCount} (${emRotaPercent}%)`);
-            console.log(`Pendentes: ${pendentesCount} (${pendentesPercent}%)`);
             
             const statsHtml = `
                 <div class="controle-stat-item">
@@ -2203,7 +2726,7 @@
                     <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;">
                         <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
                             <span>Finalizadas:</span>
-                            <span style="font-weight: 700; color: #e8f5e9;">${finalizadasCount} (${finalizadasPercent}%)</span>
+                            <span style="font-weight: 700;">${finalizadasCount} (${finalizadasPercent}%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.9rem;">
                             <span>Em Rota:</span>
@@ -2307,7 +2830,6 @@
             let html = '';
             
             filteredData.forEach((item, index) => {
-                // STATUS FINAL: Manual tem prioridade sobre automático
                 const statusFinal = item.STATUS_MANUAL || item.STATUS_AUTO;
                 const isFinalizadoManualmente = item.FINALIZADO_MANUALMENTE;
                 const temDestino = item.TEM_DESTINO;
@@ -2477,6 +2999,8 @@
             loadControleDiario();
             calculateAdvancedStatistics();
             updateRotaFrequente();
+            loadOperacoesLista();
+            updateRelacaoDisplay();
         }
 
         // CARREGAR DATA ESPECÍFICA
@@ -2510,27 +3034,20 @@
             filterTable();
         }
 
-        // TOGGLE FINALIZAÇÃO MANUAL - VERSÃO COMPLETAMENTE CORRIGIDA
+        // TOGGLE FINALIZAÇÃO MANUAL
         function toggleFinalization(id) {
-            console.log(`Toggle finalização para ID: ${id}`);
-            
             const item = frotaData.find(item => item.id === id);
-            if (!item) {
-                console.error(`Item não encontrado com ID: ${id}`);
-                return;
-            }
+            if (!item) return;
             
             if (!item.TEM_DESTINO) {
                 showNotification('Não é possível finalizar uma viagem sem destino válido', 'error');
                 return;
             }
             
-            // Alternar status de finalização
             if (manualFinalizations[id]) {
                 delete manualFinalizations[id];
                 item.STATUS_MANUAL = null;
                 item.FINALIZADO_MANUALMENTE = false;
-                console.log(`Removendo finalização manual para: ${item.VEICULO}`);
             } else {
                 manualFinalizations[id] = {
                     timestamp: new Date().toISOString(),
@@ -2538,34 +3055,21 @@
                 };
                 item.STATUS_MANUAL = 'finalizado';
                 item.FINALIZADO_MANUALMENTE = true;
-                console.log(`Aplicando finalização manual para: ${item.VEICULO}`);
             }
             
-            // Salvar alterações no localStorage
             saveManualFinalizations();
             
-            // DEBUG: Verificar manualFinalizations
-            console.log('Manual finalizations após alteração:', manualFinalizations);
-            
-            // ATUALIZAR TUDO - ORDEM CRÍTICA
-            // 1. Primeiro reaplicar todas as finalizações manuais
-            applyManualFinalizations();
-            
-            // 2. Atualizar a interface
-            loadTableData();
-            
-            // 3. Atualizar o Controle Diário (AGORA DEVE FUNCIONAR)
+            // ATUALIZAR TUDO
+            filterTable();
             loadControleDiario();
-            
-            // 4. Atualizar estatísticas
             calculateAdvancedStatistics();
             updateRotaFrequente();
-            updateCounters();
+            loadOperacoesLista();
             
             showNotification(
                 item.FINALIZADO_MANUALMENTE ? 
-                `Viagem finalizada manualmente - ${item.VEICULO} (${item.MOTORISTA})` :
-                `Finalização manual removida - ${item.VEICULO}`,
+                `Viagem finalizada manualmente` :
+                `Finalização manual removida`,
                 item.FINALIZADO_MANUALMENTE ? 'success' : 'info'
             );
         }
