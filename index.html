@@ -345,16 +345,24 @@
         .op-item.CV { border-left-color: var(--cv-color); }
         .op-item.NL { border-left-color: var(--nl-color); }
 
+        /* LAYOUT DE DUAS COLUNAS */
+        .two-columns-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
         /* CONTROLE DIÁRIO DA FROTA */
         .controle-diario-card {
             background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
             border-radius: 12px;
             padding: 25px;
-            margin-bottom: 25px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             color: white;
             position: relative;
             overflow: hidden;
+            height: 100%;
         }
 
         .controle-diario-card::before {
@@ -442,14 +450,69 @@
             opacity: 0.8;
         }
 
+        /* ESTILOS ESPECÍFICOS DO CONTROLE DIÁRIO */
+        .controle-operations-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controle-operations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .controle-op-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .controle-op-badge {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 1rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .controle-op-info {
+            flex: 1;
+        }
+
+        .controle-op-sigla {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 2px;
+        }
+
+        .controle-op-count {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
         /* RELAÇÃO VEÍCULOS/MOTORISTAS */
         .relacao-veiculos-card {
             background: white;
             border-radius: 12px;
             padding: 25px;
-            margin-bottom: 25px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             position: relative;
+            height: 100%;
         }
 
         .relacao-veiculos-card::before {
@@ -1534,6 +1597,11 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
+            
+            .two-columns-layout {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1603,6 +1671,10 @@
             .relacao-summary {
                 grid-template-columns: 1fr;
             }
+            
+            .two-columns-layout {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 480px) {
@@ -1632,7 +1704,7 @@
                 <button class="date-btn active" onclick="loadDate('today')">HOJE</button>
                 <button class="date-btn" onclick="loadDate('yesterday')">ONTEM</button>
                 <button class="date-btn" onclick="loadDate('all')">TODOS</button>
-                <div id="currentDateDisplay">31 de Janeiro de 2026</div>
+                <div id="currentDateDisplay">Carregando data...</div>
             </div>
             
             <div class="status-badge">
@@ -1690,62 +1762,65 @@
             <!-- Carregado dinamicamente -->
         </div>
 
-        <!-- CONTROLE DIÁRIO DA FROTA -->
-        <div class="controle-diario-card" id="controleDiario">
-            <!-- Carregado dinamicamente -->
-        </div>
-
-        <!-- RELAÇÃO VEÍCULOS/MOTORISTAS -->
-        <div class="relacao-veiculos-card" id="relacaoVeiculosCard">
-            <div class="relacao-header">
-                <div class="relacao-titulo">
-                    <span>🚚</span>
-                    Relação Veículos/Motoristas
-                </div>
-                <div class="relacao-controls">
-                    <button class="relacao-btn" onclick="openUpdateVeiculosModal()">
-                        <span>📝</span>
-                        Atualizar Veículos
-                    </button>
-                    <button class="relacao-btn warning" onclick="openUpdateMotoristasModal()">
-                        <span>👷</span>
-                        Atualizar Motoristas
-                    </button>
-                </div>
+        <!-- LAYOUT DE DUAS COLUNAS -->
+        <div class="two-columns-layout">
+            <!-- CONTROLE DIÁRIO DA FROTA -->
+            <div class="controle-diario-card" id="controleDiario">
+                <!-- Carregado dinamicamente -->
             </div>
-            
-            <div class="relacao-grid">
-                <div class="relacao-section">
-                    <div class="relacao-section-title">
-                        <span>🚛</span>
-                        Veículos em Operação
-                        <span style="margin-left: auto; font-size: 0.9rem; color: #666;" id="totalVeiculosInfo">Total: 0</span>
+
+            <!-- RELAÇÃO VEÍCULOS/MOTORISTAS -->
+            <div class="relacao-veiculos-card" id="relacaoVeiculosCard">
+                <div class="relacao-header">
+                    <div class="relacao-titulo">
+                        <span>🚚</span>
+                        Relação Veículos/Motoristas
                     </div>
-                    <div class="relacao-list" id="veiculosList">
-                        <!-- Carregado dinamicamente -->
+                    <div class="relacao-controls">
+                        <button class="relacao-btn" onclick="openUpdateVeiculosModal()">
+                            <span>📝</span>
+                            Atualizar Veículos
+                        </button>
+                        <button class="relacao-btn warning" onclick="openUpdateMotoristasModal()">
+                            <span>👷</span>
+                            Atualizar Motoristas
+                        </button>
                     </div>
                 </div>
                 
-                <div class="relacao-section">
-                    <div class="relacao-section-title">
-                        <span>👷</span>
-                        Motoristas Ativos
-                        <span style="margin-left: auto; font-size: 0.9rem; color: #666;" id="totalMotoristasInfo">Total: 0</span>
+                <div class="relacao-grid">
+                    <div class="relacao-section">
+                        <div class="relacao-section-title">
+                            <span>🚛</span>
+                            Veículos em Operação
+                            <span style="margin-left: auto; font-size: 0.9rem; color: #666;" id="totalVeiculosInfo">Total: 0</span>
+                        </div>
+                        <div class="relacao-list" id="veiculosList">
+                            <!-- Carregado dinamicamente -->
+                        </div>
                     </div>
-                    <div class="relacao-list" id="motoristasList">
-                        <!-- Carregado dinamicamente -->
+                    
+                    <div class="relacao-section">
+                        <div class="relacao-section-title">
+                            <span>👷</span>
+                            Motoristas Ativos
+                            <span style="margin-left: auto; font-size: 0.9rem; color: #666;" id="totalMotoristasInfo">Total: 0</span>
+                        </div>
+                        <div class="relacao-list" id="motoristasList">
+                            <!-- Carregado dinamicamente -->
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="relacao-summary">
-                <div class="relacao-summary-item">
-                    <div class="relacao-summary-label">Total de Veículos</div>
-                    <div class="relacao-summary-value" id="totalVeiculos">0</div>
-                </div>
-                <div class="relacao-summary-item">
-                    <div class="relacao-summary-label">Total de Motoristas</div>
-                    <div class="relacao-summary-value" id="totalMotoristas">0</div>
+                
+                <div class="relacao-summary">
+                    <div class="relacao-summary-item">
+                        <div class="relacao-summary-label">Total de Veículos</div>
+                        <div class="relacao-summary-value" id="totalVeiculos">0</div>
+                    </div>
+                    <div class="relacao-summary-item">
+                        <div class="relacao-summary-label">Total de Motoristas</div>
+                        <div class="relacao-summary-value" id="totalMotoristas">0</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2122,6 +2197,9 @@ Carlos Oliveira"></textarea>
             showLoading();
             
             try {
+                // Atualizar data de exibição
+                updateCurrentDateDisplay();
+                
                 // Carregar dados do localStorage
                 loadDataFromStorage();
                 
@@ -2161,6 +2239,19 @@ Carlos Oliveira"></textarea>
             } finally {
                 hideLoading();
             }
+        }
+
+        // ATUALIZAR DATA DE EXIBIÇÃO ATUAL
+        function updateCurrentDateDisplay() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            const dateString = now.toLocaleDateString('pt-BR', options);
+            document.getElementById('currentDateDisplay').textContent = dateString;
         }
 
         // CARREGAR DADOS DO LOCALSTORAGE
@@ -2746,7 +2837,7 @@ Carlos Oliveira"></textarea>
         // CARREGAR CONTROLE DIÁRIO DA FROTA
         function loadControleDiario() {
             const dateFilter = document.getElementById('dateFilter').value;
-            let targetDate = dateFilter !== 'all' ? dateFilter : '31/01/26';
+            let targetDate = dateFilter !== 'all' ? dateFilter : allDates[0] || '31/01/26';
             
             const viagensDoDia = frotaData.filter(item => item.DATA === targetDate && item.TEM_DESTINO);
             
@@ -2892,7 +2983,7 @@ Carlos Oliveira"></textarea>
                     ${statsHtml}
                 </div>
                 
-                <div class="controle-diario-operations">
+                <div style="margin-top: 20px;">
                     <div class="controle-operations-title">
                         <span>🏢</span>
                         Operações do Dia
@@ -2910,7 +3001,7 @@ Carlos Oliveira"></textarea>
             document.getElementById('controleDiario').innerHTML = html;
         }
 
-        // ATUALIZAR RELAÇÃO VEÍCULOS/MOTORISTAS
+        // ATUALIZAR RELAÇÃO VEÍCULOS/MOTORISTAS (ORDENADA)
         function updateRelacaoVeiculosMotoristas() {
             // Atualizar totais
             document.getElementById('totalVeiculos').textContent = veiculosData.total;
@@ -2918,101 +3009,90 @@ Carlos Oliveira"></textarea>
             document.getElementById('totalVeiculosInfo').textContent = `Total: ${veiculosData.total}`;
             document.getElementById('totalMotoristasInfo').textContent = `Total: ${motoristasData.total}`;
             
-            // Atualizar lista de veículos (com base nos dados)
-            const veiculosList = document.getElementById('veiculosList');
-            const motoristasList = document.getElementById('motoristasList');
+            // Calcular estatísticas de uso
+            const veiculoUsage = {};
+            const motoristaUsage = {};
             
-            // Se não há veículos definidos, usar os do CSV
-            if (veiculosData.total === 0) {
-                const veiculosSet = new Set();
-                frotaData.forEach(item => {
-                    if (item.VEICULO && item.TEM_DESTINO) {
-                        veiculosSet.add(item.VEICULO);
+            frotaData.forEach(item => {
+                if (item.VEICULO && item.TEM_DESTINO) {
+                    if (!veiculoUsage[item.VEICULO]) {
+                        veiculoUsage[item.VEICULO] = 0;
                     }
-                });
+                    veiculoUsage[item.VEICULO]++;
+                }
                 
-                const veiculosArray = Array.from(veiculosSet);
-                veiculosData.total = veiculosArray.length;
-                
-                let veiculosHtml = '';
-                veiculosArray.forEach(veiculo => {
-                    const count = frotaData.filter(item => item.VEICULO === veiculo && item.TEM_DESTINO).length;
+                if (item.MOTORISTA && item.TEM_DESTINO) {
+                    if (!motoristaUsage[item.MOTORISTA]) {
+                        motoristaUsage[item.MOTORISTA] = 0;
+                    }
+                    motoristaUsage[item.MOTORISTA]++;
+                }
+            });
+            
+            // Ordenar veículos por uso (decrescente)
+            const sortedVeiculos = Object.entries(veiculoUsage)
+                .sort((a, b) => b[1] - a[1])
+                .map(([veiculo, count]) => ({ veiculo, count }));
+            
+            // Ordenar motoristas por uso (decrescente)
+            const sortedMotoristas = Object.entries(motoristaUsage)
+                .sort((a, b) => b[1] - a[1])
+                .map(([motorista, count]) => ({ motorista, count }));
+            
+            // Atualizar lista de veículos
+            const veiculosList = document.getElementById('veiculosList');
+            let veiculosHtml = '';
+            
+            if (sortedVeiculos.length > 0) {
+                sortedVeiculos.forEach((item, index) => {
                     veiculosHtml += `
                         <div class="relacao-item">
-                            <div class="relacao-nome">${veiculo}</div>
-                            <div class="relacao-count">${count}</div>
+                            <div class="relacao-nome">${item.veiculo}</div>
+                            <div class="relacao-count">${item.count}</div>
                         </div>
                     `;
                 });
                 
-                veiculosList.innerHTML = veiculosHtml || '<div style="text-align: center; padding: 20px; color: #666;">Nenhum veículo encontrado</div>';
-                document.getElementById('totalVeiculos').textContent = veiculosData.total;
-                document.getElementById('totalVeiculosInfo').textContent = `Total: ${veiculosData.total}`;
-            } else {
-                // Usar dados salvos
-                let veiculosHtml = '';
-                if (motoristasData.lista.length > 0) {
-                    // Listar motoristas salvos
-                    motoristasData.lista.forEach((motorista, index) => {
-                        const count = frotaData.filter(item => item.MOTORISTA === motorista && item.TEM_DESTINO).length;
-                        veiculosHtml += `
-                            <div class="relacao-item">
-                                <div class="relacao-nome">Motorista ${index + 1}</div>
-                                <div class="relacao-count">${count} viagens</div>
-                            </div>
-                        `;
-                    });
-                } else {
-                    veiculosHtml = '<div style="text-align: center; padding: 20px; color: #666;">Adicione veículos através do botão "Atualizar Veículos"</div>';
+                // Atualizar total se não estiver definido
+                if (veiculosData.total === 0) {
+                    veiculosData.total = sortedVeiculos.length;
+                    document.getElementById('totalVeiculos').textContent = veiculosData.total;
+                    document.getElementById('totalVeiculosInfo').textContent = `Total: ${veiculosData.total}`;
                 }
-                veiculosList.innerHTML = veiculosHtml;
+            } else {
+                veiculosHtml = '<div style="text-align: center; padding: 20px; color: #666;">Nenhum veículo encontrado</div>';
             }
             
+            veiculosList.innerHTML = veiculosHtml;
+            
             // Atualizar lista de motoristas
-            if (motoristasData.total === 0) {
-                const motoristasSet = new Set();
-                frotaData.forEach(item => {
-                    if (item.MOTORISTA && item.TEM_DESTINO) {
-                        motoristasSet.add(item.MOTORISTA);
-                    }
-                });
-                
-                const motoristasArray = Array.from(motoristasSet);
-                motoristasData.total = motoristasArray.length;
-                
-                let motoristasHtml = '';
-                motoristasArray.forEach(motorista => {
-                    const count = frotaData.filter(item => item.MOTORISTA === motorista && item.TEM_DESTINO).length;
+            const motoristasList = document.getElementById('motoristasList');
+            let motoristasHtml = '';
+            
+            if (sortedMotoristas.length > 0) {
+                sortedMotoristas.forEach((item, index) => {
                     motoristasHtml += `
                         <div class="relacao-item">
-                            <div class="relacao-nome">${motorista}</div>
-                            <div class="relacao-count">${count}</div>
+                            <div class="relacao-nome">${item.motorista}</div>
+                            <div class="relacao-count">${item.count}</div>
                         </div>
                     `;
                 });
                 
-                motoristasList.innerHTML = motoristasHtml || '<div style="text-align: center; padding: 20px; color: #666;">Nenhum motorista encontrado</div>';
-                document.getElementById('totalMotoristas').textContent = motoristasData.total;
-                document.getElementById('totalMotoristasInfo').textContent = `Total: ${motoristasData.total}`;
-            } else {
-                // Usar dados salvos
-                let motoristasHtml = '';
-                if (motoristasData.lista.length > 0) {
-                    // Listar motoristas salvos
-                    motoristasData.lista.forEach(motorista => {
-                        const count = frotaData.filter(item => item.MOTORISTA === motorista && item.TEM_DESTINO).length;
-                        motoristasHtml += `
-                            <div class="relacao-item">
-                                <div class="relacao-nome">${motorista}</div>
-                                <div class="relacao-count">${count} viagens</div>
-                            </div>
-                        `;
-                    });
-                } else {
-                    motoristasHtml = '<div style="text-align: center; padding: 20px; color: #666;">Adicione motoristas através do botão "Atualizar Motoristas"</div>';
+                // Atualizar total se não estiver definido
+                if (motoristasData.total === 0) {
+                    motoristasData.total = sortedMotoristas.length;
+                    document.getElementById('totalMotoristas').textContent = motoristasData.total;
+                    document.getElementById('totalMotoristasInfo').textContent = `Total: ${motoristasData.total}`;
                 }
-                motoristasList.innerHTML = motoristasHtml;
+            } else {
+                motoristasHtml = '<div style="text-align: center; padding: 20px; color: #666;">Nenhum motorista encontrado</div>';
             }
+            
+            motoristasList.innerHTML = motoristasHtml;
+            
+            // Salvar dados atualizados
+            saveVeiculosMotoristasData();
         }
 
         // ATUALIZAR OPÇÕES DO FILTRO DE DATA
@@ -3034,11 +3114,13 @@ Carlos Oliveira"></textarea>
                 const option = document.createElement('option');
                 option.value = date;
                 option.textContent = `${displayDate} (${count} viagens)`;
-                if (date === '31/01/26') {
-                    option.selected = true;
-                }
                 select.appendChild(option);
             });
+            
+            // Selecionar a primeira data disponível
+            if (allDates.length > 0) {
+                select.value = allDates[0];
+            }
         }
 
         // CARREGAR DADOS DA TABELA
@@ -3218,6 +3300,7 @@ Carlos Oliveira"></textarea>
             loadControleDiario();
             calculateAdvancedStatistics();
             updateRotaFrequente();
+            updateRelacaoVeiculosMotoristas();
         }
 
         // CARREGAR DATA ESPECÍFICA
@@ -3227,12 +3310,27 @@ Carlos Oliveira"></textarea>
             
             switch(type) {
                 case 'today':
-                    targetDate = '31/01/26';
-                    displayText = '31 de Janeiro de 2026';
+                    const today = new Date();
+                    const todayFormatted = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear().toString().slice(2)}`;
+                    targetDate = todayFormatted;
+                    displayText = today.toLocaleDateString('pt-BR', { 
+                        weekday: 'long', 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric' 
+                    });
                     break;
                 case 'yesterday':
-                    targetDate = '30/01/26';
-                    displayText = '30 de Janeiro de 2026';
+                    const yesterday = new Date();
+                    yesterday.setDate(yesterday.getDate() - 1);
+                    const yesterdayFormatted = `${yesterday.getDate().toString().padStart(2, '0')}/${(yesterday.getMonth() + 1).toString().padStart(2, '0')}/${yesterday.getFullYear().toString().slice(2)}`;
+                    targetDate = yesterdayFormatted;
+                    displayText = yesterday.toLocaleDateString('pt-BR', { 
+                        weekday: 'long', 
+                        day: 'numeric', 
+                        month: 'long', 
+                        year: 'numeric' 
+                    });
                     break;
                 case 'all':
                     targetDate = 'all';
