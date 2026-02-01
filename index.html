@@ -2526,10 +2526,10 @@
             saveManualFinalizations();
             
             // ATUALIZAR TODAS AS SEÇÕES DO DASHBOARD
-            filterTable(); // Já estava aqui
-            loadControleDiario(); // ADICIONE ESTA LINHA - Atualiza o status do dia
-            calculateAdvancedStatistics(); // ADICIONE ESTA LINHA - Recalcula estatísticas
-            updateRotaFrequente(); // ADICIONE ESTA LINHA - Atualiza rotas
+            filterTable();
+            loadControleDiario();
+            calculateAdvancedStatistics();
+            updateRotaFrequente();
             
             showNotification(
                 item.FINALIZADO_MANUALMENTE ? 
@@ -2773,7 +2773,7 @@
             document.body.removeChild(textArea);
         }
 
-        // HANDLE FILE UPLOAD - CORRIGIDA!
+        // HANDLE FILE UPLOAD - CORRIGIDA E FUNCIONAL!
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -2787,7 +2787,7 @@
             
             const reader = new FileReader();
             
-            reader.onload = async function(e) {
+            reader.onload = function(e) {
                 try {
                     const csvData = e.target.result;
                     
@@ -2795,28 +2795,35 @@
                         throw new Error('Arquivo CSV vazio');
                     }
                     
-                    await processCSVData(csvData);
-                    applyManualFinalizations();
-                    identifyMultipleTrips();
-                    extractAllDates();
-                    calculateAdvancedStatistics();
-                    loadLast3DaysSummary();
-                    loadControleDiario();
-                    updateDateFilterOptions();
-                    loadTableData();
-                    updateRotaFrequente();
-                    updateTimestamp();
-                    updateCounters();
-                    
-                    showNotification(
-                        `Dados atualizados com sucesso! ${frotaData.length} registros carregados (${frotaData.filter(item => item.TEM_DESTINO).length} com destino válido).`,
-                        'success'
-                    );
+                    // Processar os dados imediatamente
+                    processCSVData(csvData).then(() => {
+                        applyManualFinalizations();
+                        identifyMultipleTrips();
+                        extractAllDates();
+                        calculateAdvancedStatistics();
+                        loadLast3DaysSummary();
+                        loadControleDiario();
+                        updateDateFilterOptions();
+                        loadTableData();
+                        updateRotaFrequente();
+                        updateTimestamp();
+                        updateCounters();
+                        
+                        showNotification(
+                            `Dados atualizados com sucesso! ${frotaData.length} registros carregados (${frotaData.filter(item => item.TEM_DESTINO).length} com destino válido).`,
+                            'success'
+                        );
+                        
+                        hideLoading();
+                    }).catch(error => {
+                        console.error('Erro ao processar arquivo:', error);
+                        showNotification(`Erro ao processar arquivo: ${error.message}`, 'error');
+                        hideLoading();
+                    });
                     
                 } catch (error) {
                     console.error('Erro ao processar arquivo:', error);
                     showNotification(`Erro ao processar arquivo: ${error.message}`, 'error');
-                } finally {
                     hideLoading();
                 }
             };
