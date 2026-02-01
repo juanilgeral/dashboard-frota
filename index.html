@@ -1538,12 +1538,12 @@
             initializeSystem();
         });
 
-        async function initializeSystem() {
+        function initializeSystem() {
             showLoading();
             
             try {
                 // Carregar dados do localStorage
-                await loadDataFromStorage();
+                loadDataFromStorage();
                 
                 // Carregar finalizações manuais
                 loadManualFinalizations();
@@ -1580,13 +1580,13 @@
         }
 
         // CARREGAR DADOS DO LOCALSTORAGE
-        async function loadDataFromStorage() {
+        function loadDataFromStorage() {
             const savedData = localStorage.getItem('frotaCSVData');
             
             if (savedData) {
-                await processCSVData(savedData);
+                processCSVData(savedData);
             } else {
-                await processCSVData(initialFrotaData);
+                processCSVData(initialFrotaData);
             }
         }
 
@@ -1614,8 +1614,8 @@
             return !destinosInvalidos.some(invalido => invalido === true);
         }
 
-        // PROCESSAR DADOS DO CSV
-        async function processCSVData(csvString) {
+        // PROCESSAR DADOS DO CSV - VERSÃO CORRIGIDA E SIMPLIFICADA
+        function processCSVData(csvString) {
             console.log("Processando dados CSV...");
             
             const lines = csvString.split('\n').filter(line => line.trim() !== '');
@@ -1624,100 +1624,108 @@
                 throw new Error('Arquivo CSV vazio');
             }
             
-            // Detectar cabeçalhos
-            let headerIndex = 0;
-            for (let i = 0; i < Math.min(3, lines.length); i++) {
-                if (lines[i].toUpperCase().includes('DATA') && 
-                    (lines[i].toUpperCase().includes('VEICULO') || lines[i].toUpperCase().includes('VEÍCULO'))) {
-                    headerIndex = i;
+            // Encontrar linha de cabeçalho
+            let headerLine = '';
+            let dataStartIndex = 0;
+            
+            for (let i = 0; i < Math.min(5, lines.length); i++) {
+                const line = lines[i].toUpperCase();
+                if (line.includes('DATA') && line.includes('VEICULO') || line.includes('VEÍCULO')) {
+                    headerLine = lines[i];
+                    dataStartIndex = i + 1;
                     break;
                 }
             }
             
-            const headersLine = lines[headerIndex];
-            const headers = headersLine.split(',').map(h => h.trim());
+            // Se não encontrou cabeçalho específico, usa a primeira linha
+            if (!headerLine) {
+                headerLine = lines[0];
+                dataStartIndex = 1;
+            }
             
+            const headers = headerLine.split(',').map(h => h.trim());
             frotaData = [];
             
-            // Processar cada linha
-            for (let i = headerIndex + 1; i < lines.length; i++) {
+            console.log('Cabeçalhos detectados:', headers);
+            
+            // Processar cada linha de dados
+            for (let i = dataStartIndex; i < lines.length; i++) {
                 const line = lines[i].trim();
-                if (!line) continue;
+                if (!line || line.split(',').length < 5) continue;
                 
-                try {
-                    const values = parseCSVLine(line);
-                    const item = {};
-                    
-                    // Mapear valores para cabeçalhos
-                    headers.forEach((header, index) => {
-                        if (index < values.length) {
-                            item[header] = values[index] ? values[index].trim() : '';
-                        } else {
-                            item[header] = '';
-                        }
-                    });
-                    
-                    // Verificar campos mínimos
-                    if (!item.DATA && !item.data) {
-                        console.warn(`Linha ${i + 1} ignorada - campo DATA faltando`);
-                        continue;
-                    }
-                    
-                    // Normalizar nomes de campos
-                    if (item.data && !item.DATA) item.DATA = item.data;
-                    if (item.Veículo && !item.VEICULO) item.VEICULO = item.Veículo;
-                    if (item.veiculo && !item.VEICULO) item.VEICULO = item.veiculo;
-                    if (item.Motorista && !item.MOTORISTA) item.MOTORISTA = item.Motorista;
-                    if (item.motorista && !item.MOTORISTA) item.MOTORISTA = item.motorista;
-                    if (item.Op && !item.OP) item.OP = item.Op;
-                    if (item.op && !item.OP) item.OP = item.op;
-                    
-                    // Verificar operação
-                    const op = item.OP || '';
-                    if (!operacoesMap[op]) {
-                        if (item.x && item.x.toUpperCase().includes('LASA')) {
-                            item.OP = 'LS';
-                        } else if (item.x && item.x.toUpperCase().includes('HORTIFRUTI')) {
-                            item.OP = 'HT';
-                        } else if (item.x && item.x.toUpperCase().includes('TELERIO')) {
-                            item.OP = 'TL';
-                        } else if (item.x && item.x.toUpperCase().includes('CASA & VÍDEO')) {
-                            item.OP = 'CV';
-                        } else if (item.x && item.x.toUpperCase().includes('NALIN')) {
-                            item.OP = 'NL';
-                        } else {
-                            item.OP = 'LS'; // Padrão
-                        }
-                    }
-                    
-                    // Verificar se é viagem válida
-                    item.TEM_DESTINO = isViagemValida(item);
-                    
-                    // Gerar ID único
-                    item.id = generateUniqueId(item);
-                    
-                    // Determinar status automático
-                    item.STATUS_AUTO = determineAutoStatus(item);
-                    item.STATUS_MANUAL = null;
-                    item.FINALIZADO_MANUALMENTE = false;
-                    
-                    // Formatar data para exibição
-                    item.DATA_DISPLAY = formatDateForDisplay(item.DATA);
-                    
-                    // Extrair número da loja
-                    item.LOJA_NUMERO = item.TEM_DESTINO ? extractLojaNumber(item.x) : '';
-                    
-                    // Obter informações da operação
-                    item.OP_INFO = operacoesMap[item.OP] || { nome: item.OP, cor: '#666' };
-                    
-                    frotaData.push(item);
-                } catch (error) {
-                    console.error(`Erro ao processar linha ${i + 1}:`, error);
+                const values = parseCSVLine(line);
+                const item = {};
+                
+                // Mapear valores para cabeçalhos
+                headers.forEach((header, index) => {
+                    item[header] = values[index] ? values[index].trim() : '';
+                });
+                
+                // Garantir que temos os campos necessários
+                if (!item.DATA) {
+                    console.warn(`Linha ${i + 1} ignorada - sem data`);
+                    continue;
                 }
+                
+                // Normalizar nomes de campos
+                if (!item.VEICULO && item['VEÍCULO']) item.VEICULO = item['VEÍCULO'];
+                if (!item.MOTORISTA && item.Motorista) item.MOTORISTA = item.Motorista;
+                if (!item.OP && item.Op) item.OP = item.Op;
+                
+                // Determinar operação baseada no destino
+                if (!item.OP || !operacoesMap[item.OP]) {
+                    const destino = item.x || item.DESTINO || '';
+                    if (destino.toUpperCase().includes('LASA')) item.OP = 'LS';
+                    else if (destino.toUpperCase().includes('HORTIFRUTI')) item.OP = 'HT';
+                    else if (destino.toUpperCase().includes('TELERIO')) item.OP = 'TL';
+                    else if (destino.toUpperCase().includes('CASA & VÍDEO')) item.OP = 'CV';
+                    else if (destino.toUpperCase().includes('NALIN')) item.OP = 'NL';
+                    else item.OP = 'LS'; // Padrão
+                }
+                
+                // Verificar se é viagem válida
+                item.TEM_DESTINO = isViagemValida(item);
+                
+                // Gerar ID único
+                item.id = generateUniqueId(item);
+                
+                // Determinar status automático
+                item.STATUS_AUTO = determineAutoStatus(item);
+                item.STATUS_MANUAL = null;
+                item.FINALIZADO_MANUALMENTE = false;
+                
+                // Formatar data para exibição
+                item.DATA_DISPLAY = formatDateForDisplay(item.DATA);
+                
+                // Extrair número da loja
+                item.LOJA_NUMERO = item.TEM_DESTINO ? extractLojaNumber(item.x || item.DESTINO || '') : '';
+                
+                // Obter informações da operação
+                item.OP_INFO = operacoesMap[item.OP] || { nome: item.OP, cor: '#666' };
+                
+                frotaData.push(item);
             }
             
             console.log(`Dados processados: ${frotaData.length} registros`);
             saveDataToStorage(csvString);
+            
+            // Após processar, atualizar tudo
+            updateAllAfterDataLoad();
+        }
+
+        // ATUALIZAR TUDO APÓS CARREGAR DADOS
+        function updateAllAfterDataLoad() {
+            applyManualFinalizations();
+            identifyMultipleTrips();
+            extractAllDates();
+            calculateAdvancedStatistics();
+            loadLast3DaysSummary();
+            loadControleDiario();
+            updateDateFilterOptions();
+            loadTableData();
+            updateRotaFrequente();
+            updateTimestamp();
+            updateCounters();
         }
 
         // PARSE DE LINHA CSV
@@ -1812,14 +1820,12 @@
         // APLICAR FINALIZAÇÕES MANUAIS
         function applyManualFinalizations() {
             frotaData.forEach(item => {
-                item.STATUS_MANUAL = null;
-                item.FINALIZADO_MANUALMENTE = false;
-            });
-            
-            frotaData.forEach(item => {
                 if (manualFinalizations[item.id]) {
                     item.STATUS_MANUAL = 'finalizado';
                     item.FINALIZADO_MANUALMENTE = true;
+                } else {
+                    item.STATUS_MANUAL = null;
+                    item.FINALIZADO_MANUALMENTE = false;
                 }
             });
         }
@@ -2322,7 +2328,7 @@
                     rowClass += ' veiculo-finalizado';
                 }
                 
-                const destino = formatDestination(item.x);
+                const destino = formatDestination(item.x || item.DESTINO || '');
                 const isMultipleTrip = temDestino && item.VIAGEM_MULTIPLA;
                 const opInfo = item.OP_INFO || operacoesMap[item.OP] || { nome: item.OP, cor: '#666' };
                 
@@ -2500,7 +2506,7 @@
             filterTable();
         }
 
-        // TOGGLE FINALIZAÇÃO MANUAL - CORRIGIDO
+        // TOGGLE FINALIZAÇÃO MANUAL
         function toggleFinalization(id) {
             const item = frotaData.find(item => item.id === id);
             if (!item) return;
@@ -2525,7 +2531,7 @@
             
             saveManualFinalizations();
             
-            // ATUALIZAR TODAS AS SEÇÕES DO DASHBOARD
+            // ATUALIZAR TUDO
             filterTable();
             loadControleDiario();
             calculateAdvancedStatistics();
@@ -2550,10 +2556,16 @@
             routes.forEach(route => {
                 const nomeExibicao = route.nome.length > 40 ? route.nome.substring(0, 40) + '...' : route.nome;
                 const diasOperacao = route.diasOperacao.size;
-                const veiculoMaisUtilizado = route.veiculoMaisUtilizado || 'Não definido';
-                const motoristaMaisFrequente = route.motoristaMaisFrequente || 'Não definido';
+                const veiculoMaisUtilizado = Object.keys(route.veiculosUtilizados).reduce((a, b) => 
+                    route.veiculosUtilizados[a] > route.veiculosUtilizados[b] ? a : b, 'Não definido'
+                );
+                const motoristaMaisFrequente = Object.keys(route.motoristasUtilizados).reduce((a, b) => 
+                    route.motoristasUtilizados[a] > route.motoristasUtilizados[b] ? a : b, 'Não definido'
+                );
                 
-                const opMaisFrequente = route.operacaoMaisFrequente || 'Não definida';
+                const opMaisFrequente = Object.keys(route.operacoes).reduce((a, b) => 
+                    route.operacoes[a] > route.operacoes[b] ? a : b, 'Não definida'
+                );
                 const opInfo = operacoesMap[opMaisFrequente] || { nome: opMaisFrequente, cor: '#666' };
                 
                 html += `
@@ -2636,10 +2648,16 @@
                 const rota = route.nome.replace(/,/g, ';');
                 const totalViagens = route.totalViagens;
                 const diasOperacao = route.diasOperacao.size;
-                const veiculoMaisUtilizado = route.veiculoMaisUtilizado || 'N/A';
-                const veiculoUsoCount = route.veiculoUsoCount || 0;
-                const motoristaMaisFrequente = route.motoristaMaisFrequente || 'N/A';
-                const operacaoPrincipal = route.operacaoMaisFrequente || 'N/A';
+                const veiculoMaisUtilizado = Object.keys(route.veiculosUtilizados).reduce((a, b) => 
+                    route.veiculosUtilizados[a] > route.veiculosUtilizados[b] ? a : b, 'N/A'
+                );
+                const veiculoUsoCount = route.veiculosUtilizados[veiculoMaisUtilizado] || 0;
+                const motoristaMaisFrequente = Object.keys(route.motoristasUtilizados).reduce((a, b) => 
+                    route.motoristasUtilizados[a] > route.motoristasUtilizados[b] ? a : b, 'N/A'
+                );
+                const operacaoPrincipal = Object.keys(route.operacoes).reduce((a, b) => 
+                    route.operacoes[a] > route.operacoes[b] ? a : b, 'N/A'
+                );
                 
                 csvData += `"${rota}",${totalViagens},${diasOperacao},"${veiculoMaisUtilizado}",${veiculoUsoCount},"${motoristaMaisFrequente}","${operacaoPrincipal}"\n`;
             });
@@ -2666,10 +2684,18 @@
                     rota: route.nome,
                     totalViagens: route.totalViagens,
                     diasOperacao: Array.from(route.diasOperacao),
-                    veiculoMaisUtilizado: route.veiculoMaisUtilizado,
-                    veiculoUsoCount: route.veiculoUsoCount,
-                    motoristaMaisFrequente: route.motoristaMaisFrequente,
-                    operacaoPrincipal: route.operacaoMaisFrequente,
+                    veiculoMaisUtilizado: Object.keys(route.veiculosUtilizados).reduce((a, b) => 
+                        route.veiculosUtilizados[a] > route.veiculosUtilizados[b] ? a : b, 'N/A'
+                    ),
+                    veiculoUsoCount: route.veiculosUtilizados[Object.keys(route.veiculosUtilizados).reduce((a, b) => 
+                        route.veiculosUtilizados[a] > route.veiculosUtilizados[b] ? a : b, 'N/A'
+                    )] || 0,
+                    motoristaMaisFrequente: Object.keys(route.motoristasUtilizados).reduce((a, b) => 
+                        route.motoristasUtilizados[a] > route.motoristasUtilizados[b] ? a : b, 'N/A'
+                    ),
+                    operacaoPrincipal: Object.keys(route.operacoes).reduce((a, b) => 
+                        route.operacoes[a] > route.operacoes[b] ? a : b, 'N/A'
+                    ),
                     operacoesDetalhadas: route.operacoes,
                     veiculosUtilizados: route.veiculosUtilizados,
                     motoristasUtilizados: route.motoristasUtilizados
@@ -2732,7 +2758,17 @@
             let clipboardData = "ROTA\tTOTAL VIAGENS\tDIAS OPERAÇÃO\tVEÍCULO MAIS USADO\tMOTORISTA FREQUENTE\tOPERAÇÃO PRINCIPAL\n";
             
             routes.forEach(route => {
-                clipboardData += `${route.nome}\t${route.totalViagens}\t${route.diasOperacao.size}\t${route.veiculoMaisUtilizado || 'N/A'}\t${route.motoristaMaisFrequente || 'N/A'}\t${route.operacaoMaisFrequente || 'N/A'}\n`;
+                const veiculoMaisUtilizado = Object.keys(route.veiculosUtilizados).reduce((a, b) => 
+                    route.veiculosUtilizados[a] > route.veiculosUtilizados[b] ? a : b, 'N/A'
+                );
+                const motoristaMaisFrequente = Object.keys(route.motoristasUtilizados).reduce((a, b) => 
+                    route.motoristasUtilizados[a] > route.motoristasUtilizados[b] ? a : b, 'N/A'
+                );
+                const operacaoPrincipal = Object.keys(route.operacoes).reduce((a, b) => 
+                    route.operacoes[a] > route.operacoes[b] ? a : b, 'N/A'
+                );
+                
+                clipboardData += `${route.nome}\t${route.totalViagens}\t${route.diasOperacao.size}\t${veiculoMaisUtilizado}\t${motoristaMaisFrequente}\t${operacaoPrincipal}\n`;
             });
             
             clipboardData += `\nExportado em: ${new Date().toLocaleString('pt-BR')}\n`;
@@ -2773,7 +2809,7 @@
             document.body.removeChild(textArea);
         }
 
-        // HANDLE FILE UPLOAD - CORRIGIDA E FUNCIONAL!
+        // HANDLE FILE UPLOAD - VERSÃO SIMPLIFICADA E FUNCIONAL
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -2795,35 +2831,18 @@
                         throw new Error('Arquivo CSV vazio');
                     }
                     
-                    // Processar os dados imediatamente
-                    processCSVData(csvData).then(() => {
-                        applyManualFinalizations();
-                        identifyMultipleTrips();
-                        extractAllDates();
-                        calculateAdvancedStatistics();
-                        loadLast3DaysSummary();
-                        loadControleDiario();
-                        updateDateFilterOptions();
-                        loadTableData();
-                        updateRotaFrequente();
-                        updateTimestamp();
-                        updateCounters();
-                        
-                        showNotification(
-                            `Dados atualizados com sucesso! ${frotaData.length} registros carregados (${frotaData.filter(item => item.TEM_DESTINO).length} com destino válido).`,
-                            'success'
-                        );
-                        
-                        hideLoading();
-                    }).catch(error => {
-                        console.error('Erro ao processar arquivo:', error);
-                        showNotification(`Erro ao processar arquivo: ${error.message}`, 'error');
-                        hideLoading();
-                    });
+                    // Processar os dados
+                    processCSVData(csvData);
+                    
+                    showNotification(
+                        `Dados atualizados com sucesso! ${frotaData.length} registros carregados (${frotaData.filter(item => item.TEM_DESTINO).length} com destino válido).`,
+                        'success'
+                    );
                     
                 } catch (error) {
                     console.error('Erro ao processar arquivo:', error);
                     showNotification(`Erro ao processar arquivo: ${error.message}`, 'error');
+                } finally {
                     hideLoading();
                 }
             };
