@@ -1460,9 +1460,9 @@
 
     <script>
         // ============================================
-        // DADOS INICIAIS DA PLANILHA (EXEMPLO)
+        // DADOS INICIAIS DA PLANILHA (SIMPLIFICADO)
         // ============================================
-        const initialFrotaData = `DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,C,x,SAÍDA_VEÍCULO_CD
+        const initialFrotaData = `DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,PRÓX_HORA_DISP,DESTINO,SAÍDA_VEÍCULO_CD
 02/01/26,sex.,LS,064 LUV 9296,MARTINS,05:13:00,10:13:00,14:09:00,01:09:00,069 - CAXIAS / 774 - SHOP. CAXIAS,06:10:00
 02/01/26,sex.,LS,065 KZQ 9648,JOEL,09:48:00,14:48:00,,,GARAGEM X LASA,10:14:00
 02/01/26,sex.,LS,066 LUB 1400,JOEL,09:48:00,14:48:00,16:18:00,03:18:00,GARAGEM X LASA,14:19:00
@@ -1480,34 +1480,7 @@
 02/01/26,sex.,CV,124 ATI 4G85,ROSENDO,04:07:00,09:07:00,12:01:00,23:01:00,SÃO GONÇALO I - 374,04:47:00
 02/01/26,sex.,CV,097 LRX 4831,GILMAR,13:25:00,18:25:00,19:30:00,06:30:00,SHOP MADUREIRA-255,13:30:00
 02/01/26,sex.,CV,101 LRX 4832,LUIZ,13:00:00,18:00:00,19:00:00,06:00:00,NORTE SHOP-240,13:30:00
-02/01/26,sex.,CV,105 KPU 7450,SERGIO SILVA,13:30:00,18:30:00,18:40:00,05:40:00,SHOP CAXIAS-327,13:30:00
-02/01/26,sex.,CV,098 LRX 4828,MEDEIROS,15:30:00,20:30:00,22:25:00,09:25:00,PETROPOLIS-312,16:30:00
-02/01/26,sex.,CV,075 KUT 8573,SERGIO,16:00:00,21:00:00,21:15:00,08:15:00,MESQUITA-362/BELFORD ROXO-288,16:30:00
-03/01/26,sáb.,LS,064 LUV 9296,GUILHERME,07:00:00,12:00:00,19:00:00,06:00:00,020 - COPACABANA,07:30:00
-03/01/26,sáb.,LS,065 KZQ 9648,VAGNER,05:45:00,10:45:00,16:02:00,03:02:00,017 - VOLTA REDONDA,06:00:00
-03/01/26,sáb.,LS,066 LUB 1400,OLIVEIRA,06:45:00,11:45:00,17:10:00,04:10:00,057 - NILÓPOLIS,07:45:00
-03/01/26,sáb.,TL,108 LSM 7748,CLAUDINEI,06:53:00,11:53:00,11:08:00,22:08:00,06 - CENTRO URUGUAIANA (Leonardo e Luciano),07:20:00
-03/01/26,sáb.,TL,113 KXU 6988,NOGUEIRA,06:40:00,11:40:00,13:25:00,00:25:00,43 - SHOPPING MADUREIRA (João Vitor e Pablo Winicius),10:49:00
-03/01/26,sáb.,TL,116 LSQ 6092,ALEXANDRE,05:55:00,10:55:00,12:41:00,23:41:00,06 - CENTRO URUGUAIANA (Marcos e Rafael),07:20:00
-03/01/26,sáb.,TL,117 KRR 2728,ANDERSON,06:07:00,11:07:00,12:39:00,23:39:00,06 - CENTRO URUGUAIANA (Wesley e Gabriel),07:47:00
-03/01/26,sáb.,TL,118 LSQ 6093,EDILSON,06:02:00,11:02:00,13:25:00,00:25:00,06 - CENTRO URUGUAIANA (Pablo e Ederson),07:50:00
-03/01/26,sáb.,HT,048 LSZ 0790,ROGÉRIO,03:00:00,08:00:00,12:00:00,23:00:00,ABRANTES / PRADO JUNIOR / SIQUEIRA CAMPOS / DIAS DA ROCHA / GAVEA / ADALBERTO / SÃO CONRADO / LEBLON / JARDIM BOTÂNICO,05:55:00
-03/01/26,sáb.,HT,093 KVF 3715,WALMIR,03:01:00,08:01:00,11:35:00,22:35:00,BARRA BLUE / A5 / RECREIO / AMERICAS / BARRA GARDEN / BARRA / ABELARDO BUENO / FREGUESIA,05:36:00
-03/01/26,sáb.,HT,122 DPF 7I23,VALDIR,03:00:00,08:00:00,11:33:00,22:33:00,SIQUEIRA CAMPOS,05:03:00
-03/01/26,sáb.,HT,125 OWO 2F73,NEVES,03:12:00,08:12:00,10:48:00,21:48:00,M. PARANA / REGIÃO OCEÂNICA / ITAIPU / SANTA ROSA,05:06:00
-03/01/26,sáb.,CV,102 LRT 4821,SANDRO,04:00:00,09:00:00,13:30:00,00:30:00,PARTAGE-365/JARDIM CATARINA-691,04:35:00
-03/01/26,sáb.,CV,099 LRX 4830,ROSENDO,04:03:00,09:03:00,10:13:00,21:13:00,PLAZA SHOP-381,04:55:00
-03/01/26,sáb.,CV,104 LRC 3089,HERIBERTO,04:05:00,09:05:00,10:14:00,21:14:00,NITEROI -266,04:30:00
-31/01/26,sáb.,LS,063 LBW 8156,ANDRÉ,05:00:00,10:00:00,,,597 - SÃO CRISTOVÃO SM 399194,05:30:00
-31/01/26,sáb.,LS,064 LUV 9296,CÉLIO,05:00:00,10:00:00,,,1033 - SHOP. AMÉRICAS RECREIO - REENTREGA  SM 399206,05:30:00
-31/01/26,sáb.,LS,068 LSN 1702,MARTINS,05:00:00,10:00:00,,,623 - SHOP. ESTAÇÃO DE QUEIMADOS / 5240 - MESQUITA SM 399209,05:30:00
-31/01/26,sáb.,HT,048 LSZ 0790,ROGÉRIO,01:40:00,06:40:00,,,,05:00:00
-31/01/26,sáb.,HT,093 KVF 3715,WALMIR,01:40:00,06:40:00,,,,05:00:00
-31/01/26,sáb.,HT,122 DPF 7I23,CAMARA,01:40:00,06:40:00,,,,05:00:00
-31/01/26,sáb.,HT,125 OWO 2F73,NEVES,01:40:00,06:40:00,,,,05:00:00
-31/01/26,sáb.,CV,115 KXW 7716,ROSENDO,,,,,PLAZA SHOP-381/NITEROI-266,04:30:00
-31/01/26,sáb.,CV,105 KPU 7450,EDUARDO,,,,,GUANABARA PENHA-385   TREINAMENTO DIAS,04:30:00
-31/01/26,sáb.,CV,121 KRZ 8143,HERIBERTO,,,,,NILOPOLIS-259/BELFORD ROXO-654    TREINAMENTO MÁRCIO,04:30:00`;
+02/01/26,sex.,CV,105 KPU 7450,SERGIO SILVA,13:30:00,18:30:00,18:40:00,05:40:00,SHOP CAXIAS-327,13:30:00`;
 
         // ============================================
         // VARIÁVEIS GLOBAIS
@@ -1595,26 +1568,34 @@
             localStorage.setItem('frotaCSVData', csvData);
         }
 
-        // FUNÇÃO PARA VERIFICAR SE É UMA VIAGEM VÁLIDA
-        function isViagemValida(item) {
-            const destino = item.x ? item.x.trim().toUpperCase() : '';
+        // FUNÇÃO PARA VERIFICAR SE É UMA VIAGEM VÁLIDA (USANDO CSV REAL)
+        function isViagemValidaReal(item) {
+            const destino = item.DESTINO ? item.DESTINO.trim().toUpperCase() : '';
             
             if (!destino) return false;
             
             const destinosInvalidos = [
-                destino.includes('COBRANÇA 50%'),
-                destino.includes('COBRANCA 50%'),
+                destino.includes('COBRANÇA'),
+                destino.includes('COBRANCA'),
                 destino.startsWith('GARAGEM X'),
                 destino.includes(' X GARAGEM'),
                 destino === '',
                 destino === '-',
-                destino === '--'
+                destino === '--',
+                destino.includes('RETORNOU CARREGADO'),
+                destino.includes('SEM CONDIÇÕES'),
+                destino.includes('NÃO SAIU'),
+                destino.includes('VEÍCULO NÃO'),
+                destino.includes('TRANSBORDO'),
+                destino.includes('REBOCOU'),
+                destino.includes('TESTE'),
+                destino.includes('MANUTENÇÃO')
             ];
             
             return !destinosInvalidos.some(invalido => invalido === true);
         }
 
-        // PROCESSAR DADOS DO CSV - VERSÃO CORRIGIDA E SIMPLIFICADA
+        // PROCESSAR DADOS DO CSV - VERSÃO CORRIGIDA PARA O CSV REAL
         function processCSVData(csvString) {
             console.log("Processando dados CSV...");
             
@@ -1630,7 +1611,7 @@
             
             for (let i = 0; i < Math.min(5, lines.length); i++) {
                 const line = lines[i].toUpperCase();
-                if (line.includes('DATA') && line.includes('VEICULO') || line.includes('VEÍCULO')) {
+                if (line.includes('DATA') && (line.includes('VEICULO') || line.includes('VEÍCULO'))) {
                     headerLine = lines[i];
                     dataStartIndex = i + 1;
                     break;
@@ -1671,20 +1652,21 @@
                 if (!item.VEICULO && item['VEÍCULO']) item.VEICULO = item['VEÍCULO'];
                 if (!item.MOTORISTA && item.Motorista) item.MOTORISTA = item.Motorista;
                 if (!item.OP && item.Op) item.OP = item.Op;
+                if (!item.DESTINO && item['DESTINO']) item.DESTINO = item['DESTINO'];
                 
                 // Determinar operação baseada no destino
                 if (!item.OP || !operacoesMap[item.OP]) {
-                    const destino = item.x || item.DESTINO || '';
+                    const destino = item.DESTINO || '';
                     if (destino.toUpperCase().includes('LASA')) item.OP = 'LS';
                     else if (destino.toUpperCase().includes('HORTIFRUTI')) item.OP = 'HT';
-                    else if (destino.toUpperCase().includes('TELERIO')) item.OP = 'TL';
-                    else if (destino.toUpperCase().includes('CASA & VÍDEO')) item.OP = 'CV';
+                    else if (destino.toUpperCase().includes('TELERIO') || destino.toUpperCase().includes('TELERIO')) item.OP = 'TL';
+                    else if (destino.toUpperCase().includes('CASA & VÍDEO') || destino.toUpperCase().includes('CASA E VIDEO')) item.OP = 'CV';
                     else if (destino.toUpperCase().includes('NALIN')) item.OP = 'NL';
                     else item.OP = 'LS'; // Padrão
                 }
                 
-                // Verificar se é viagem válida
-                item.TEM_DESTINO = isViagemValida(item);
+                // Verificar se é viagem válida usando o campo DESTINO
+                item.TEM_DESTINO = isViagemValidaReal(item);
                 
                 // Gerar ID único
                 item.id = generateUniqueId(item);
@@ -1698,7 +1680,7 @@
                 item.DATA_DISPLAY = formatDateForDisplay(item.DATA);
                 
                 // Extrair número da loja
-                item.LOJA_NUMERO = item.TEM_DESTINO ? extractLojaNumber(item.x || item.DESTINO || '') : '';
+                item.LOJA_NUMERO = item.TEM_DESTINO ? extractLojaNumber(item.DESTINO || '') : '';
                 
                 // Obter informações da operação
                 item.OP_INFO = operacoesMap[item.OP] || { nome: item.OP, cor: '#666' };
@@ -1711,21 +1693,6 @@
             
             // Após processar, atualizar tudo
             updateAllAfterDataLoad();
-        }
-
-        // ATUALIZAR TUDO APÓS CARREGAR DADOS
-        function updateAllAfterDataLoad() {
-            applyManualFinalizations();
-            identifyMultipleTrips();
-            extractAllDates();
-            calculateAdvancedStatistics();
-            loadLast3DaysSummary();
-            loadControleDiario();
-            updateDateFilterOptions();
-            loadTableData();
-            updateRotaFrequente();
-            updateTimestamp();
-            updateCounters();
         }
 
         // PARSE DE LINHA CSV
@@ -1753,7 +1720,7 @@
 
         // GERAR ID ÚNICO
         function generateUniqueId(item) {
-            const baseId = `${item.DATA}_${item.OP}_${item.VEICULO}_${item.MOTORISTA}_${item['PONTO_ON_MOT.'] || ''}_${item.x || ''}`
+            const baseId = `${item.DATA}_${item.OP}_${item.VEICULO}_${item.MOTORISTA}_${item['PONTO_ON_MOT.'] || ''}_${item.DESTINO || ''}`
                 .replace(/\s+/g, '_')
                 .replace(/[^a-zA-Z0-9_]/g, '');
             
@@ -1886,6 +1853,21 @@
             return new Date(2000 + parseInt(year), parseInt(month) - 1, parseInt(day));
         }
 
+        // ATUALIZAR TUDO APÓS CARREGAR DADOS
+        function updateAllAfterDataLoad() {
+            applyManualFinalizations();
+            identifyMultipleTrips();
+            extractAllDates();
+            calculateAdvancedStatistics();
+            loadLast3DaysSummary();
+            loadControleDiario();
+            updateDateFilterOptions();
+            loadTableData();
+            updateRotaFrequente();
+            updateTimestamp();
+            updateCounters();
+        }
+
         // CALCULAR ESTATÍSTICAS AVANÇADAS
         function calculateAdvancedStatistics() {
             driverStatistics = {};
@@ -1897,7 +1879,7 @@
             viagensComDestino.forEach(item => {
                 const motorista = item.MOTORISTA;
                 const veiculo = item.VEICULO;
-                const rota = item.x ? item.x.substring(0, 50) : 'Não especificada';
+                const rota = item.DESTINO ? item.DESTINO.substring(0, 50) : 'Não especificada';
                 const lojaNumero = item.LOJA_NUMERO;
                 
                 // Estatísticas por motorista
@@ -2328,7 +2310,7 @@
                     rowClass += ' veiculo-finalizado';
                 }
                 
-                const destino = formatDestination(item.x || item.DESTINO || '');
+                const destino = formatDestination(item.DESTINO || '');
                 const isMultipleTrip = temDestino && item.VIAGEM_MULTIPLA;
                 const opInfo = item.OP_INFO || operacoesMap[item.OP] || { nome: item.OP, cor: '#666' };
                 
@@ -2406,6 +2388,34 @@
             }
         }
 
+        // FORMATAR DESTINO
+        function formatDestination(destino) {
+            if (!destino || destino.trim() === '') return '<span style="color: #9e9e9e; font-style: italic;">Sem destino</span>';
+            
+            const destinoUpper = destino.toUpperCase();
+            if (destinoUpper.includes('COBRANÇA') || 
+                destinoUpper.includes('COBRANCA') ||
+                destinoUpper.startsWith('GARAGEM X') ||
+                destinoUpper.includes(' X GARAGEM') ||
+                destinoUpper.includes('RETORNOU CARREGADO') ||
+                destinoUpper.includes('SEM CONDIÇÕES') ||
+                destinoUpper.includes('NÃO SAIU') ||
+                destinoUpper.includes('VEÍCULO NÃO') ||
+                destinoUpper.includes('TRANSBORDO')) {
+                return `<span style="color: #9e9e9e; font-style: italic;">${destino.substring(0, 50)}${destino.length > 50 ? '...' : ''} (inválido)</span>`;
+            }
+            
+            const lojaMatch = destino.match(/(\d+)/);
+            if (lojaMatch) {
+                const lojaNum = lojaMatch[0];
+                const nomePart = destino.split('-').slice(1).join('-').trim() || destino.split(' ').slice(1).join(' ').trim();
+                const nome = nomePart.substring(0, 25);
+                return `<span title="${destino}">${lojaNum} - ${nome}${nomePart.length > 25 ? '...' : ''}</span>`;
+            }
+            
+            return destino.substring(0, 30) + (destino.length > 30 ? '...' : '');
+        }
+
         // OBTER DADOS FILTRADOS
         function getFilteredData() {
             let filtered = [...frotaData];
@@ -2442,29 +2452,6 @@
             }
             
             return filtered;
-        }
-
-        // FORMATAR DESTINO
-        function formatDestination(destino) {
-            if (!destino || destino.trim() === '') return '<span style="color: #9e9e9e; font-style: italic;">Sem destino</span>';
-            
-            const destinoUpper = destino.toUpperCase();
-            if (destinoUpper.includes('COBRANÇA 50%') || 
-                destinoUpper.includes('COBRANCA 50%') ||
-                destinoUpper.startsWith('GARAGEM X') ||
-                destinoUpper.includes(' X GARAGEM')) {
-                return `<span style="color: #9e9e9e; font-style: italic;">${destino} (inválido)</span>`;
-            }
-            
-            const lojaMatch = destino.match(/(\d+)/);
-            if (lojaMatch) {
-                const lojaNum = lojaMatch[0];
-                const nomePart = destino.split('-').slice(1).join('-').trim();
-                const nome = nomePart.substring(0, 25);
-                return `<span title="${destino}">${lojaNum} - ${nome}${nomePart.length > 25 ? '...' : ''}</span>`;
-            }
-            
-            return destino.substring(0, 30) + (destino.length > 30 ? '...' : '');
         }
 
         // FILTRAR TABELA
@@ -2809,7 +2796,7 @@
             document.body.removeChild(textArea);
         }
 
-        // HANDLE FILE UPLOAD - VERSÃO SIMPLIFICADA E FUNCIONAL
+        // HANDLE FILE UPLOAD
         function handleFileUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
