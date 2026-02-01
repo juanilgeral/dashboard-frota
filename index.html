@@ -442,71 +442,311 @@
             opacity: 0.8;
         }
 
-        .controle-diario-operations {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
-            padding: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* RELAÇÃO VEÍCULOS/MOTORISTAS */
+        .relacao-veiculos-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
             position: relative;
-            z-index: 2;
         }
 
-        .controle-operations-title {
+        .relacao-veiculos-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #1a237e, #283593, #3949ab);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .relacao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .relacao-titulo {
+            color: #1a237e;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .relacao-titulo span {
+            font-size: 2rem;
+        }
+
+        .relacao-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .relacao-btn {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+        }
+
+        .relacao-btn:hover {
+            background: linear-gradient(135deg, #283593 0%, #3949ab 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+        }
+
+        .relacao-btn.warning {
+            background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+        }
+
+        .relacao-btn.warning:hover {
+            background: linear-gradient(135deg, #f57c00 0%, #ff9800 100%);
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
+        .relacao-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .relacao-section {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .relacao-section-title {
+            color: #1a237e;
             font-size: 1.1rem;
             font-weight: 700;
             margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
         }
 
-        .controle-operations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 10px;
+        .relacao-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
         }
 
-        .controle-op-item {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 12px;
-            border-radius: 6px;
+        .relacao-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .relacao-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .relacao-list::-webkit-scrollbar-thumb {
+            background: #c5c5c5;
+            border-radius: 10px;
+        }
+
+        .relacao-item {
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            border-left: 4px solid;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 4px solid #1a237e;
             transition: all 0.2s;
         }
 
-        .controle-op-item:hover {
-            background: rgba(255, 255, 255, 0.15);
+        .relacao-item:hover {
+            background: #f0f0f0;
+            transform: translateX(3px);
         }
 
-        .controle-op-badge {
+        .relacao-nome {
+            font-weight: 600;
+            color: #424242;
+            flex: 1;
+        }
+
+        .relacao-count {
+            background: #1a237e;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .relacao-summary {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .relacao-summary-item {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            border-radius: 8px;
+            color: white;
+        }
+
+        .relacao-summary-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .relacao-summary-value {
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        /* MODAL DE ATUALIZAÇÃO */
+        .update-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .update-modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .update-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .update-modal-title {
+            color: #1a237e;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #666;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
             width: 40px;
             height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            flex-shrink: 0;
-            color: white !important;
+            transition: all 0.3s;
         }
 
-        .controle-op-info {
-            flex: 1;
+        .close-btn:hover {
+            background: #f5f5f5;
+            color: #c62828;
         }
 
-        .controle-op-sigla {
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: #424242;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #1a237e;
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
             font-weight: 700;
             font-size: 1rem;
-            margin-bottom: 2px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .controle-op-count {
-            font-size: 0.85rem;
-            opacity: 0.9;
+        .submit-btn:hover {
+            background: linear-gradient(135deg, #1b5e20 0%, #388e3c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
         }
 
         /* DASHBOARD LAYOUT */
@@ -1134,6 +1374,90 @@
             top: -5px;
         }
 
+        /* PASSWORD MODAL */
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .password-modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .password-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .password-modal-title {
+            color: #1a237e;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #1a237e;
+            box-shadow: 0 0 0 3px rgba(26, 35, 126, 0.1);
+        }
+
+        .password-error {
+            color: #c62828;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .password-btn {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .password-btn:hover {
+            background: linear-gradient(135deg, #283593 0%, #3949ab 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26, 35, 126, 0.3);
+        }
+
         /* LOADING */
         .loading-overlay {
             position: fixed;
@@ -1205,6 +1529,11 @@
                 width: 100%;
                 justify-content: flex-start;
             }
+            
+            .relacao-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1259,6 +1588,20 @@
             
             .upload-btn {
                 width: 100%;
+            }
+            
+            .relacao-controls {
+                flex-direction: column;
+                width: 100%;
+            }
+            
+            .relacao-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .relacao-summary {
+                grid-template-columns: 1fr;
             }
         }
 
@@ -1350,6 +1693,61 @@
         <!-- CONTROLE DIÁRIO DA FROTA -->
         <div class="controle-diario-card" id="controleDiario">
             <!-- Carregado dinamicamente -->
+        </div>
+
+        <!-- RELAÇÃO VEÍCULOS/MOTORISTAS -->
+        <div class="relacao-veiculos-card" id="relacaoVeiculosCard">
+            <div class="relacao-header">
+                <div class="relacao-titulo">
+                    <span>🚚</span>
+                    Relação Veículos/Motoristas
+                </div>
+                <div class="relacao-controls">
+                    <button class="relacao-btn" onclick="openUpdateVeiculosModal()">
+                        <span>📝</span>
+                        Atualizar Veículos
+                    </button>
+                    <button class="relacao-btn warning" onclick="openUpdateMotoristasModal()">
+                        <span>👷</span>
+                        Atualizar Motoristas
+                    </button>
+                </div>
+            </div>
+            
+            <div class="relacao-grid">
+                <div class="relacao-section">
+                    <div class="relacao-section-title">
+                        <span>🚛</span>
+                        Veículos em Operação
+                        <span style="margin-left: auto; font-size: 0.9rem; color: #666;" id="totalVeiculosInfo">Total: 0</span>
+                    </div>
+                    <div class="relacao-list" id="veiculosList">
+                        <!-- Carregado dinamicamente -->
+                    </div>
+                </div>
+                
+                <div class="relacao-section">
+                    <div class="relacao-section-title">
+                        <span>👷</span>
+                        Motoristas Ativos
+                        <span style="margin-left: auto; font-size: 0.9rem; color: #666;" id="totalMotoristasInfo">Total: 0</span>
+                    </div>
+                    <div class="relacao-list" id="motoristasList">
+                        <!-- Carregado dinamicamente -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="relacao-summary">
+                <div class="relacao-summary-item">
+                    <div class="relacao-summary-label">Total de Veículos</div>
+                    <div class="relacao-summary-value" id="totalVeiculos">0</div>
+                </div>
+                <div class="relacao-summary-item">
+                    <div class="relacao-summary-label">Total de Motoristas</div>
+                    <div class="relacao-summary-value" id="totalMotoristas">0</div>
+                </div>
+            </div>
         </div>
 
         <!-- DASHBOARD PRINCIPAL -->
@@ -1444,13 +1842,13 @@
                 Atualização de Dados Completa
             </div>
             
-            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-box" onclick="requestPassword()">
                 <div class="upload-icon">📁</div>
                 <p style="font-size: 1.2rem; margin-bottom: 10px; color: #1a237e; font-weight: 700;">
                     Importar Planilha Completa
                 </p>
                 <p style="color: #666;">
-                    Clique para importar todos os dados da sua planilha
+                    Clique para importar todos os dados da sua planilha (Somente Supervisão)
                 </p>
             </div>
             
@@ -1458,12 +1856,6 @@
             
             <!-- BOTÕES DE CONTROLE ADICIONAIS -->
             <div class="upload-controls">
-                <button class="upload-btn" onclick="importNewData()">
-                    📥 Importar Novos Dados
-                </button>
-                <button class="upload-btn warning" onclick="updateStatistics()">
-                    🔄 Atualizar Estatísticas
-                </button>
                 <button class="upload-btn danger" onclick="confirmClearData()">
                     🗑️ Limpar Todos os Dados
                 </button>
@@ -1477,8 +1869,8 @@
                     <li><strong>Destinos inválidos:</strong> COBRANÇA 50%, Garagem X..., ... X Garagem, campos vazios</li>
                     <li><strong>Controle manual</strong> de finalização preservado</li>
                     <li><strong>Últimos 3 dias</strong> mostrados no resumo acima</li>
-                    <li><strong>Botão Limpar:</strong> Remove todos os dados para importação de novo arquivo</li>
-                    <li><strong>Botão Atualizar:</strong> Recalcula estatísticas de veículos e motoristas</li>
+                    <li><strong>Senha de supervisão:</strong> @admin0768# (necessária para importar dados)</li>
+                    <li><strong>Relação Veículos/Motoristas:</strong> Atualize manualmente os totais</li>
                 </ul>
             </div>
         </div>
@@ -1487,6 +1879,120 @@
         <div class="footer">
             <p>Sistema Completo de Controle de Frota • Todas as operações • Apenas viagens com destino válido</p>
             <p>Total de registros: <span id="totalRecords">0</span> • Viagens com destino válido: <span id="totalViagensComDestino">0</span> • Última atualização: <span id="lastUpdate">Carregando...</span></p>
+        </div>
+    </div>
+
+    <!-- MODAL DE ATUALIZAÇÃO DE VEÍCULOS -->
+    <div class="update-modal" id="updateVeiculosModal">
+        <div class="update-modal-content">
+            <div class="update-modal-header">
+                <div class="update-modal-title">
+                    <span>🚛</span>
+                    Atualizar Total de Veículos
+                </div>
+                <button class="close-btn" onclick="closeUpdateVeiculosModal()">×</button>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Total de Veículos em Operação:</label>
+                <input type="number" id="veiculosInput" class="form-input" min="0" max="100" placeholder="Ex: 25" value="0">
+                <div class="form-text">Informe o número total de veículos disponíveis para operação.</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Distribuição por Operação (opcional):</label>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <label style="font-size: 0.9rem; color: #666;">LS:</label>
+                        <input type="number" id="veiculosLS" class="form-input" min="0" placeholder="0" style="font-size: 0.9rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.9rem; color: #666;">HT:</label>
+                        <input type="number" id="veiculosHT" class="form-input" min="0" placeholder="0" style="font-size: 0.9rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.9rem; color: #666;">TL:</label>
+                        <input type="number" id="veiculosTL" class="form-input" min="0" placeholder="0" style="font-size: 0.9rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.9rem; color: #666;">CV:</label>
+                        <input type="number" id="veiculosCV" class="form-input" min="0" placeholder="0" style="font-size: 0.9rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.9rem; color: #666;">NL:</label>
+                        <input type="number" id="veiculosNL" class="form-input" min="0" placeholder="0" style="font-size: 0.9rem;">
+                    </div>
+                </div>
+                <div class="form-text">Preencha a distribuição por operação para um controle mais detalhado.</div>
+            </div>
+            
+            <button class="submit-btn" onclick="updateVeiculos()">
+                <span>💾</span>
+                Salvar Alterações
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DE ATUALIZAÇÃO DE MOTORISTAS -->
+    <div class="update-modal" id="updateMotoristasModal">
+        <div class="update-modal-content">
+            <div class="update-modal-header">
+                <div class="update-modal-title">
+                    <span>👷</span>
+                    Atualizar Total de Motoristas
+                </div>
+                <button class="close-btn" onclick="closeUpdateMotoristasModal()">×</button>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Total de Motoristas Ativos:</label>
+                <input type="number" id="motoristasInput" class="form-input" min="0" max="50" placeholder="Ex: 18" value="0">
+                <div class="form-text">Informe o número total de motoristas disponíveis para operação.</div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Adicionar Motoristas (opcional):</label>
+                <textarea id="motoristasListInput" class="form-input" rows="4" placeholder="Digite os nomes dos motoristas, um por linha
+Ex:
+João Silva
+Maria Santos
+Carlos Oliveira"></textarea>
+                <div class="form-text">Adicione os nomes dos motoristas, um por linha. Os nomes serão combinados com os já existentes.</div>
+            </div>
+            
+            <button class="submit-btn" onclick="updateMotoristas()">
+                <span>💾</span>
+                Salvar Alterações
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL DE SENHA -->
+    <div class="password-modal" id="passwordModal">
+        <div class="password-modal-content">
+            <div class="password-modal-header">
+                <div class="password-modal-title">
+                    <span>🔒</span>
+                    Autenticação de Supervisão
+                </div>
+                <button class="close-btn" onclick="closePasswordModal()">×</button>
+            </div>
+            
+            <p style="color: #666; margin-bottom: 20px; text-align: center;">
+                Esta ação requer autorização de supervisão.<br>
+                Digite a senha para continuar.
+            </p>
+            
+            <input type="password" id="passwordInput" class="password-input" placeholder="Digite a senha de supervisão">
+            
+            <div class="password-error" id="passwordError">
+                Senha incorreta. Tente novamente.
+            </div>
+            
+            <button class="password-btn" onclick="verifyPassword()">
+                <span>🔑</span>
+                Verificar Senha
+            </button>
         </div>
     </div>
 
@@ -1572,6 +2078,26 @@
         let driverStatistics = {};
         let routeStatistics = {};
         let vehicleStatistics = {};
+        
+        // Dados de veículos e motoristas
+        let veiculosData = {
+            total: 0,
+            distribuicao: {
+                LS: 0,
+                HT: 0,
+                TL: 0,
+                CV: 0,
+                NL: 0
+            }
+        };
+        
+        let motoristasData = {
+            total: 0,
+            lista: []
+        };
+        
+        // Senha de supervisão
+        const SUPERVISOR_PASSWORD = "@admin0768#";
 
         // Mapeamento das operações
         const operacoesMap = {
@@ -1599,6 +2125,9 @@
                 // Carregar dados do localStorage
                 loadDataFromStorage();
                 
+                // Carregar dados de veículos e motoristas
+                loadVeiculosMotoristasData();
+                
                 // Carregar finalizações manuais
                 loadManualFinalizations();
                 
@@ -1620,6 +2149,7 @@
                 updateDateFilterOptions();
                 loadTableData();
                 updateRotaFrequente();
+                updateRelacaoVeiculosMotoristas();
                 updateTimestamp();
                 
                 // Atualizar contadores
@@ -1642,6 +2172,47 @@
             } else {
                 processCSVData(initialFrotaData);
             }
+        }
+
+        // CARREGAR DADOS DE VEÍCULOS E MOTORISTAS
+        function loadVeiculosMotoristasData() {
+            // Carregar veículos
+            const savedVeiculos = localStorage.getItem('frotaVeiculosData');
+            if (savedVeiculos) {
+                try {
+                    veiculosData = JSON.parse(savedVeiculos);
+                } catch (e) {
+                    veiculosData = {
+                        total: 0,
+                        distribuicao: {
+                            LS: 0,
+                            HT: 0,
+                            TL: 0,
+                            CV: 0,
+                            NL: 0
+                        }
+                    };
+                }
+            }
+            
+            // Carregar motoristas
+            const savedMotoristas = localStorage.getItem('frotaMotoristasData');
+            if (savedMotoristas) {
+                try {
+                    motoristasData = JSON.parse(savedMotoristas);
+                } catch (e) {
+                    motoristasData = {
+                        total: 0,
+                        lista: []
+                    };
+                }
+            }
+        }
+
+        // SALVAR DADOS DE VEÍCULOS E MOTORISTAS
+        function saveVeiculosMotoristasData() {
+            localStorage.setItem('frotaVeiculosData', JSON.stringify(veiculosData));
+            localStorage.setItem('frotaMotoristasData', JSON.stringify(motoristasData));
         }
 
         // SALVAR DADOS NO LOCALSTORAGE
@@ -1945,6 +2516,7 @@
             updateDateFilterOptions();
             loadTableData();
             updateRotaFrequente();
+            updateRelacaoVeiculosMotoristas();
             updateTimestamp();
             updateCounters();
         }
@@ -2338,6 +2910,111 @@
             document.getElementById('controleDiario').innerHTML = html;
         }
 
+        // ATUALIZAR RELAÇÃO VEÍCULOS/MOTORISTAS
+        function updateRelacaoVeiculosMotoristas() {
+            // Atualizar totais
+            document.getElementById('totalVeiculos').textContent = veiculosData.total;
+            document.getElementById('totalMotoristas').textContent = motoristasData.total;
+            document.getElementById('totalVeiculosInfo').textContent = `Total: ${veiculosData.total}`;
+            document.getElementById('totalMotoristasInfo').textContent = `Total: ${motoristasData.total}`;
+            
+            // Atualizar lista de veículos (com base nos dados)
+            const veiculosList = document.getElementById('veiculosList');
+            const motoristasList = document.getElementById('motoristasList');
+            
+            // Se não há veículos definidos, usar os do CSV
+            if (veiculosData.total === 0) {
+                const veiculosSet = new Set();
+                frotaData.forEach(item => {
+                    if (item.VEICULO && item.TEM_DESTINO) {
+                        veiculosSet.add(item.VEICULO);
+                    }
+                });
+                
+                const veiculosArray = Array.from(veiculosSet);
+                veiculosData.total = veiculosArray.length;
+                
+                let veiculosHtml = '';
+                veiculosArray.forEach(veiculo => {
+                    const count = frotaData.filter(item => item.VEICULO === veiculo && item.TEM_DESTINO).length;
+                    veiculosHtml += `
+                        <div class="relacao-item">
+                            <div class="relacao-nome">${veiculo}</div>
+                            <div class="relacao-count">${count}</div>
+                        </div>
+                    `;
+                });
+                
+                veiculosList.innerHTML = veiculosHtml || '<div style="text-align: center; padding: 20px; color: #666;">Nenhum veículo encontrado</div>';
+                document.getElementById('totalVeiculos').textContent = veiculosData.total;
+                document.getElementById('totalVeiculosInfo').textContent = `Total: ${veiculosData.total}`;
+            } else {
+                // Usar dados salvos
+                let veiculosHtml = '';
+                if (motoristasData.lista.length > 0) {
+                    // Listar motoristas salvos
+                    motoristasData.lista.forEach((motorista, index) => {
+                        const count = frotaData.filter(item => item.MOTORISTA === motorista && item.TEM_DESTINO).length;
+                        veiculosHtml += `
+                            <div class="relacao-item">
+                                <div class="relacao-nome">Motorista ${index + 1}</div>
+                                <div class="relacao-count">${count} viagens</div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    veiculosHtml = '<div style="text-align: center; padding: 20px; color: #666;">Adicione veículos através do botão "Atualizar Veículos"</div>';
+                }
+                veiculosList.innerHTML = veiculosHtml;
+            }
+            
+            // Atualizar lista de motoristas
+            if (motoristasData.total === 0) {
+                const motoristasSet = new Set();
+                frotaData.forEach(item => {
+                    if (item.MOTORISTA && item.TEM_DESTINO) {
+                        motoristasSet.add(item.MOTORISTA);
+                    }
+                });
+                
+                const motoristasArray = Array.from(motoristasSet);
+                motoristasData.total = motoristasArray.length;
+                
+                let motoristasHtml = '';
+                motoristasArray.forEach(motorista => {
+                    const count = frotaData.filter(item => item.MOTORISTA === motorista && item.TEM_DESTINO).length;
+                    motoristasHtml += `
+                        <div class="relacao-item">
+                            <div class="relacao-nome">${motorista}</div>
+                            <div class="relacao-count">${count}</div>
+                        </div>
+                    `;
+                });
+                
+                motoristasList.innerHTML = motoristasHtml || '<div style="text-align: center; padding: 20px; color: #666;">Nenhum motorista encontrado</div>';
+                document.getElementById('totalMotoristas').textContent = motoristasData.total;
+                document.getElementById('totalMotoristasInfo').textContent = `Total: ${motoristasData.total}`;
+            } else {
+                // Usar dados salvos
+                let motoristasHtml = '';
+                if (motoristasData.lista.length > 0) {
+                    // Listar motoristas salvos
+                    motoristasData.lista.forEach(motorista => {
+                        const count = frotaData.filter(item => item.MOTORISTA === motorista && item.TEM_DESTINO).length;
+                        motoristasHtml += `
+                            <div class="relacao-item">
+                                <div class="relacao-nome">${motorista}</div>
+                                <div class="relacao-count">${count} viagens</div>
+                            </div>
+                        `;
+                    });
+                } else {
+                    motoristasHtml = '<div style="text-align: center; padding: 20px; color: #666;">Adicione motoristas através do botão "Atualizar Motoristas"</div>';
+                }
+                motoristasList.innerHTML = motoristasHtml;
+            }
+        }
+
         // ATUALIZAR OPÇÕES DO FILTRO DE DATA
         function updateDateFilterOptions() {
             const select = document.getElementById('dateFilter');
@@ -2684,6 +3361,236 @@
             document.getElementById('rotaFrequenteContent').innerHTML = html;
         }
 
+        // ============================================
+        // FUNÇÕES DE CONTROLE E MODAIS
+        // ============================================
+
+        // ABRIR MODAL DE ATUALIZAÇÃO DE VEÍCULOS
+        function openUpdateVeiculosModal() {
+            document.getElementById('veiculosInput').value = veiculosData.total;
+            document.getElementById('veiculosLS').value = veiculosData.distribuicao.LS;
+            document.getElementById('veiculosHT').value = veiculosData.distribuicao.HT;
+            document.getElementById('veiculosTL').value = veiculosData.distribuicao.TL;
+            document.getElementById('veiculosCV').value = veiculosData.distribuicao.CV;
+            document.getElementById('veiculosNL').value = veiculosData.distribuicao.NL;
+            document.getElementById('updateVeiculosModal').style.display = 'flex';
+        }
+
+        // FECHAR MODAL DE ATUALIZAÇÃO DE VEÍCULOS
+        function closeUpdateVeiculosModal() {
+            document.getElementById('updateVeiculosModal').style.display = 'none';
+        }
+
+        // ATUALIZAR DADOS DE VEÍCULOS
+        function updateVeiculos() {
+            const total = parseInt(document.getElementById('veiculosInput').value) || 0;
+            const ls = parseInt(document.getElementById('veiculosLS').value) || 0;
+            const ht = parseInt(document.getElementById('veiculosHT').value) || 0;
+            const tl = parseInt(document.getElementById('veiculosTL').value) || 0;
+            const cv = parseInt(document.getElementById('veiculosCV').value) || 0;
+            const nl = parseInt(document.getElementById('veiculosNL').value) || 0;
+            
+            // Validar se a soma das distribuições não excede o total
+            const somaDistribuicao = ls + ht + tl + cv + nl;
+            if (somaDistribuicao > total) {
+                showNotification('A soma das distribuições por operação não pode ser maior que o total de veículos!', 'error');
+                return;
+            }
+            
+            veiculosData = {
+                total: total,
+                distribuicao: {
+                    LS: ls,
+                    HT: ht,
+                    TL: tl,
+                    CV: cv,
+                    NL: nl
+                }
+            };
+            
+            saveVeiculosMotoristasData();
+            updateRelacaoVeiculosMotoristas();
+            closeUpdateVeiculosModal();
+            
+            showNotification(`Total de veículos atualizado para ${total}`, 'success');
+        }
+
+        // ABRIR MODAL DE ATUALIZAÇÃO DE MOTORISTAS
+        function openUpdateMotoristasModal() {
+            document.getElementById('motoristasInput').value = motoristasData.total;
+            document.getElementById('motoristasListInput').value = motoristasData.lista.join('\n');
+            document.getElementById('updateMotoristasModal').style.display = 'flex';
+        }
+
+        // FECHAR MODAL DE ATUALIZAÇÃO DE MOTORISTAS
+        function closeUpdateMotoristasModal() {
+            document.getElementById('updateMotoristasModal').style.display = 'none';
+        }
+
+        // ATUALIZAR DADOS DE MOTORISTAS
+        function updateMotoristas() {
+            const total = parseInt(document.getElementById('motoristasInput').value) || 0;
+            const listaTexto = document.getElementById('motoristasListInput').value;
+            
+            // Processar lista de motoristas
+            const novaLista = listaTexto.split('\n')
+                .map(nome => nome.trim())
+                .filter(nome => nome.length > 0);
+            
+            // Combinar com lista existente, removendo duplicatas
+            const listaCombinada = [...new Set([...motoristasData.lista, ...novaLista])];
+            
+            // Se o total for maior que 0, ajustar a lista
+            let listaFinal = listaCombinada;
+            if (total > 0 && listaCombinada.length < total) {
+                // Adicionar motoristas genéricos se necessário
+                for (let i = listaCombinada.length; i < total; i++) {
+                    listaFinal.push(`Motorista ${i + 1}`);
+                }
+            } else if (total > 0 && listaCombinada.length > total) {
+                // Limitar ao total informado
+                listaFinal = listaCombinada.slice(0, total);
+            }
+            
+            motoristasData = {
+                total: total,
+                lista: listaFinal
+            };
+            
+            saveVeiculosMotoristasData();
+            updateRelacaoVeiculosMotoristas();
+            closeUpdateMotoristasModal();
+            
+            showNotification(`Total de motoristas atualizado para ${total}`, 'success');
+        }
+
+        // SOLICITAR SENHA PARA IMPORTAR DADOS
+        function requestPassword() {
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('passwordError').style.display = 'none';
+            document.getElementById('passwordModal').style.display = 'flex';
+        }
+
+        // FECHAR MODAL DE SENHA
+        function closePasswordModal() {
+            document.getElementById('passwordModal').style.display = 'none';
+        }
+
+        // VERIFICAR SENHA
+        function verifyPassword() {
+            const password = document.getElementById('passwordInput').value;
+            
+            if (password === SUPERVISOR_PASSWORD) {
+                closePasswordModal();
+                document.getElementById('fileInput').click();
+            } else {
+                document.getElementById('passwordError').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        }
+
+        // HANDLE FILE UPLOAD
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                alert('Por favor, selecione um arquivo CSV!');
+                return;
+            }
+            
+            showLoading();
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const csvData = e.target.result;
+                    
+                    if (!csvData || csvData.trim().length === 0) {
+                        throw new Error('Arquivo CSV vazio');
+                    }
+                    
+                    // Processar os dados
+                    processCSVData(csvData);
+                    
+                    showNotification(
+                        `Dados atualizados com sucesso! ${frotaData.length} registros carregados (${frotaData.filter(item => item.TEM_DESTINO).length} com destino válido).`,
+                        'success'
+                    );
+                    
+                } catch (error) {
+                    console.error('Erro ao processar arquivo:', error);
+                    showNotification(`Erro ao processar arquivo: ${error.message}`, 'error');
+                } finally {
+                    hideLoading();
+                }
+            };
+            
+            reader.onerror = function() {
+                alert('Erro ao ler o arquivo');
+                hideLoading();
+            };
+            
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        // CONFIRMAR LIMPEZA DE DADOS
+        function confirmClearData() {
+            if (confirm('⚠️ ATENÇÃO: Esta ação irá REMOVER TODOS os dados do sistema!\n\nIsso inclui:\n• Todos os registros de viagens\n• Finalizações manuais\n• Estatísticas\n• Dados de veículos e motoristas\n\nVocê poderá importar um novo arquivo CSV após a limpeza.\n\nTem certeza que deseja continuar?')) {
+                clearAllData();
+            }
+        }
+
+        // LIMPAR TODOS OS DADOS
+        function clearAllData() {
+            showLoading();
+            
+            try {
+                // Limpar arrays
+                frotaData = [];
+                manualFinalizations = {};
+                allDates = [];
+                driverStatistics = {};
+                routeStatistics = {};
+                vehicleStatistics = {};
+                
+                // Limpar dados de veículos e motoristas
+                veiculosData = {
+                    total: 0,
+                    distribuicao: {
+                        LS: 0,
+                        HT: 0,
+                        TL: 0,
+                        CV: 0,
+                        NL: 0
+                    }
+                };
+                
+                motoristasData = {
+                    total: 0,
+                    lista: []
+                };
+                
+                // Limpar localStorage
+                localStorage.removeItem('frotaCSVData');
+                localStorage.removeItem('frotaManualFinalizations');
+                localStorage.removeItem('frotaVeiculosData');
+                localStorage.removeItem('frotaMotoristasData');
+                
+                // Resetar para dados iniciais vazios
+                processCSVData('DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,PRÓX_HORA_DISP,DESTINO,SAÍDA_VEÍCULO_CD');
+                
+                showNotification('✅ Todos os dados foram removidos com sucesso! Agora você pode importar um novo arquivo CSV.', 'success');
+            } catch (error) {
+                console.error('Erro ao limpar dados:', error);
+                showNotification('Erro ao limpar dados: ' + error.message, 'error');
+            } finally {
+                hideLoading();
+            }
+        }
+
         // ABRIR MODAL DE EXPORTAÇÃO
         function openExportModal() {
             if (Object.keys(routeStatistics).length === 0) {
@@ -2877,124 +3784,6 @@
             document.body.removeChild(textArea);
         }
 
-        // HANDLE FILE UPLOAD
-        function handleFileUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            if (!file.name.toLowerCase().endsWith('.csv')) {
-                alert('Por favor, selecione um arquivo CSV!');
-                return;
-            }
-            
-            showLoading();
-            
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                try {
-                    const csvData = e.target.result;
-                    
-                    if (!csvData || csvData.trim().length === 0) {
-                        throw new Error('Arquivo CSV vazio');
-                    }
-                    
-                    // Processar os dados
-                    processCSVData(csvData);
-                    
-                    showNotification(
-                        `Dados atualizados com sucesso! ${frotaData.length} registros carregados (${frotaData.filter(item => item.TEM_DESTINO).length} com destino válido).`,
-                        'success'
-                    );
-                    
-                } catch (error) {
-                    console.error('Erro ao processar arquivo:', error);
-                    showNotification(`Erro ao processar arquivo: ${error.message}`, 'error');
-                } finally {
-                    hideLoading();
-                }
-            };
-            
-            reader.onerror = function() {
-                alert('Erro ao ler o arquivo');
-                hideLoading();
-            };
-            
-            reader.readAsText(file, 'UTF-8');
-        }
-
-        // ============================================
-        // FUNÇÕES NOVAS ADICIONADAS
-        // ============================================
-
-        // IMPORTAR NOVOS DADOS (ABRE O SELETOR DE ARQUIVOS)
-        function importNewData() {
-            document.getElementById('fileInput').click();
-        }
-
-        // ATUALIZAR ESTATÍSTICAS MANUALMENTE
-        function updateStatistics() {
-            showLoading();
-            
-            try {
-                // Recalcular todas as estatísticas
-                calculateAdvancedStatistics();
-                
-                // Atualizar a interface
-                loadLast3DaysSummary();
-                loadControleDiario();
-                updateRotaFrequente();
-                updateTimestamp();
-                updateCounters();
-                
-                showNotification('Estatísticas recalculadas com sucesso! Total de veículos e motoristas atualizados.', 'success');
-            } catch (error) {
-                console.error('Erro ao atualizar estatísticas:', error);
-                showNotification('Erro ao atualizar estatísticas: ' + error.message, 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        // CONFIRMAR LIMPEZA DE DADOS
-        function confirmClearData() {
-            if (confirm('⚠️ ATENÇÃO: Esta ação irá REMOVER TODOS os dados do sistema!\n\nIsso inclui:\n• Todos os registros de viagens\n• Finalizações manuais\n• Estatísticas\n\nVocê poderá importar um novo arquivo CSV após a limpeza.\n\nTem certeza que deseja continuar?')) {
-                clearAllData();
-            }
-        }
-
-        // LIMPAR TODOS OS DADOS
-        function clearAllData() {
-            showLoading();
-            
-            try {
-                // Limpar arrays
-                frotaData = [];
-                manualFinalizations = {};
-                allDates = [];
-                driverStatistics = {};
-                routeStatistics = {};
-                vehicleStatistics = {};
-                
-                // Limpar localStorage
-                localStorage.removeItem('frotaCSVData');
-                localStorage.removeItem('frotaManualFinalizations');
-                
-                // Resetar para dados iniciais vazios
-                processCSVData('DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,PRÓX_HORA_DISP,DESTINO,SAÍDA_VEÍCULO_CD');
-                
-                // Atualizar interface
-                updateAllAfterDataLoad();
-                
-                showNotification('✅ Todos os dados foram removidos com sucesso! Agora você pode importar um novo arquivo CSV.', 'success');
-            } catch (error) {
-                console.error('Erro ao limpar dados:', error);
-                showNotification('Erro ao limpar dados: ' + error.message, 'error');
-            } finally {
-                hideLoading();
-            }
-        }
-
         // MOSTRAR NOTIFICAÇÃO
         function showNotification(message, type = 'info') {
             console.log(`[${type.toUpperCase()}] ${message}`);
@@ -3062,11 +3851,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Garantir que o upload box funcione
             const uploadBox = document.querySelector('.upload-box');
-            const fileInput = document.getElementById('fileInput');
             
-            if (uploadBox && fileInput) {
+            if (uploadBox) {
                 uploadBox.addEventListener('click', function() {
-                    fileInput.click();
+                    requestPassword();
                 });
             }
             
