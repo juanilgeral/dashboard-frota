@@ -1784,12 +1784,13 @@
             localStorage.setItem('frotaManualFinalizations', JSON.stringify(manualFinalizations));
         }
 
-        // APLICAR FINALIZAÇÕES MANUAIS
+        // APLICAR FINALIZAÇÕES MANUAIS - VERSÃO CORRIGIDA
         function applyManualFinalizations() {
             frotaData.forEach(item => {
                 if (manualFinalizations[item.id]) {
                     item.STATUS_MANUAL = 'finalizado';
                     item.FINALIZADO_MANUALMENTE = true;
+                    console.log(`Aplicando finalização manual para ID: ${item.id} - Veículo: ${item.VEICULO}`);
                 } else {
                     item.STATUS_MANUAL = null;
                     item.FINALIZADO_MANUALMENTE = false;
@@ -1906,7 +1907,7 @@
                     }
                     stats.operacoes[item.OP]++;
                     
-                    if (item.STATUS_AUTO === 'finalizado' || item.STATUS_MANUAL === 'finalizado') {
+                    if (item.STATUS_MANUAL === 'finalizado' || item.STATUS_AUTO === 'finalizado') {
                         stats.viagensConcluidas++;
                     }
                     
@@ -2090,12 +2091,12 @@
             document.getElementById('last3DaysSummary').innerHTML = html;
         }
 
-        // CARREGAR CONTROLE DIÁRIO DA FROTA - VERSÃO CORRIGIDA
+        // CARREGAR CONTROLE DIÁRIO DA FROTA - VERSÃO COMPLETAMENTE CORRIGIDA
         function loadControleDiario() {
             const dateFilter = document.getElementById('dateFilter').value;
             let targetDate = dateFilter !== 'all' ? dateFilter : '31/01/26';
             
-            // CRÍTICO: Usar todos os dados, não apenas os filtrados
+            // Usar TODOS os dados da data selecionada, não apenas os filtrados
             const viagensDoDia = frotaData.filter(item => item.DATA === targetDate && item.TEM_DESTINO);
             
             if (viagensDoDia.length === 0) {
@@ -2114,15 +2115,14 @@
                 return;
             }
             
-            const totalViagens = viagensDoDia.length;
-            const veiculosSet = new Set();
-            const motoristasSet = new Set();
-            const operacoesCount = {};
-            
-            // CRÍTICO: Contar status corretamente considerando finalizações manuais
+            // CONTAGEM CORRETA DOS STATUS
             let finalizadasCount = 0;
             let emRotaCount = 0;
             let pendentesCount = 0;
+            
+            const veiculosSet = new Set();
+            const motoristasSet = new Set();
+            const operacoesCount = {};
             
             viagensDoDia.forEach(item => {
                 veiculosSet.add(item.VEICULO);
@@ -2137,8 +2137,11 @@
                 }
                 operacoesCount[item.OP].count++;
                 
-                // Determinar status considerando finalizações manuais
+                // DETERMINAR STATUS FINAL (MANUAL TEM PRIORIDADE SOBRE AUTO)
                 const statusFinal = item.STATUS_MANUAL || item.STATUS_AUTO;
+                
+                // DEBUG: Log para verificar status
+                console.log(`Veículo: ${item.VEICULO}, Status Auto: ${item.STATUS_AUTO}, Status Manual: ${item.STATUS_MANUAL}, Status Final: ${statusFinal}, Finalizado Manualmente: ${item.FINALIZADO_MANUALMENTE}`);
                 
                 if (statusFinal === 'finalizado') {
                     finalizadasCount++;
@@ -2149,12 +2152,20 @@
                 }
             });
             
+            const totalViagens = viagensDoDia.length;
             const totalVeiculos = veiculosSet.size;
             const totalMotoristas = motoristasSet.size;
             
             const finalizadasPercent = totalViagens > 0 ? Math.round((finalizadasCount / totalViagens) * 100) : 0;
             const emRotaPercent = totalViagens > 0 ? Math.round((emRotaCount / totalViagens) * 100) : 0;
             const pendentesPercent = totalViagens > 0 ? Math.round((pendentesCount / totalViagens) * 100) : 0;
+            
+            // DEBUG: Log das contagens
+            console.log(`Controle Diário - Data: ${targetDate}`);
+            console.log(`Total Viagens: ${totalViagens}`);
+            console.log(`Finalizadas: ${finalizadasCount} (${finalizadasPercent}%)`);
+            console.log(`Em Rota: ${emRotaCount} (${emRotaPercent}%)`);
+            console.log(`Pendentes: ${pendentesCount} (${pendentesPercent}%)`);
             
             const statsHtml = `
                 <div class="controle-stat-item">
@@ -2296,6 +2307,7 @@
             let html = '';
             
             filteredData.forEach((item, index) => {
+                // STATUS FINAL: Manual tem prioridade sobre automático
                 const statusFinal = item.STATUS_MANUAL || item.STATUS_AUTO;
                 const isFinalizadoManualmente = item.FINALIZADO_MANUALMENTE;
                 const temDestino = item.TEM_DESTINO;
@@ -2498,10 +2510,15 @@
             filterTable();
         }
 
-        // TOGGLE FINALIZAÇÃO MANUAL - VERSÃO CORRIGIDA
+        // TOGGLE FINALIZAÇÃO MANUAL - VERSÃO COMPLETAMENTE CORRIGIDA
         function toggleFinalization(id) {
+            console.log(`Toggle finalização para ID: ${id}`);
+            
             const item = frotaData.find(item => item.id === id);
-            if (!item) return;
+            if (!item) {
+                console.error(`Item não encontrado com ID: ${id}`);
+                return;
+            }
             
             if (!item.TEM_DESTINO) {
                 showNotification('Não é possível finalizar uma viagem sem destino válido', 'error');
@@ -2513,6 +2530,7 @@
                 delete manualFinalizations[id];
                 item.STATUS_MANUAL = null;
                 item.FINALIZADO_MANUALMENTE = false;
+                console.log(`Removendo finalização manual para: ${item.VEICULO}`);
             } else {
                 manualFinalizations[id] = {
                     timestamp: new Date().toISOString(),
@@ -2520,23 +2538,33 @@
                 };
                 item.STATUS_MANUAL = 'finalizado';
                 item.FINALIZADO_MANUALMENTE = true;
+                console.log(`Aplicando finalização manual para: ${item.VEICULO}`);
             }
             
-            // Salvar alterações
+            // Salvar alterações no localStorage
             saveManualFinalizations();
             
-            // ATUALIZAR TUDO - CRÍTICO: Reaplicar as finalizações manuais
+            // DEBUG: Verificar manualFinalizations
+            console.log('Manual finalizations após alteração:', manualFinalizations);
+            
+            // ATUALIZAR TUDO - ORDEM CRÍTICA
+            // 1. Primeiro reaplicar todas as finalizações manuais
             applyManualFinalizations();
             
-            // Atualizar interface
-            filterTable();
-            loadControleDiario(); // CRÍTICO: Esta função agora usa os dados atualizados
+            // 2. Atualizar a interface
+            loadTableData();
+            
+            // 3. Atualizar o Controle Diário (AGORA DEVE FUNCIONAR)
+            loadControleDiario();
+            
+            // 4. Atualizar estatísticas
             calculateAdvancedStatistics();
             updateRotaFrequente();
+            updateCounters();
             
             showNotification(
                 item.FINALIZADO_MANUALMENTE ? 
-                `Viagem finalizada manualmente - ${item.VEICULO} (${item.DESTINO.substring(0, 30)})` :
+                `Viagem finalizada manualmente - ${item.VEICULO} (${item.MOTORISTA})` :
                 `Finalização manual removida - ${item.VEICULO}`,
                 item.FINALIZADO_MANUALMENTE ? 'success' : 'info'
             );
