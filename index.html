@@ -2096,7 +2096,7 @@
             </div>
         </div>
 
-        <!-- RESUMO DOS ÚLTIMOS 3 DIAS -->
+        <!-- RESUMO DOS ÚLTIMOS 3 DIAS (COMEÇANDO DO DIA ATUAL) -->
         <div class="day-operations" id="last3DaysSummary">
             <!-- Carregado dinamicamente -->
         </div>
@@ -2527,27 +2527,40 @@ Carlos Oliveira"></textarea>
 
     <script>
         // ============================================
-        // DADOS INICIAIS DA PLANILHA (SIMPLIFICADO)
+        // DADOS INICIAIS DA PLANILHA (VÁZIO - COMEÇA COM DATA VIGENTE)
         // ============================================
+        function getTodayDateString() {
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = String(today.getFullYear()).slice(2);
+            return `${day}/${month}/${year}`;
+        }
+
+        function getYesterdayDateString() {
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            const day = String(yesterday.getDate()).padStart(2, '0');
+            const month = String(yesterday.getMonth() + 1).padStart(2, '0');
+            const year = String(yesterday.getFullYear()).slice(2);
+            return `${day}/${month}/${year}`;
+        }
+
+        function getDayBeforeYesterdayDateString() {
+            const dayBefore = new Date();
+            dayBefore.setDate(dayBefore.getDate() - 2);
+            const day = String(dayBefore.getDate()).padStart(2, '0');
+            const month = String(dayBefore.getMonth() + 1).padStart(2, '0');
+            const year = String(dayBefore.getFullYear()).slice(2);
+            return `${day}/${month}/${year}`;
+        }
+
         const initialFrotaData = `DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,PRÓX_HORA_DISP,DESTINO,SAÍDA_VEÍCULO_CD
-02/01/26,sex.,LS,064 LUV 9296,MARTINS,05:13:00,10:13:00,14:09:00,01:09:00,069 - CAXIAS / 774 - SHOP. CAXIAS,06:10:00
-02/01/26,sex.,LS,065 KZQ 9648,JOEL,09:48:00,14:48:00,,,GARAGEM X LASA,10:14:00
-02/01/26,sex.,LS,066 LUB 1400,JOEL,09:48:00,14:48:00,16:18:00,03:18:00,GARAGEM X LASA,14:19:00
-02/01/26,sex.,LS,067 LUX 9063,CÉLIO,05:00:00,10:00:00,16:25:00,03:25:00,164 - SHOP. CARIOCA / 258 - SHOP. MADUREIRA,06:20:00
-02/01/26,sex.,TL,108 LSM 7748,CLAUDINEI,06:30:00,11:30:00,17:20:00,04:20:00,GARAGEM X TELERIO (COBRANÇA DEVIDA),06:45:00
-02/01/26,sex.,TL,113 KXU 6988,NOGUEIRA,06:43:00,11:43:00,17:20:00,04:20:00,03 - CAMPO GRANDE(Pablo e Pablo Winicius),12:50:00
-02/01/26,sex.,TL,116 LSQ 6092,ALEXANDRE,06:36:00,11:36:00,17:17:00,04:17:00,03 - CAMPO GRANDE (João Vitor e Rafael),10:10:00
-02/01/26,sex.,TL,117 KRR 2728,ANDERSON,05:44:00,10:44:00,,,GARAGEM X TELERIO,06:10:00
-02/01/26,sex.,TL,117 KRR 2728,ANDERSON,05:44:00,10:44:00,17:20:00,04:20:00,09 - MÉIER ( Wesley e Gabriel),10:50:00
-02/01/26,sex.,TL,118 LSQ 6093,EDILSON,06:47:00,11:47:00,17:20:00,04:20:00,COBRANÇA 50%,06:50:00
-02/01/26,sex.,HT,048 LSZ 0790,ROGÉRIO,03:00:00,08:00:00,11:20:00,22:20:00,MARACANÃ / CONDE DE BONFIM / CB 648 / TIJUCA / CONDE 99 / ILHA,05:30:00
-02/01/26,sex.,HT,093 KVF 3715,WALMIR,03:19:00,08:19:00,12:38:00,23:38:00,BARRA BLUE / A5 / RECREIO / AMERICAS / ABELARDO BUENO / FREGUESIA,05:12:00
-02/01/26,sex.,HT,122 DPF 7I23,VALDIR,03:00:00,08:00:00,14:05:00,01:05:00,ABRANTES / PRADO JUNIOR / SIQUEIRA CAMPOS / DIAS DA ROCHA / ADALBERTO / SÃO CONRADO / LEBLON / JARDIM BOTÂNICO,05:32:00
-02/01/26,sex.,HT,125 OWO 2F73,NEVES,03:05:00,08:05:00,11:15:00,22:15:00,M. PARANA / REGIÃO OCEÂNICA / ITAIPU / SANTA ROSA,05:37:00
-02/01/26,sex.,CV,124 ATI 4G85,ROSENDO,04:07:00,09:07:00,12:01:00,23:01:00,SÃO GONÇALO I - 374,04:47:00
-02/01/26,sex.,CV,097 LRX 4831,GILMAR,13:25:00,18:25:00,19:30:00,06:30:00,SHOP MADUREIRA-255,13:30:00
-02/01/26,sex.,CV,101 LRX 4832,LUIZ,13:00:00,18:00:00,19:00:00,06:00:00,NORTE SHOP-240,13:30:00
-02/01/26,sex.,CV,105 KPU 7450,SERGIO SILVA,13:30:00,18:30:00,18:40:00,05:40:00,SHOP CAXIAS-327,13:30:00`;
+${getDayBeforeYesterdayDateString()},qua.,LS,064 LUV 9296,MARTINS,05:13:00,10:13:00,14:09:00,01:09:00,069 - CAXIAS / 774 - SHOP. CAXIAS,06:10:00
+${getDayBeforeYesterdayDateString()},qua.,LS,065 KZQ 9648,JOEL,09:48:00,14:48:00,,,GARAGEM X LASA,10:14:00
+${getYesterdayDateString()},qui.,LS,066 LUB 1400,JOEL,09:48:00,14:48:00,16:18:00,03:18:00,GARAGEM X LASA,14:19:00
+${getYesterdayDateString()},qui.,LS,067 LUX 9063,CÉLIO,05:00:00,10:00:00,16:25:00,03:25:00,164 - SHOP. CARIOCA / 258 - SHOP. MADUREIRA,06:20:00
+${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - TIJUCA / 648 - CENTRO,06:15:00`;
 
         // ============================================
         // VARIÁVEIS GLOBAIS
@@ -2690,7 +2703,9 @@ Carlos Oliveira"></textarea>
             if (savedVeiculos) {
                 try {
                     veiculosData = JSON.parse(savedVeiculos);
+                    console.log('Veículos carregados:', veiculosData);
                 } catch (e) {
+                    console.error('Erro ao carregar veículos:', e);
                     veiculosData = {
                         total: 0,
                         distribuicao: {
@@ -2702,6 +2717,8 @@ Carlos Oliveira"></textarea>
                         }
                     };
                 }
+            } else {
+                console.log('Nenhum dado de veículos encontrado no localStorage');
             }
             
             // Carregar motoristas
@@ -2709,19 +2726,35 @@ Carlos Oliveira"></textarea>
             if (savedMotoristas) {
                 try {
                     motoristasData = JSON.parse(savedMotoristas);
+                    console.log('Motoristas carregados:', motoristasData);
+                    
+                    // Verificar se o total está correto
+                    if (motoristasData.total !== motoristasData.lista.length) {
+                        console.warn(`Total de motoristas (${motoristasData.total}) não corresponde à lista (${motoristasData.lista.length}). Corrigindo...`);
+                        motoristasData.total = motoristasData.lista.length;
+                        saveVeiculosMotoristasData();
+                    }
                 } catch (e) {
+                    console.error('Erro ao carregar motoristas:', e);
                     motoristasData = {
                         total: 0,
                         lista: []
                     };
                 }
+            } else {
+                console.log('Nenhum dado de motoristas encontrado no localStorage');
             }
         }
 
         // SALVAR DADOS DE VEÍCULOS E MOTORISTAS
         function saveVeiculosMotoristasData() {
-            localStorage.setItem('frotaVeiculosData', JSON.stringify(veiculosData));
-            localStorage.setItem('frotaMotoristasData', JSON.stringify(motoristasData));
+            try {
+                localStorage.setItem('frotaVeiculosData', JSON.stringify(veiculosData));
+                localStorage.setItem('frotaMotoristasData', JSON.stringify(motoristasData));
+                console.log('Dados de veículos e motoristas salvos:', { veiculosData, motoristasData });
+            } catch (e) {
+                console.error('Erro ao salvar dados de veículos/motoristas:', e);
+            }
         }
 
         // SALVAR DADOS NO LOCALSTORAGE
@@ -3166,27 +3199,30 @@ Carlos Oliveira"></textarea>
             
             // Encontrar data atual selecionada
             const dateFilter = document.getElementById('dateFilter').value;
-            let dataSelecionada = dateFilter !== 'all' ? dateFilter : allDates[0] || '';
+            let dataSelecionada = dateFilter !== 'all' ? dateFilter : getTodayDateString();
+            
+            console.log('Data selecionada para análise:', dataSelecionada);
             
             // Coletar todos os motoristas que já trabalharam
             viagensComDestino.forEach(item => {
-                if (item.MOTORISTA) {
-                    naoEscaladosAnalysis.motoristasTodos.add(item.MOTORISTA);
+                if (item.MOTORISTA && item.MOTORISTA.trim() !== '') {
+                    const motorista = item.MOTORISTA.trim();
+                    naoEscaladosAnalysis.motoristasTodos.add(motorista);
                     
                     // Coletar motoristas que trabalharam hoje
                     if (item.DATA === dataSelecionada) {
-                        naoEscaladosAnalysis.motoristasHoje.add(item.MOTORISTA);
+                        naoEscaladosAnalysis.motoristasHoje.add(motorista);
                     }
                     
                     // Atualizar último dia de trabalho
-                    if (!naoEscaladosAnalysis.ultimoTrabalho[item.MOTORISTA]) {
-                        naoEscaladosAnalysis.ultimoTrabalho[item.MOTORISTA] = item.DATA;
+                    if (!naoEscaladosAnalysis.ultimoTrabalho[motorista]) {
+                        naoEscaladosAnalysis.ultimoTrabalho[motorista] = item.DATA;
                     } else {
                         // Manter a data mais recente
-                        const dataAtual = parseDate(naoEscaladosAnalysis.ultimoTrabalho[item.MOTORISTA]);
+                        const dataAtual = parseDate(naoEscaladosAnalysis.ultimoTrabalho[motorista]);
                         const dataNova = parseDate(item.DATA);
                         if (dataNova > dataAtual) {
-                            naoEscaladosAnalysis.ultimoTrabalho[item.MOTORISTA] = item.DATA;
+                            naoEscaladosAnalysis.ultimoTrabalho[motorista] = item.DATA;
                         }
                     }
                 }
@@ -3222,31 +3258,56 @@ Carlos Oliveira"></textarea>
                     naoEscaladosAnalysis.padroesFolga[motorista] = 'trabalhou_hoje';
                 }
             });
+            
+            console.log('Análise de não escalados:', naoEscaladosAnalysis);
         }
 
         // ATUALIZAR SEÇÃO DE MOTORISTAS NÃO ESCALADOS
         function updateNaoEscalados() {
             calculateNaoEscaladosAnalysis();
             
-            const motoristasTodos = Array.from(naoEscaladosAnalysis.motoristasTodos);
+            // Combina motoristas do sistema com motoristas cadastrados manualmente
+            const motoristasDoSistema = Array.from(naoEscaladosAnalysis.motoristasTodos);
+            const motoristasCadastrados = motoristasData.lista;
+            
+            // União de todos os motoristas conhecidos
+            const todosMotoristas = [...new Set([...motoristasDoSistema, ...motoristasCadastrados])];
+            
+            // Encontrar data atual selecionada
+            const dateFilter = document.getElementById('dateFilter').value;
+            let dataSelecionada = dateFilter !== 'all' ? dateFilter : getTodayDateString();
+            
+            // Motoristas que trabalharam hoje
             const motoristasHoje = Array.from(naoEscaladosAnalysis.motoristasHoje);
-            const motoristasNaoEscaladosHoje = motoristasTodos.filter(m => !motoristasHoje.includes(m));
+            
+            // Motoristas que não trabalharam hoje
+            const motoristasNaoEscaladosHoje = todosMotoristas.filter(m => 
+                !motoristasHoje.includes(m)
+            );
+            
+            console.log('Motoristas hoje:', motoristasHoje.length);
+            console.log('Motoristas não escalados hoje:', motoristasNaoEscaladosHoje.length);
+            console.log('Total motoristas:', todosMotoristas.length);
             
             // Ordenar por dias sem trabalhar (decrescente)
             motoristasNaoEscaladosHoje.sort((a, b) => {
-                return naoEscaladosAnalysis.diasSemTrabalhar[b] - naoEscaladosAnalysis.diasSemTrabalhar[a];
+                const diasA = naoEscaladosAnalysis.diasSemTrabalhar[a] || 999;
+                const diasB = naoEscaladosAnalysis.diasSemTrabalhar[b] || 999;
+                return diasB - diasA;
             });
             
             // Separar em folgas curtas e possíveis férias
-            const folgaCurta = motoristasNaoEscaladosHoje.filter(m => 
-                naoEscaladosAnalysis.padroesFolga[m] === 'folga_curta' || 
-                naoEscaladosAnalysis.padroesFolga[m] === 'folga_longa'
-            );
+            const folgaCurta = motoristasNaoEscaladosHoje.filter(m => {
+                const dias = naoEscaladosAnalysis.diasSemTrabalhar[m] || 999;
+                const padrao = naoEscaladosAnalysis.padroesFolga[m];
+                return padrao === 'folga_curta' || padrao === 'folga_longa' || 
+                       (dias < 7 && dias > 0) || dias === 999;
+            });
             
-            const possiveisFerias = motoristasNaoEscaladosHoje.filter(m => 
-                naoEscaladosAnalysis.padroesFolga[m] === 'possivel_ferias' || 
-                naoEscaladosAnalysis.padroesFolga[m] === 'inativo'
-            );
+            const possiveisFerias = motoristasNaoEscaladosHoje.filter(m => {
+                const padrao = naoEscaladosAnalysis.padroesFolga[m];
+                return padrao === 'possivel_ferias' || padrao === 'inativo';
+            });
             
             // Atualizar listas
             const folgaList = document.getElementById('folgaList');
@@ -3257,14 +3318,14 @@ Carlos Oliveira"></textarea>
             
             if (folgaCurta.length > 0) {
                 folgaCurta.forEach(motorista => {
-                    const dias = naoEscaladosAnalysis.diasSemTrabalhar[motorista];
+                    const dias = naoEscaladosAnalysis.diasSemTrabalhar[motorista] || 999;
                     const padrao = naoEscaladosAnalysis.padroesFolga[motorista];
-                    const ultimoTrabalho = naoEscaladosAnalysis.ultimoTrabalho[motorista] || 'Nunca';
+                    const ultimoTrabalho = naoEscaladosAnalysis.ultimoTrabalho[motorista] || 'Nunca trabalhou';
                     
                     let statusClass = 'nao-escalados-status folga';
-                    let statusText = 'FOLGA';
+                    let statusText = dias === 999 ? 'NOVO' : 'FOLGA';
                     
-                    if (dias >= 7) {
+                    if (dias >= 7 && dias < 14) {
                         statusClass = 'nao-escalados-status folga';
                         statusText = 'FOLGA LONGA';
                     }
@@ -3278,7 +3339,7 @@ Carlos Oliveira"></textarea>
                                 </div>
                             </div>
                             <div class="nao-escalados-info">
-                                <div class="nao-escalados-dias">${dias} dias</div>
+                                <div class="nao-escalados-dias">${dias === 999 ? '?' : dias} dias</div>
                                 <div class="${statusClass}">${statusText}</div>
                             </div>
                         </div>
@@ -3290,9 +3351,9 @@ Carlos Oliveira"></textarea>
             
             if (possiveisFerias.length > 0) {
                 possiveisFerias.forEach(motorista => {
-                    const dias = naoEscaladosAnalysis.diasSemTrabalhar[motorista];
+                    const dias = naoEscaladosAnalysis.diasSemTrabalhar[motorista] || 0;
                     const padrao = naoEscaladosAnalysis.padroesFolga[motorista];
-                    const ultimoTrabalho = naoEscaladosAnalysis.ultimoTrabalho[motorista] || 'Nunca';
+                    const ultimoTrabalho = naoEscaladosAnalysis.ultimoTrabalho[motorista] || 'Nunca trabalhou';
                     
                     let statusClass = 'nao-escalados-status ferias';
                     let statusText = 'POSSÍVEL FÉRIAS';
@@ -3325,7 +3386,7 @@ Carlos Oliveira"></textarea>
             feriasList.innerHTML = feriasHtml;
             
             // Atualizar estatísticas
-            const totalMotoristas = motoristasTodos.length;
+            const totalMotoristas = todosMotoristas.length;
             const motoristasHojeCount = motoristasHoje.length;
             const naoEscaladosHojeCount = motoristasNaoEscaladosHoje.length;
             
@@ -3335,7 +3396,7 @@ Carlos Oliveira"></textarea>
             
             motoristasNaoEscaladosHoje.forEach(m => {
                 const dias = naoEscaladosAnalysis.diasSemTrabalhar[m];
-                if (dias < 999) { // Ignorar "nunca trabalhou"
+                if (dias && dias < 999) { // Ignorar "nunca trabalhou"
                     somaDiasFolga += dias;
                     countDiasFolga++;
                 }
@@ -3350,7 +3411,7 @@ Carlos Oliveira"></textarea>
             document.getElementById('mediaDiasFolga').textContent = mediaDiasFolga;
         }
 
-        // CARREGAR RESUMO DOS ÚLTIMOS 3 DIAS
+        // CARREGAR RESUMO DOS ÚLTIMOS 3 DIAS (COMEÇANDO DO DIA ATUAL)
         function loadLast3DaysSummary() {
             const daysSummary = {};
             
@@ -3387,7 +3448,17 @@ Carlos Oliveira"></textarea>
                 day.operations[item.OP].vehicles.add(item.VEICULO);
             });
             
-            const last3Dates = allDates.slice(0, 3);
+            // Ordenar datas de forma decrescente (mais recente primeiro)
+            const sortedDates = Object.keys(daysSummary).sort((a, b) => {
+                const dateA = parseDate(a);
+                const dateB = parseDate(b);
+                return dateB - dateA;
+            });
+            
+            // Pegar as 3 datas mais recentes
+            const last3Dates = sortedDates.slice(0, 3);
+            
+            console.log('Últimas 3 datas:', last3Dates);
             
             let html = '';
             last3Dates.forEach(date => {
@@ -3455,7 +3526,7 @@ Carlos Oliveira"></textarea>
         // CARREGAR CONTROLE DIÁRIO DA FROTA COM ANÁLISE DE CONTRATAÇÃO
         function loadControleDiario() {
             const dateFilter = document.getElementById('dateFilter').value;
-            let targetDate = dateFilter !== 'all' ? dateFilter : allDates[0] || '31/01/26';
+            let targetDate = dateFilter !== 'all' ? dateFilter : getTodayDateString();
             
             const viagensDoDia = frotaData.filter(item => item.DATA === targetDate && item.TEM_DESTINO);
             
@@ -3696,13 +3767,15 @@ Carlos Oliveira"></textarea>
 
         // ATUALIZAR RELAÇÃO VEÍCULOS/MOTORISTAS (ORDENADA)
         function updateRelacaoVeiculosMotoristas() {
+            console.log('Atualizando relação veículos/motoristas...');
+            
             // Atualizar totais
             document.getElementById('totalVeiculos').textContent = veiculosData.total;
             document.getElementById('totalMotoristas').textContent = motoristasData.total;
             document.getElementById('totalVeiculosInfo').textContent = `Total: ${veiculosData.total}`;
             document.getElementById('totalMotoristasInfo').textContent = `Total: ${motoristasData.total}`;
             
-            // Calcular estatísticas de uso
+            // Calcular estatísticas de uso de veículos
             const veiculoUsage = {};
             const motoristaUsage = {};
             
@@ -3745,13 +3818,6 @@ Carlos Oliveira"></textarea>
                         </div>
                     `;
                 });
-                
-                // Atualizar total se não estiver definido
-                if (veiculosData.total === 0) {
-                    veiculosData.total = sortedVeiculos.length;
-                    document.getElementById('totalVeiculos').textContent = veiculosData.total;
-                    document.getElementById('totalVeiculosInfo').textContent = `Total: ${veiculosData.total}`;
-                }
             } else {
                 veiculosHtml = '<div style="text-align: center; padding: 20px; color: #666;">Nenhum veículo encontrado</div>';
             }
@@ -3762,21 +3828,30 @@ Carlos Oliveira"></textarea>
             const motoristasList = document.getElementById('motoristasList');
             let motoristasHtml = '';
             
-            if (sortedMotoristas.length > 0) {
-                sortedMotoristas.forEach((item, index) => {
+            // Combina motoristas do sistema com motoristas cadastrados manualmente
+            const motoristasDoSistema = new Set(Object.keys(motoristaUsage));
+            const motoristasCadastrados = new Set(motoristasData.lista);
+            
+            // União de todos os motoristas
+            const todosMotoristas = [...new Set([...motoristasDoSistema, ...motoristasCadastrados])];
+            
+            if (todosMotoristas.length > 0) {
+                todosMotoristas.forEach(motorista => {
+                    const count = motoristaUsage[motorista] || 0;
                     motoristasHtml += `
                         <div class="relacao-item">
-                            <div class="relacao-nome">${item.motorista}</div>
-                            <div class="relacao-count">${item.count}</div>
+                            <div class="relacao-nome">${motorista}</div>
+                            <div class="relacao-count">${count}</div>
                         </div>
                     `;
                 });
                 
                 // Atualizar total se não estiver definido
                 if (motoristasData.total === 0) {
-                    motoristasData.total = sortedMotoristas.length;
+                    motoristasData.total = todosMotoristas.length;
                     document.getElementById('totalMotoristas').textContent = motoristasData.total;
                     document.getElementById('totalMotoristasInfo').textContent = `Total: ${motoristasData.total}`;
+                    saveVeiculosMotoristasData();
                 }
             } else {
                 motoristasHtml = '<div style="text-align: center; padding: 20px; color: #666;">Nenhum motorista encontrado</div>';
@@ -3784,8 +3859,11 @@ Carlos Oliveira"></textarea>
             
             motoristasList.innerHTML = motoristasHtml;
             
-            // Salvar dados atualizados
-            saveVeiculosMotoristasData();
+            console.log('Relação atualizada:', {
+                veiculos: veiculosData.total,
+                motoristas: motoristasData.total,
+                listaMotoristas: motoristasData.lista
+            });
             
             // Atualizar também o Controle Diário para refletir os novos totais
             loadControleDiario();
@@ -3813,8 +3891,11 @@ Carlos Oliveira"></textarea>
                 select.appendChild(option);
             });
             
-            // Selecionar a primeira data disponível
-            if (allDates.length > 0) {
+            // Selecionar a data de hoje se disponível
+            const hoje = getTodayDateString();
+            if (allDates.includes(hoje)) {
+                select.value = hoje;
+            } else if (allDates.length > 0) {
                 select.value = allDates[0];
             }
         }
@@ -4009,7 +4090,7 @@ Carlos Oliveira"></textarea>
             switch(type) {
                 case 'today':
                     const today = new Date();
-                    const todayFormatted = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear().toString().slice(2)}`;
+                    const todayFormatted = getTodayDateString();
                     targetDate = todayFormatted;
                     displayText = today.toLocaleDateString('pt-BR', { 
                         weekday: 'long', 
@@ -4021,7 +4102,7 @@ Carlos Oliveira"></textarea>
                 case 'yesterday':
                     const yesterday = new Date();
                     yesterday.setDate(yesterday.getDate() - 1);
-                    const yesterdayFormatted = `${yesterday.getDate().toString().padStart(2, '0')}/${(yesterday.getMonth() + 1).toString().padStart(2, '0')}/${yesterday.getFullYear().toString().slice(2)}`;
+                    const yesterdayFormatted = getYesterdayDateString();
                     targetDate = yesterdayFormatted;
                     displayText = yesterday.toLocaleDateString('pt-BR', { 
                         weekday: 'long', 
@@ -4384,10 +4465,10 @@ Carlos Oliveira"></textarea>
                 localStorage.removeItem('frotaVeiculosData');
                 localStorage.removeItem('frotaMotoristasData');
                 
-                // Resetar para dados iniciais vazios
-                processCSVData('DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,PRÓX_HORA_DISP,DESTINO,SAÍDA_VEÍCULO_CD');
+                // Resetar para dados iniciais
+                processCSVData(initialFrotaData);
                 
-                showNotification('✅ Todos os dados foram removidos com sucesso! Agora você pode importar um novo arquivo CSV.', 'success');
+                showNotification('✅ Todos os dados foram removidos com sucesso!', 'success');
             } catch (error) {
                 console.error('Erro ao limpar dados:', error);
                 showNotification('Erro ao limpar dados: ' + error.message, 'error');
