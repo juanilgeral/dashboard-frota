@@ -152,7 +152,6 @@
             color: #1a237e;
             font-size: 1.2rem;
             font-weight: 700;
-            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -798,6 +797,233 @@
         .relacao-summary-value {
             font-size: 2rem;
             font-weight: 800;
+        }
+
+        /* NOVA SEÇÃO: MOTORISTAS NÃO ESCALADOS */
+        .nao-escalados-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .nao-escalados-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #ff9800, #ffb74d, #ffcc80);
+            border-radius: 12px 12px 0 0;
+        }
+
+        .nao-escalados-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .nao-escalados-titulo {
+            color: #1a237e;
+            font-size: 1.4rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nao-escalados-titulo span {
+            font-size: 2rem;
+        }
+
+        .nao-escalados-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nao-escalados-select {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            font-weight: 600;
+            color: #424242;
+            cursor: pointer;
+            min-width: 200px;
+            font-size: 0.95rem;
+        }
+
+        .nao-escalados-select:focus {
+            outline: none;
+            border-color: #ff9800;
+        }
+
+        .nao-escalados-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 25px;
+        }
+
+        @media (max-width: 768px) {
+            .nao-escalados-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .nao-escalados-section {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .nao-escalados-section-title {
+            color: #ff9800;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ffe0b2;
+        }
+
+        .nao-escalados-list {
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .nao-escalados-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .nao-escalados-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .nao-escalados-list::-webkit-scrollbar-thumb {
+            background: #ffcc80;
+            border-radius: 10px;
+        }
+
+        .nao-escalados-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            border-left: 4px solid #ff9800;
+            transition: all 0.2s;
+        }
+
+        .nao-escalados-item:hover {
+            background: #fff3e0;
+            transform: translateX(3px);
+        }
+
+        .nao-escalados-nome {
+            font-weight: 600;
+            color: #424242;
+            flex: 1;
+        }
+
+        .nao-escalados-info {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nao-escalados-dias {
+            background: #ff9800;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .nao-escalados-status {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+
+        .nao-escalados-status.folga {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .nao-escalados-status.ferias {
+            background: #e3f2fd;
+            color: #1565c0;
+            border: 1px solid #bbdefb;
+        }
+
+        .nao-escalados-status.inativo {
+            background: #f5f5f5;
+            color: #757575;
+            border: 1px solid #e0e0e0;
+        }
+
+        .nao-escalados-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #f0f0f0;
+        }
+
+        .nao-escalados-summary-item {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+            border-radius: 8px;
+            color: white;
+        }
+
+        .nao-escalados-summary-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .nao-escalados-summary-value {
+            font-size: 2.2rem;
+            font-weight: 800;
+        }
+
+        .nao-escalados-alerta {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            color: #5d4037;
+        }
+
+        .nao-escalados-alerta strong {
+            color: #ff9800;
         }
 
         /* MODAL DE ATUALIZAÇÃO */
@@ -2002,6 +2228,71 @@
             </div>
         </div>
 
+        <!-- NOVA SEÇÃO: MOTORISTAS NÃO ESCALADOS -->
+        <div class="nao-escalados-card" id="naoEscaladosCard">
+            <div class="nao-escalados-header">
+                <div class="nao-escalados-titulo">
+                    <span>👥</span>
+                    Análise de Motoristas Não Escalados
+                </div>
+                <div class="nao-escalados-controls">
+                    <select class="nao-escalados-select" id="naoEscaladosDateFilter" onchange="updateNaoEscalados()">
+                        <option value="hoje">Dia Selecionado</option>
+                        <option value="7dias">Últimos 7 Dias</option>
+                        <option value="15dias">Últimos 15 Dias</option>
+                        <option value="30dias">Últimos 30 Dias</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="nao-escalados-grid">
+                <div class="nao-escalados-section">
+                    <div class="nao-escalados-section-title">
+                        <span>⏸️</span>
+                        Motoristas em Folga (Hoje)
+                    </div>
+                    <div class="nao-escalados-list" id="folgaList">
+                        <!-- Carregado dinamicamente -->
+                    </div>
+                </div>
+                
+                <div class="nao-escalados-section">
+                    <div class="nao-escalados-section-title">
+                        <span>🏖️</span>
+                        Possíveis Férias/Afastamentos
+                    </div>
+                    <div class="nao-escalados-list" id="feriasList">
+                        <!-- Carregado dinamicamente -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nao-escalados-summary">
+                <div class="nao-escalados-summary-item">
+                    <div class="nao-escalados-summary-label">Total de Motoristas</div>
+                    <div class="nao-escalados-summary-value" id="totalMotoristasTodos">0</div>
+                </div>
+                <div class="nao-escalados-summary-item">
+                    <div class="nao-escalados-summary-label">Em Operação Hoje</div>
+                    <div class="nao-escalados-summary-value" id="motoristasHoje">0</div>
+                </div>
+                <div class="nao-escalados-summary-item">
+                    <div class="nao-escalados-summary-label">Não Escalados Hoje</div>
+                    <div class="nao-escalados-summary-value" id="naoEscaladosHoje">0</div>
+                </div>
+                <div class="nao-escalados-summary-item">
+                    <div class="nao-escalados-summary-label">Média de Dias Sem Trabalhar</div>
+                    <div class="nao-escalados-summary-value" id="mediaDiasFolga">0</div>
+                </div>
+            </div>
+            
+            <div class="nao-escalados-alerta">
+                <strong>📋 Análise de Padrão:</strong> Esta seção identifica motoristas que não foram escalados recentemente, 
+                permitindo identificar padrões de folgas, possíveis férias ou afastamentos. 
+                Motoristas com mais de 7 dias sem trabalhar são destacados para análise.
+            </div>
+        </div>
+
         <!-- ESTATÍSTICAS DE ROTAS FREQUENTES -->
         <div class="rota-stats">
             <div class="stats-header">
@@ -2059,6 +2350,7 @@
                     <li><strong>Últimos 3 dias</strong> mostrados no resumo acima</li>
                     <li><strong>Senha de supervisão:</strong> @admin0768# (necessária para importar dados)</li>
                     <li><strong>Relação Veículos/Motoristas:</strong> Atualize manualmente os totais</li>
+                    <li><strong>Análise de Não Escalados:</strong> Identifica motoristas em folga ou possíveis férias</li>
                 </ul>
             </div>
         </div>
@@ -2284,6 +2576,15 @@ Carlos Oliveira"></textarea>
             lista: []
         };
         
+        // Dados de análise de não escalados
+        let naoEscaladosAnalysis = {
+            motoristasHoje: new Set(),
+            motoristasTodos: new Set(),
+            diasSemTrabalhar: {},
+            ultimoTrabalho: {},
+            padroesFolga: {}
+        };
+        
         // Senha de supervisão
         const SUPERVISOR_PASSWORD = "@admin0768#";
 
@@ -2334,11 +2635,15 @@ Carlos Oliveira"></textarea>
                 // Calcular estatísticas avançadas
                 calculateAdvancedStatistics();
                 
+                // Calcular análise de não escalados
+                calculateNaoEscaladosAnalysis();
+                
                 // Carregar interface
                 loadLast3DaysSummary();
                 loadControleDiario();
                 updateDateFilterOptions();
                 loadTableData();
+                updateNaoEscalados();
                 updateRotaFrequente();
                 updateRelacaoVeiculosMotoristas();
                 updateTimestamp();
@@ -2715,10 +3020,12 @@ Carlos Oliveira"></textarea>
             identifyMultipleTrips();
             extractAllDates();
             calculateAdvancedStatistics();
+            calculateNaoEscaladosAnalysis();
             loadLast3DaysSummary();
             loadControleDiario();
             updateDateFilterOptions();
             loadTableData();
+            updateNaoEscalados();
             updateRotaFrequente();
             updateRelacaoVeiculosMotoristas();
             updateTimestamp();
@@ -2843,6 +3150,204 @@ Carlos Oliveira"></textarea>
                     }
                 }
             });
+        }
+
+        // CALCULAR ANÁLISE DE MOTORISTAS NÃO ESCALADOS
+        function calculateNaoEscaladosAnalysis() {
+            naoEscaladosAnalysis = {
+                motoristasHoje: new Set(),
+                motoristasTodos: new Set(),
+                diasSemTrabalhar: {},
+                ultimoTrabalho: {},
+                padroesFolga: {}
+            };
+            
+            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
+            
+            // Encontrar data atual selecionada
+            const dateFilter = document.getElementById('dateFilter').value;
+            let dataSelecionada = dateFilter !== 'all' ? dateFilter : allDates[0] || '';
+            
+            // Coletar todos os motoristas que já trabalharam
+            viagensComDestino.forEach(item => {
+                if (item.MOTORISTA) {
+                    naoEscaladosAnalysis.motoristasTodos.add(item.MOTORISTA);
+                    
+                    // Coletar motoristas que trabalharam hoje
+                    if (item.DATA === dataSelecionada) {
+                        naoEscaladosAnalysis.motoristasHoje.add(item.MOTORISTA);
+                    }
+                    
+                    // Atualizar último dia de trabalho
+                    if (!naoEscaladosAnalysis.ultimoTrabalho[item.MOTORISTA]) {
+                        naoEscaladosAnalysis.ultimoTrabalho[item.MOTORISTA] = item.DATA;
+                    } else {
+                        // Manter a data mais recente
+                        const dataAtual = parseDate(naoEscaladosAnalysis.ultimoTrabalho[item.MOTORISTA]);
+                        const dataNova = parseDate(item.DATA);
+                        if (dataNova > dataAtual) {
+                            naoEscaladosAnalysis.ultimoTrabalho[item.MOTORISTA] = item.DATA;
+                        }
+                    }
+                }
+            });
+            
+            // Calcular dias sem trabalhar
+            const hoje = parseDate(dataSelecionada);
+            
+            Object.keys(naoEscaladosAnalysis.ultimoTrabalho).forEach(motorista => {
+                const ultimaData = parseDate(naoEscaladosAnalysis.ultimoTrabalho[motorista]);
+                if (ultimaData && hoje) {
+                    const diffTime = Math.abs(hoje - ultimaData);
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    naoEscaladosAnalysis.diasSemTrabalhar[motorista] = diffDays;
+                } else {
+                    naoEscaladosAnalysis.diasSemTrabalhar[motorista] = 999; // Nunca trabalhou
+                }
+            });
+            
+            // Identificar padrões de folga
+            Object.keys(naoEscaladosAnalysis.diasSemTrabalhar).forEach(motorista => {
+                const dias = naoEscaladosAnalysis.diasSemTrabalhar[motorista];
+                
+                if (dias >= 30) {
+                    naoEscaladosAnalysis.padroesFolga[motorista] = 'inativo';
+                } else if (dias >= 14) {
+                    naoEscaladosAnalysis.padroesFolga[motorista] = 'possivel_ferias';
+                } else if (dias >= 7) {
+                    naoEscaladosAnalysis.padroesFolga[motorista] = 'folga_longa';
+                } else if (dias > 0) {
+                    naoEscaladosAnalysis.padroesFolga[motorista] = 'folga_curta';
+                } else {
+                    naoEscaladosAnalysis.padroesFolga[motorista] = 'trabalhou_hoje';
+                }
+            });
+        }
+
+        // ATUALIZAR SEÇÃO DE MOTORISTAS NÃO ESCALADOS
+        function updateNaoEscalados() {
+            calculateNaoEscaladosAnalysis();
+            
+            const motoristasTodos = Array.from(naoEscaladosAnalysis.motoristasTodos);
+            const motoristasHoje = Array.from(naoEscaladosAnalysis.motoristasHoje);
+            const motoristasNaoEscaladosHoje = motoristasTodos.filter(m => !motoristasHoje.includes(m));
+            
+            // Ordenar por dias sem trabalhar (decrescente)
+            motoristasNaoEscaladosHoje.sort((a, b) => {
+                return naoEscaladosAnalysis.diasSemTrabalhar[b] - naoEscaladosAnalysis.diasSemTrabalhar[a];
+            });
+            
+            // Separar em folgas curtas e possíveis férias
+            const folgaCurta = motoristasNaoEscaladosHoje.filter(m => 
+                naoEscaladosAnalysis.padroesFolga[m] === 'folga_curta' || 
+                naoEscaladosAnalysis.padroesFolga[m] === 'folga_longa'
+            );
+            
+            const possiveisFerias = motoristasNaoEscaladosHoje.filter(m => 
+                naoEscaladosAnalysis.padroesFolga[m] === 'possivel_ferias' || 
+                naoEscaladosAnalysis.padroesFolga[m] === 'inativo'
+            );
+            
+            // Atualizar listas
+            const folgaList = document.getElementById('folgaList');
+            const feriasList = document.getElementById('feriasList');
+            
+            let folgaHtml = '';
+            let feriasHtml = '';
+            
+            if (folgaCurta.length > 0) {
+                folgaCurta.forEach(motorista => {
+                    const dias = naoEscaladosAnalysis.diasSemTrabalhar[motorista];
+                    const padrao = naoEscaladosAnalysis.padroesFolga[motorista];
+                    const ultimoTrabalho = naoEscaladosAnalysis.ultimoTrabalho[motorista] || 'Nunca';
+                    
+                    let statusClass = 'nao-escalados-status folga';
+                    let statusText = 'FOLGA';
+                    
+                    if (dias >= 7) {
+                        statusClass = 'nao-escalados-status folga';
+                        statusText = 'FOLGA LONGA';
+                    }
+                    
+                    folgaHtml += `
+                        <div class="nao-escalados-item">
+                            <div class="nao-escalados-nome">
+                                ${motorista}
+                                <div style="font-size: 0.8rem; color: #666; margin-top: 2px;">
+                                    Último: ${ultimoTrabalho}
+                                </div>
+                            </div>
+                            <div class="nao-escalados-info">
+                                <div class="nao-escalados-dias">${dias} dias</div>
+                                <div class="${statusClass}">${statusText}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                folgaHtml = '<div style="text-align: center; padding: 20px; color: #666;">Todos os motoristas escalados hoje</div>';
+            }
+            
+            if (possiveisFerias.length > 0) {
+                possiveisFerias.forEach(motorista => {
+                    const dias = naoEscaladosAnalysis.diasSemTrabalhar[motorista];
+                    const padrao = naoEscaladosAnalysis.padroesFolga[motorista];
+                    const ultimoTrabalho = naoEscaladosAnalysis.ultimoTrabalho[motorista] || 'Nunca';
+                    
+                    let statusClass = 'nao-escalados-status ferias';
+                    let statusText = 'POSSÍVEL FÉRIAS';
+                    
+                    if (dias >= 30) {
+                        statusClass = 'nao-escalados-status inativo';
+                        statusText = 'INATIVO';
+                    }
+                    
+                    feriasHtml += `
+                        <div class="nao-escalados-item">
+                            <div class="nao-escalados-nome">
+                                ${motorista}
+                                <div style="font-size: 0.8rem; color: #666; margin-top: 2px;">
+                                    Último: ${ultimoTrabalho}
+                                </div>
+                            </div>
+                            <div class="nao-escalados-info">
+                                <div class="nao-escalados-dias">${dias} dias</div>
+                                <div class="${statusClass}">${statusText}</div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                feriasHtml = '<div style="text-align: center; padding: 20px; color: #666;">Nenhum motorista com padrão de férias</div>';
+            }
+            
+            folgaList.innerHTML = folgaHtml;
+            feriasList.innerHTML = feriasHtml;
+            
+            // Atualizar estatísticas
+            const totalMotoristas = motoristasTodos.length;
+            const motoristasHojeCount = motoristasHoje.length;
+            const naoEscaladosHojeCount = motoristasNaoEscaladosHoje.length;
+            
+            // Calcular média de dias de folga
+            let somaDiasFolga = 0;
+            let countDiasFolga = 0;
+            
+            motoristasNaoEscaladosHoje.forEach(m => {
+                const dias = naoEscaladosAnalysis.diasSemTrabalhar[m];
+                if (dias < 999) { // Ignorar "nunca trabalhou"
+                    somaDiasFolga += dias;
+                    countDiasFolga++;
+                }
+            });
+            
+            const mediaDiasFolga = countDiasFolga > 0 ? Math.round(somaDiasFolga / countDiasFolga) : 0;
+            
+            // Atualizar os valores na interface
+            document.getElementById('totalMotoristasTodos').textContent = totalMotoristas;
+            document.getElementById('motoristasHoje').textContent = motoristasHojeCount;
+            document.getElementById('naoEscaladosHoje').textContent = naoEscaladosHojeCount;
+            document.getElementById('mediaDiasFolga').textContent = mediaDiasFolga;
         }
 
         // CARREGAR RESUMO DOS ÚLTIMOS 3 DIAS
@@ -3490,6 +3995,8 @@ Carlos Oliveira"></textarea>
             loadTableData();
             loadControleDiario();
             calculateAdvancedStatistics();
+            calculateNaoEscaladosAnalysis();
+            updateNaoEscalados();
             updateRotaFrequente();
             updateRelacaoVeiculosMotoristas();
         }
@@ -3569,6 +4076,8 @@ Carlos Oliveira"></textarea>
             filterTable();
             loadControleDiario();
             calculateAdvancedStatistics();
+            calculateNaoEscaladosAnalysis();
+            updateNaoEscalados();
             updateRotaFrequente();
             
             showNotification(
@@ -3827,7 +4336,7 @@ Carlos Oliveira"></textarea>
 
         // CONFIRMAR LIMPEZA DE DADOS
         function confirmClearData() {
-            if (confirm('⚠️ ATENÇÃO: Esta ação irá REMOVER TODOS os dados do sistema!\n\nIsso inclui:\n• Todos os registros de viagens\n• Finalizações manuais\n• Estatísticas\n• Dados de veículos e motoristas\n\nVocê poderá importar um novo arquivo CSV após a limpeza.\n\nTem certeza que deseja continuar?')) {
+            if (confirm('⚠️ ATENÇÃO: Esta ação irá REMOVER TODOS os dados do sistema!\n\nIsso inclui:\n• Todos os registros de viagens\n• Finalizações manuais\n• Estatísticas\n• Dados de veículos e motoristas\n• Análise de motoristas não escalados\n\nVocê poderá importar um novo arquivo CSV após a limpeza.\n\nTem certeza que deseja continuar?')) {
                 clearAllData();
             }
         }
@@ -3844,6 +4353,13 @@ Carlos Oliveira"></textarea>
                 driverStatistics = {};
                 routeStatistics = {};
                 vehicleStatistics = {};
+                naoEscaladosAnalysis = {
+                    motoristasHoje: new Set(),
+                    motoristasTodos: new Set(),
+                    diasSemTrabalhar: {},
+                    ultimoTrabalho: {},
+                    padroesFolga: {}
+                };
                 
                 // Limpar dados de veículos e motoristas
                 veiculosData = {
