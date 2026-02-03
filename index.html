@@ -714,7 +714,7 @@
             align-items: center;
             gap: 10px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0e0;
+            border-bottom: 2px solid #e0e0f0;
         }
 
         .relacao-list {
@@ -2595,7 +2595,9 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             motoristasTodos: new Set(),
             diasSemTrabalhar: {},
             ultimoTrabalho: {},
-            padroesFolga: {}
+            padroesFolga: {},
+            motoristasEscaladosHoje: new Set(),
+            motoristasComDestinoValidoHoje: new Set()
         };
         
         // Senha de supervisão
@@ -3185,36 +3187,46 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             });
         }
 
-        // CALCULAR ANÁLISE DE MOTORISTAS NÃO ESCALADOS
+        // CALCULAR ANÁLISE DE MOTORISTAS NÃO ESCALADOS - VERSÃO CORRIGIDA
         function calculateNaoEscaladosAnalysis() {
             naoEscaladosAnalysis = {
                 motoristasHoje: new Set(),
                 motoristasTodos: new Set(),
                 diasSemTrabalhar: {},
                 ultimoTrabalho: {},
-                padroesFolga: {}
+                padroesFolga: {},
+                motoristasEscaladosHoje: new Set(),
+                motoristasComDestinoValidoHoje: new Set()
             };
-            
-            const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
             
             // Encontrar data atual selecionada
             const dateFilter = document.getElementById('dateFilter').value;
             let dataSelecionada = dateFilter !== 'all' ? dateFilter : getTodayDateString();
             
-            console.log('Data selecionada para análise:', dataSelecionada);
+            console.log('Data selecionada para análise de não escalados:', dataSelecionada);
             
-            // Coletar todos os motoristas que já trabalharam
-            viagensComDestino.forEach(item => {
+            // Coletar todos os motoristas que já trabalharam (COM OU SEM DESTINO VÁLIDO)
+            frotaData.forEach(item => {
                 if (item.MOTORISTA && item.MOTORISTA.trim() !== '') {
                     const motorista = item.MOTORISTA.trim();
+                    
+                    // Adicionar a lista de todos os motoristas
                     naoEscaladosAnalysis.motoristasTodos.add(motorista);
                     
-                    // Coletar motoristas que trabalharam hoje
+                    // Coletar motoristas que trabalharam na data selecionada (COM OU SEM DESTINO VÁLIDO)
                     if (item.DATA === dataSelecionada) {
+                        // Motoristas escalados hoje (todos, independente de ter destino válido)
+                        naoEscaladosAnalysis.motoristasEscaladosHoje.add(motorista);
+                        
+                        // Motoristas com destino válido hoje
+                        if (item.TEM_DESTINO) {
+                            naoEscaladosAnalysis.motoristasComDestinoValidoHoje.add(motorista);
+                        }
+                        
                         naoEscaladosAnalysis.motoristasHoje.add(motorista);
                     }
                     
-                    // Atualizar último dia de trabalho
+                    // Atualizar último dia de trabalho (considera qualquer viagem, com ou sem destino válido)
                     if (!naoEscaladosAnalysis.ultimoTrabalho[motorista]) {
                         naoEscaladosAnalysis.ultimoTrabalho[motorista] = item.DATA;
                     } else {
@@ -3246,7 +3258,10 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             Object.keys(naoEscaladosAnalysis.diasSemTrabalhar).forEach(motorista => {
                 const dias = naoEscaladosAnalysis.diasSemTrabalhar[motorista];
                 
-                if (dias >= 30) {
+                // Motoristas escalados hoje não estão em folga
+                if (naoEscaladosAnalysis.motoristasEscaladosHoje.has(motorista)) {
+                    naoEscaladosAnalysis.padroesFolga[motorista] = 'trabalhou_hoje';
+                } else if (dias >= 30) {
                     naoEscaladosAnalysis.padroesFolga[motorista] = 'inativo';
                 } else if (dias >= 14) {
                     naoEscaladosAnalysis.padroesFolga[motorista] = 'possivel_ferias';
@@ -3259,7 +3274,13 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                 }
             });
             
-            console.log('Análise de não escalados:', naoEscaladosAnalysis);
+            console.log('Análise de não escalados - CORRIGIDA:', {
+                dataSelecionada,
+                motoristasHoje: Array.from(naoEscaladosAnalysis.motoristasHoje),
+                motoristasEscaladosHoje: Array.from(naoEscaladosAnalysis.motoristasEscaladosHoje),
+                motoristasComDestinoValidoHoje: Array.from(naoEscaladosAnalysis.motoristasComDestinoValidoHoje),
+                padroesFolga: naoEscaladosAnalysis.padroesFolga
+            });
         }
 
         // ATUALIZAR SEÇÃO DE MOTORISTAS NÃO ESCALADOS
@@ -3277,19 +3298,26 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             const dateFilter = document.getElementById('dateFilter').value;
             let dataSelecionada = dateFilter !== 'all' ? dateFilter : getTodayDateString();
             
-            // Motoristas que trabalharam hoje
-            const motoristasHoje = Array.from(naoEscaladosAnalysis.motoristasHoje);
+            // Motoristas que trabalharam hoje (incluindo os sem destino válido)
+            const motoristasHoje = Array.from(naoEscaladosAnalysis.motoristasEscaladosHoje);
             
-            // Motoristas que não trabalharam hoje
+            // Motoristas que NÃO foram escalados hoje (não aparecem em nenhuma viagem hoje)
             const motoristasNaoEscaladosHoje = todosMotoristas.filter(m => 
                 !motoristasHoje.includes(m)
             );
             
-            console.log('Motoristas hoje:', motoristasHoje.length);
-            console.log('Motoristas não escalados hoje:', motoristasNaoEscaladosHoje.length);
-            console.log('Total motoristas:', todosMotoristas.length);
+            // Motoristas com destino válido hoje
+            const motoristasComDestinoValidoHoje = Array.from(naoEscaladosAnalysis.motoristasComDestinoValidoHoje);
             
-            // Ordenar por dias sem trabalhar (decrescente)
+            console.log('Estatísticas corrigidas:', {
+                todosMotoristas: todosMotoristas.length,
+                motoristasHoje: motoristasHoje.length,
+                motoristasComDestinoValidoHoje: motoristasComDestinoValidoHoje.length,
+                motoristasNaoEscaladosHoje: motoristasNaoEscaladosHoje.length,
+                dataSelecionada
+            });
+            
+            // Ordenar motoristas não escalados por dias sem trabalhar (decrescente)
             motoristasNaoEscaladosHoje.sort((a, b) => {
                 const diasA = naoEscaladosAnalysis.diasSemTrabalhar[a] || 999;
                 const diasB = naoEscaladosAnalysis.diasSemTrabalhar[b] || 999;
@@ -3300,13 +3328,15 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             const folgaCurta = motoristasNaoEscaladosHoje.filter(m => {
                 const dias = naoEscaladosAnalysis.diasSemTrabalhar[m] || 999;
                 const padrao = naoEscaladosAnalysis.padroesFolga[m];
-                return padrao === 'folga_curta' || padrao === 'folga_longa' || 
-                       (dias < 7 && dias > 0) || dias === 999;
+                return (padrao === 'folga_curta' || padrao === 'folga_longa' || 
+                       (dias < 7 && dias > 0) || dias === 999) &&
+                       !motoristasHoje.includes(m);
             });
             
             const possiveisFerias = motoristasNaoEscaladosHoje.filter(m => {
                 const padrao = naoEscaladosAnalysis.padroesFolga[m];
-                return padrao === 'possivel_ferias' || padrao === 'inativo';
+                return (padrao === 'possivel_ferias' || padrao === 'inativo') &&
+                       !motoristasHoje.includes(m);
             });
             
             // Atualizar listas
@@ -3335,7 +3365,7 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                             <div class="nao-escalados-nome">
                                 ${motorista}
                                 <div style="font-size: 0.8rem; color: #666; margin-top: 2px;">
-                                    Último: ${ultimoTrabalho}
+                                    Último trabalho: ${ultimoTrabalho}
                                 </div>
                             </div>
                             <div class="nao-escalados-info">
@@ -3389,8 +3419,9 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             const totalMotoristas = todosMotoristas.length;
             const motoristasHojeCount = motoristasHoje.length;
             const naoEscaladosHojeCount = motoristasNaoEscaladosHoje.length;
+            const motoristasComDestinoValidoCount = motoristasComDestinoValidoHoje.length;
             
-            // Calcular média de dias de folga
+            // Calcular média de dias de folga (apenas para os não escalados)
             let somaDiasFolga = 0;
             let countDiasFolga = 0;
             
@@ -3409,6 +3440,9 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             document.getElementById('motoristasHoje').textContent = motoristasHojeCount;
             document.getElementById('naoEscaladosHoje').textContent = naoEscaladosHojeCount;
             document.getElementById('mediaDiasFolga').textContent = mediaDiasFolga;
+            
+            // Adicionar informação sobre motoristas com/sem destino válido
+            console.log(`Motoristas hoje: ${motoristasHojeCount} (${motoristasComDestinoValidoCount} com destino válido)`);
         }
 
         // CARREGAR RESUMO DOS ÚLTIMOS 3 DIAS (COMEÇANDO DO DIA ATUAL)
@@ -4439,7 +4473,9 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                     motoristasTodos: new Set(),
                     diasSemTrabalhar: {},
                     ultimoTrabalho: {},
-                    padroesFolga: {}
+                    padroesFolga: {},
+                    motoristasEscaladosHoje: new Set(),
+                    motoristasComDestinoValidoHoje: new Set()
                 };
                 
                 // Limpar dados de veículos e motoristas
