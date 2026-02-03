@@ -152,6 +152,7 @@
             color: #1a237e;
             font-size: 1.2rem;
             font-weight: 700;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -714,7 +715,7 @@
             align-items: center;
             gap: 10px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0f0;
+            border-bottom: 2px solid #e0e0e0;
         }
 
         .relacao-list {
@@ -797,233 +798,6 @@
         .relacao-summary-value {
             font-size: 2rem;
             font-weight: 800;
-        }
-
-        /* NOVA SEÇÃO: MOTORISTAS NÃO ESCALADOS */
-        .nao-escalados-card {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .nao-escalados-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 5px;
-            background: linear-gradient(90deg, #ff9800, #ffb74d, #ffcc80);
-            border-radius: 12px 12px 0 0;
-        }
-
-        .nao-escalados-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #f0f0f0;
-        }
-
-        .nao-escalados-titulo {
-            color: #1a237e;
-            font-size: 1.4rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .nao-escalados-titulo span {
-            font-size: 2rem;
-        }
-
-        .nao-escalados-controls {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .nao-escalados-select {
-            padding: 10px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            background: white;
-            font-weight: 600;
-            color: #424242;
-            cursor: pointer;
-            min-width: 200px;
-            font-size: 0.95rem;
-        }
-
-        .nao-escalados-select:focus {
-            outline: none;
-            border-color: #ff9800;
-        }
-
-        .nao-escalados-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            margin-bottom: 25px;
-        }
-
-        @media (max-width: 768px) {
-            .nao-escalados-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .nao-escalados-section {
-            background: #f9f9f9;
-            border-radius: 8px;
-            padding: 20px;
-            border: 1px solid #e0e0e0;
-        }
-
-        .nao-escalados-section-title {
-            color: #ff9800;
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #ffe0b2;
-        }
-
-        .nao-escalados-list {
-            max-height: 300px;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        .nao-escalados-list::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .nao-escalados-list::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .nao-escalados-list::-webkit-scrollbar-thumb {
-            background: #ffcc80;
-            border-radius: 10px;
-        }
-
-        .nao-escalados-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            background: white;
-            border-radius: 6px;
-            margin-bottom: 8px;
-            border-left: 4px solid #ff9800;
-            transition: all 0.2s;
-        }
-
-        .nao-escalados-item:hover {
-            background: #fff3e0;
-            transform: translateX(3px);
-        }
-
-        .nao-escalados-nome {
-            font-weight: 600;
-            color: #424242;
-            flex: 1;
-        }
-
-        .nao-escalados-info {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .nao-escalados-dias {
-            background: #ff9800;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            min-width: 60px;
-            text-align: center;
-        }
-
-        .nao-escalados-status {
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-weight: 700;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-        }
-
-        .nao-escalados-status.folga {
-            background: #e8f5e9;
-            color: #2e7d32;
-            border: 1px solid #c8e6c9;
-        }
-
-        .nao-escalados-status.ferias {
-            background: #e3f2fd;
-            color: #1565c0;
-            border: 1px solid #bbdefb;
-        }
-
-        .nao-escalados-status.inativo {
-            background: #f5f5f5;
-            color: #757575;
-            border: 1px solid #e0e0e0;
-        }
-
-        .nao-escalados-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 2px solid #f0f0f0;
-        }
-
-        .nao-escalados-summary-item {
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
-            border-radius: 8px;
-            color: white;
-        }
-
-        .nao-escalados-summary-label {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .nao-escalados-summary-value {
-            font-size: 2.2rem;
-            font-weight: 800;
-        }
-
-        .nao-escalados-alerta {
-            background: #fff3e0;
-            border-left: 4px solid #ff9800;
-            padding: 15px;
-            border-radius: 0 8px 8px 0;
-            margin-top: 20px;
-            font-size: 0.95rem;
-            color: #5d4037;
-        }
-
-        .nao-escalados-alerta strong {
-            color: #ff9800;
         }
 
         /* MODAL DE ATUALIZAÇÃO */
@@ -1337,91 +1111,51 @@
             border: 2px solid #e0e0e0;
         }
 
-        /* NOVOS ESTILOS PARA O BOTÃO DE CONTROLE REDONDO */
-        .controle-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
+        .finalizar-btn {
+            padding: 8px 20px;
             border: none;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 0.9rem;
             cursor: pointer;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
-            position: relative;
-            overflow: hidden;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .controle-btn.inicial {
-            background: linear-gradient(135deg, #c62828 0%, #d32f2f 100%);
+        .finalizar-btn:not(.finalized) {
+            background: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
         }
 
-        .controle-btn.inicial:hover {
-            background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%);
-            transform: scale(1.1);
-            box-shadow: 0 5px 15px rgba(198, 40, 40, 0.4);
-        }
-
-        .controle-btn.inicial:active {
-            transform: scale(0.95);
-        }
-
-        .controle-btn.fim-viagem {
-            background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
-            color: white;
-            border-radius: 20px;
-            width: auto;
-            min-width: 120px;
-            height: 40px;
-            padding: 0 20px;
-            font-size: 0.9rem;
-            font-weight: 700;
-            animation: pulse-yellow 1.5s infinite;
-        }
-
-        .controle-btn.fim-viagem:hover {
-            background: linear-gradient(135deg, #f57c00 0%, #ff9800 100%);
+        .finalizar-btn:not(.finalized):hover {
+            background: linear-gradient(135deg, #1b5e20 0%, #388e3c 100%);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 152, 0, 0.4);
+            box-shadow: 0 6px 16px rgba(46, 125, 50, 0.4);
         }
 
-        .controle-btn.fim-viagem:active {
-            transform: translateY(0);
+        .finalizar-btn.finalized {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #c8e6c9;
+            cursor: default;
         }
 
-        @keyframes pulse-yellow {
-            0% {
-                box-shadow: 0 0 0 0 rgba(255, 152, 0, 0.7);
-            }
-            70% {
-                box-shadow: 0 0 0 10px rgba(255, 152, 0, 0);
-            }
-            100% {
-                box-shadow: 0 0 0 0 rgba(255, 152, 0, 0);
-            }
+        .finalizar-btn.finalized::before {
+            content: "✓";
+            font-weight: bold;
+            font-size: 1.1rem;
         }
 
-        .controle-btn.sem-destino {
+        .finalizar-btn.sem-destino {
             background: #e0e0e0;
             color: #757575;
             cursor: not-allowed;
             opacity: 0.7;
-            width: auto;
-            min-width: 120px;
-            height: 40px;
-            padding: 0 20px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 700;
-        }
-
-        .controle-btn.sem-destino:hover {
-            transform: none;
-            box-shadow: none;
         }
 
         .trip-badge {
@@ -2136,7 +1870,7 @@
             </div>
         </div>
 
-        <!-- RESUMO DOS ÚLTIMOS 3 DIAS (COMEÇANDO DO DIA ATUAL) -->
+        <!-- RESUMO DOS ÚLTIMOS 3 DIAS -->
         <div class="day-operations" id="last3DaysSummary">
             <!-- Carregado dinamicamente -->
         </div>
@@ -2268,71 +2002,6 @@
             </div>
         </div>
 
-        <!-- NOVA SEÇÃO: MOTORISTAS NÃO ESCALADOS -->
-        <div class="nao-escalados-card" id="naoEscaladosCard">
-            <div class="nao-escalados-header">
-                <div class="nao-escalados-titulo">
-                    <span>👥</span>
-                    Análise de Motoristas Não Escalados
-                </div>
-                <div class="nao-escalados-controls">
-                    <select class="nao-escalados-select" id="naoEscaladosDateFilter" onchange="updateNaoEscalados()">
-                        <option value="hoje">Dia Selecionado</option>
-                        <option value="7dias">Últimos 7 Dias</option>
-                        <option value="15dias">Últimos 15 Dias</option>
-                        <option value="30dias">Últimos 30 Dias</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="nao-escalados-grid">
-                <div class="nao-escalados-section">
-                    <div class="nao-escalados-section-title">
-                        <span>⏸️</span>
-                        Motoristas em Folga (Hoje)
-                    </div>
-                    <div class="nao-escalados-list" id="folgaList">
-                        <!-- Carregado dinamicamente -->
-                    </div>
-                </div>
-                
-                <div class="nao-escalados-section">
-                    <div class="nao-escalados-section-title">
-                        <span>🏖️</span>
-                        Possíveis Férias/Afastamentos
-                    </div>
-                    <div class="nao-escalados-list" id="feriasList">
-                        <!-- Carregado dinamicamente -->
-                    </div>
-                </div>
-            </div>
-            
-            <div class="nao-escalados-summary">
-                <div class="nao-escalados-summary-item">
-                    <div class="nao-escalados-summary-label">Total de Motoristas</div>
-                    <div class="nao-escalados-summary-value" id="totalMotoristasTodos">0</div>
-                </div>
-                <div class="nao-escalados-summary-item">
-                    <div class="nao-escalados-summary-label">Em Operação Hoje</div>
-                    <div class="nao-escalados-summary-value" id="motoristasHoje">0</div>
-                </div>
-                <div class="nao-escalados-summary-item">
-                    <div class="nao-escalados-summary-label">Não Escalados Hoje</div>
-                    <div class="nao-escalados-summary-value" id="naoEscaladosHoje">0</div>
-                </div>
-                <div class="nao-escalados-summary-item">
-                    <div class="nao-escalados-summary-label">Média de Dias Sem Trabalhar</div>
-                    <div class="nao-escalados-summary-value" id="mediaDiasFolga">0</div>
-                </div>
-            </div>
-            
-            <div class="nao-escalados-alerta">
-                <strong>📋 Análise de Padrão:</strong> Esta seção identifica motoristas que não foram escalados recentemente, 
-                permitindo identificar padrões de folgas, possíveis férias ou afastamentos. 
-                Motoristas com mais de 7 dias sem trabalhar são destacados para análise.
-            </div>
-        </div>
-
         <!-- ESTATÍSTICAS DE ROTAS FREQUENTES -->
         <div class="rota-stats">
             <div class="stats-header">
@@ -2390,7 +2059,6 @@
                     <li><strong>Últimos 3 dias</strong> mostrados no resumo acima</li>
                     <li><strong>Senha de supervisão:</strong> @admin0768# (necessária para importar dados)</li>
                     <li><strong>Relação Veículos/Motoristas:</strong> Atualize manualmente os totais</li>
-                    <li><strong>Análise de Não Escalados:</strong> Identifica motoristas em folga ou possíveis férias</li>
                 </ul>
             </div>
         </div>
@@ -2567,40 +2235,27 @@ Carlos Oliveira"></textarea>
 
     <script>
         // ============================================
-        // DADOS INICIAIS DA PLANILHA (VÁZIO - COMEÇA COM DATA VIGENTE)
+        // DADOS INICIAIS DA PLANILHA (SIMPLIFICADO)
         // ============================================
-        function getTodayDateString() {
-            const today = new Date();
-            const day = String(today.getDate()).padStart(2, '0');
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const year = String(today.getFullYear()).slice(2);
-            return `${day}/${month}/${year}`;
-        }
-
-        function getYesterdayDateString() {
-            const yesterday = new Date();
-            yesterday.setDate(yesterday.getDate() - 1);
-            const day = String(yesterday.getDate()).padStart(2, '0');
-            const month = String(yesterday.getMonth() + 1).padStart(2, '0');
-            const year = String(yesterday.getFullYear()).slice(2);
-            return `${day}/${month}/${year}`;
-        }
-
-        function getDayBeforeYesterdayDateString() {
-            const dayBefore = new Date();
-            dayBefore.setDate(dayBefore.getDate() - 2);
-            const day = String(dayBefore.getDate()).padStart(2, '0');
-            const month = String(dayBefore.getMonth() + 1).padStart(2, '0');
-            const year = String(dayBefore.getFullYear()).slice(2);
-            return `${day}/${month}/${year}`;
-        }
-
         const initialFrotaData = `DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,PRÓX_HORA_DISP,DESTINO,SAÍDA_VEÍCULO_CD
-${getDayBeforeYesterdayDateString()},qua.,LS,064 LUV 9296,MARTINS,05:13:00,10:13:00,14:09:00,01:09:00,069 - CAXIAS / 774 - SHOP. CAXIAS,06:10:00
-${getDayBeforeYesterdayDateString()},qua.,LS,065 KZQ 9648,JOEL,09:48:00,14:48:00,,,GARAGEM X LASA,10:14:00
-${getYesterdayDateString()},qui.,LS,066 LUB 1400,JOEL,09:48:00,14:48:00,16:18:00,03:18:00,GARAGEM X LASA,14:19:00
-${getYesterdayDateString()},qui.,LS,067 LUX 9063,CÉLIO,05:00:00,10:00:00,16:25:00,03:25:00,164 - SHOP. CARIOCA / 258 - SHOP. MADUREIRA,06:20:00
-${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - TIJUCA / 648 - CENTRO,06:15:00`;
+02/01/26,sex.,LS,064 LUV 9296,MARTINS,05:13:00,10:13:00,14:09:00,01:09:00,069 - CAXIAS / 774 - SHOP. CAXIAS,06:10:00
+02/01/26,sex.,LS,065 KZQ 9648,JOEL,09:48:00,14:48:00,,,GARAGEM X LASA,10:14:00
+02/01/26,sex.,LS,066 LUB 1400,JOEL,09:48:00,14:48:00,16:18:00,03:18:00,GARAGEM X LASA,14:19:00
+02/01/26,sex.,LS,067 LUX 9063,CÉLIO,05:00:00,10:00:00,16:25:00,03:25:00,164 - SHOP. CARIOCA / 258 - SHOP. MADUREIRA,06:20:00
+02/01/26,sex.,TL,108 LSM 7748,CLAUDINEI,06:30:00,11:30:00,17:20:00,04:20:00,GARAGEM X TELERIO (COBRANÇA DEVIDA),06:45:00
+02/01/26,sex.,TL,113 KXU 6988,NOGUEIRA,06:43:00,11:43:00,17:20:00,04:20:00,03 - CAMPO GRANDE(Pablo e Pablo Winicius),12:50:00
+02/01/26,sex.,TL,116 LSQ 6092,ALEXANDRE,06:36:00,11:36:00,17:17:00,04:17:00,03 - CAMPO GRANDE (João Vitor e Rafael),10:10:00
+02/01/26,sex.,TL,117 KRR 2728,ANDERSON,05:44:00,10:44:00,,,GARAGEM X TELERIO,06:10:00
+02/01/26,sex.,TL,117 KRR 2728,ANDERSON,05:44:00,10:44:00,17:20:00,04:20:00,09 - MÉIER ( Wesley e Gabriel),10:50:00
+02/01/26,sex.,TL,118 LSQ 6093,EDILSON,06:47:00,11:47:00,17:20:00,04:20:00,COBRANÇA 50%,06:50:00
+02/01/26,sex.,HT,048 LSZ 0790,ROGÉRIO,03:00:00,08:00:00,11:20:00,22:20:00,MARACANÃ / CONDE DE BONFIM / CB 648 / TIJUCA / CONDE 99 / ILHA,05:30:00
+02/01/26,sex.,HT,093 KVF 3715,WALMIR,03:19:00,08:19:00,12:38:00,23:38:00,BARRA BLUE / A5 / RECREIO / AMERICAS / ABELARDO BUENO / FREGUESIA,05:12:00
+02/01/26,sex.,HT,122 DPF 7I23,VALDIR,03:00:00,08:00:00,14:05:00,01:05:00,ABRANTES / PRADO JUNIOR / SIQUEIRA CAMPOS / DIAS DA ROCHA / ADALBERTO / SÃO CONRADO / LEBLON / JARDIM BOTÂNICO,05:32:00
+02/01/26,sex.,HT,125 OWO 2F73,NEVES,03:05:00,08:05:00,11:15:00,22:15:00,M. PARANA / REGIÃO OCEÂNICA / ITAIPU / SANTA ROSA,05:37:00
+02/01/26,sex.,CV,124 ATI 4G85,ROSENDO,04:07:00,09:07:00,12:01:00,23:01:00,SÃO GONÇALO I - 374,04:47:00
+02/01/26,sex.,CV,097 LRX 4831,GILMAR,13:25:00,18:25:00,19:30:00,06:30:00,SHOP MADUREIRA-255,13:30:00
+02/01/26,sex.,CV,101 LRX 4832,LUIZ,13:00:00,18:00:00,19:00:00,06:00:00,NORTE SHOP-240,13:30:00
+02/01/26,sex.,CV,105 KPU 7450,SERGIO SILVA,13:30:00,18:30:00,18:40:00,05:40:00,SHOP CAXIAS-327,13:30:00`;
 
         // ============================================
         // VARIÁVEIS GLOBAIS
@@ -2627,17 +2282,6 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
         let motoristasData = {
             total: 0,
             lista: []
-        };
-        
-        // Dados de análise de não escalados
-        let naoEscaladosAnalysis = {
-            motoristasHoje: new Set(),
-            motoristasTodos: new Set(),
-            diasSemTrabalhar: {},
-            ultimoTrabalho: {},
-            padroesFolga: {},
-            motoristasEscaladosHoje: new Set(),
-            motoristasComDestinoValidoHoje: new Set()
         };
         
         // Senha de supervisão
@@ -2690,15 +2334,11 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                 // Calcular estatísticas avançadas
                 calculateAdvancedStatistics();
                 
-                // Calcular análise de não escalados
-                calculateNaoEscaladosAnalysis();
-                
                 // Carregar interface
                 loadLast3DaysSummary();
                 loadControleDiario();
                 updateDateFilterOptions();
                 loadTableData();
-                updateNaoEscalados();
                 updateRotaFrequente();
                 updateRelacaoVeiculosMotoristas();
                 updateTimestamp();
@@ -2745,9 +2385,7 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             if (savedVeiculos) {
                 try {
                     veiculosData = JSON.parse(savedVeiculos);
-                    console.log('Veículos carregados:', veiculosData);
                 } catch (e) {
-                    console.error('Erro ao carregar veículos:', e);
                     veiculosData = {
                         total: 0,
                         distribuicao: {
@@ -2759,8 +2397,6 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                         }
                     };
                 }
-            } else {
-                console.log('Nenhum dado de veículos encontrado no localStorage');
             }
             
             // Carregar motoristas
@@ -2768,35 +2404,19 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             if (savedMotoristas) {
                 try {
                     motoristasData = JSON.parse(savedMotoristas);
-                    console.log('Motoristas carregados:', motoristasData);
-                    
-                    // Verificar se o total está correto
-                    if (motoristasData.total !== motoristasData.lista.length) {
-                        console.warn(`Total de motoristas (${motoristasData.total}) não corresponde à lista (${motoristasData.lista.length}). Corrigindo...`);
-                        motoristasData.total = motoristasData.lista.length;
-                        saveVeiculosMotoristasData();
-                    }
                 } catch (e) {
-                    console.error('Erro ao carregar motoristas:', e);
                     motoristasData = {
                         total: 0,
                         lista: []
                     };
                 }
-            } else {
-                console.log('Nenhum dado de motoristas encontrado no localStorage');
             }
         }
 
         // SALVAR DADOS DE VEÍCULOS E MOTORISTAS
         function saveVeiculosMotoristasData() {
-            try {
-                localStorage.setItem('frotaVeiculosData', JSON.stringify(veiculosData));
-                localStorage.setItem('frotaMotoristasData', JSON.stringify(motoristasData));
-                console.log('Dados de veículos e motoristas salvos:', { veiculosData, motoristasData });
-            } catch (e) {
-                console.error('Erro ao salvar dados de veículos/motoristas:', e);
-            }
+            localStorage.setItem('frotaVeiculosData', JSON.stringify(veiculosData));
+            localStorage.setItem('frotaMotoristasData', JSON.stringify(motoristasData));
         }
 
         // SALVAR DADOS NO LOCALSTORAGE
@@ -3095,12 +2715,10 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             identifyMultipleTrips();
             extractAllDates();
             calculateAdvancedStatistics();
-            calculateNaoEscaladosAnalysis();
             loadLast3DaysSummary();
             loadControleDiario();
             updateDateFilterOptions();
             loadTableData();
-            updateNaoEscalados();
             updateRotaFrequente();
             updateRelacaoVeiculosMotoristas();
             updateTimestamp();
@@ -3227,265 +2845,7 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             });
         }
 
-        // CALCULAR ANÁLISE DE MOTORISTAS NÃO ESCALADOS - VERSÃO CORRIGIDA
-        function calculateNaoEscaladosAnalysis() {
-            naoEscaladosAnalysis = {
-                motoristasHoje: new Set(),
-                motoristasTodos: new Set(),
-                diasSemTrabalhar: {},
-                ultimoTrabalho: {},
-                padroesFolga: {},
-                motoristasEscaladosHoje: new Set(),
-                motoristasComDestinoValidoHoje: new Set()
-            };
-            
-            // Encontrar data atual selecionada
-            const dateFilter = document.getElementById('dateFilter').value;
-            let dataSelecionada = dateFilter !== 'all' ? dateFilter : getTodayDateString();
-            
-            console.log('Data selecionada para análise de não escalados:', dataSelecionada);
-            
-            // Coletar todos os motoristas que já trabalharam (COM OU SEM DESTINO VÁLIDO)
-            frotaData.forEach(item => {
-                if (item.MOTORISTA && item.MOTORISTA.trim() !== '') {
-                    const motorista = item.MOTORISTA.trim();
-                    
-                    // Adicionar a lista de todos os motoristas
-                    naoEscaladosAnalysis.motoristasTodos.add(motorista);
-                    
-                    // Coletar motoristas que trabalharam na data selecionada (COM OU SEM DESTINO VÁLIDO)
-                    if (item.DATA === dataSelecionada) {
-                        // Motoristas escalados hoje (todos, independente de ter destino válido)
-                        naoEscaladosAnalysis.motoristasEscaladosHoje.add(motorista);
-                        
-                        // Motoristas com destino válido hoje
-                        if (item.TEM_DESTINO) {
-                            naoEscaladosAnalysis.motoristasComDestinoValidoHoje.add(motorista);
-                        }
-                        
-                        naoEscaladosAnalysis.motoristasHoje.add(motorista);
-                    }
-                    
-                    // Atualizar último dia de trabalho (considera qualquer viagem, com ou sem destino válido)
-                    if (!naoEscaladosAnalysis.ultimoTrabalho[motorista]) {
-                        naoEscaladosAnalysis.ultimoTrabalho[motorista] = item.DATA;
-                    } else {
-                        // Manter a data mais recente
-                        const dataAtual = parseDate(naoEscaladosAnalysis.ultimoTrabalho[motorista]);
-                        const dataNova = parseDate(item.DATA);
-                        if (dataNova > dataAtual) {
-                            naoEscaladosAnalysis.ultimoTrabalho[motorista] = item.DATA;
-                        }
-                    }
-                }
-            });
-            
-            // Calcular dias sem trabalhar
-            const hoje = parseDate(dataSelecionada);
-            
-            Object.keys(naoEscaladosAnalysis.ultimoTrabalho).forEach(motorista => {
-                const ultimaData = parseDate(naoEscaladosAnalysis.ultimoTrabalho[motorista]);
-                if (ultimaData && hoje) {
-                    const diffTime = Math.abs(hoje - ultimaData);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    naoEscaladosAnalysis.diasSemTrabalhar[motorista] = diffDays;
-                } else {
-                    naoEscaladosAnalysis.diasSemTrabalhar[motorista] = 999; // Nunca trabalhou
-                }
-            });
-            
-            // Identificar padrões de folga
-            Object.keys(naoEscaladosAnalysis.diasSemTrabalhar).forEach(motorista => {
-                const dias = naoEscaladosAnalysis.diasSemTrabalhar[motorista];
-                
-                // Motoristas escalados hoje não estão em folga
-                if (naoEscaladosAnalysis.motoristasEscaladosHoje.has(motorista)) {
-                    naoEscaladosAnalysis.padroesFolga[motorista] = 'trabalhou_hoje';
-                } else if (dias >= 30) {
-                    naoEscaladosAnalysis.padroesFolga[motorista] = 'inativo';
-                } else if (dias >= 14) {
-                    naoEscaladosAnalysis.padroesFolga[motorista] = 'possivel_ferias';
-                } else if (dias >= 7) {
-                    naoEscaladosAnalysis.padroesFolga[motorista] = 'folga_longa';
-                } else if (dias > 0) {
-                    naoEscaladosAnalysis.padroesFolga[motorista] = 'folga_curta';
-                } else {
-                    naoEscaladosAnalysis.padroesFolga[motorista] = 'trabalhou_hoje';
-                }
-            });
-            
-            console.log('Análise de não escalados - CORRIGIDA:', {
-                dataSelecionada,
-                motoristasHoje: Array.from(naoEscaladosAnalysis.motoristasHoje),
-                motoristasEscaladosHoje: Array.from(naoEscaladosAnalysis.motoristasEscaladosHoje),
-                motoristasComDestinoValidoHoje: Array.from(naoEscaladosAnalysis.motoristasComDestinoValidoHoje),
-                padroesFolga: naoEscaladosAnalysis.padroesFolga
-            });
-        }
-
-        // ATUALIZAR SEÇÃO DE MOTORISTAS NÃO ESCALADOS
-        function updateNaoEscalados() {
-            calculateNaoEscaladosAnalysis();
-            
-            // Combina motoristas do sistema com motoristas cadastrados manualmente
-            const motoristasDoSistema = Array.from(naoEscaladosAnalysis.motoristasTodos);
-            const motoristasCadastrados = motoristasData.lista;
-            
-            // União de todos os motoristas conhecidos
-            const todosMotoristas = [...new Set([...motoristasDoSistema, ...motoristasCadastrados])];
-            
-            // Encontrar data atual selecionada
-            const dateFilter = document.getElementById('dateFilter').value;
-            let dataSelecionada = dateFilter !== 'all' ? dateFilter : getTodayDateString();
-            
-            // Motoristas que trabalharam hoje (incluindo os sem destino válido)
-            const motoristasHoje = Array.from(naoEscaladosAnalysis.motoristasEscaladosHoje);
-            
-            // Motoristas que NÃO foram escalados hoje (não aparecem em nenhuma viagem hoje)
-            const motoristasNaoEscaladosHoje = todosMotoristas.filter(m => 
-                !motoristasHoje.includes(m)
-            );
-            
-            // Motoristas com destino válido hoje
-            const motoristasComDestinoValidoHoje = Array.from(naoEscaladosAnalysis.motoristasComDestinoValidoHoje);
-            
-            console.log('Estatísticas corrigidas:', {
-                todosMotoristas: todosMotoristas.length,
-                motoristasHoje: motoristasHoje.length,
-                motoristasComDestinoValidoHoje: motoristasComDestinoValidoHoje.length,
-                motoristasNaoEscaladosHoje: motoristasNaoEscaladosHoje.length,
-                dataSelecionada
-            });
-            
-            // Ordenar motoristas não escalados por dias sem trabalhar (decrescente)
-            motoristasNaoEscaladosHoje.sort((a, b) => {
-                const diasA = naoEscaladosAnalysis.diasSemTrabalhar[a] || 999;
-                const diasB = naoEscaladosAnalysis.diasSemTrabalhar[b] || 999;
-                return diasB - diasA;
-            });
-            
-            // Separar em folgas curtas e possíveis férias
-            const folgaCurta = motoristasNaoEscaladosHoje.filter(m => {
-                const dias = naoEscaladosAnalysis.diasSemTrabalhar[m] || 999;
-                const padrao = naoEscaladosAnalysis.padroesFolga[m];
-                return (padrao === 'folga_curta' || padrao === 'folga_longa' || 
-                       (dias < 7 && dias > 0) || dias === 999) &&
-                       !motoristasHoje.includes(m);
-            });
-            
-            const possiveisFerias = motoristasNaoEscaladosHoje.filter(m => {
-                const padrao = naoEscaladosAnalysis.padroesFolga[m];
-                return (padrao === 'possivel_ferias' || padrao === 'inativo') &&
-                       !motoristasHoje.includes(m);
-            });
-            
-            // Atualizar listas
-            const folgaList = document.getElementById('folgaList');
-            const feriasList = document.getElementById('feriasList');
-            
-            let folgaHtml = '';
-            let feriasHtml = '';
-            
-            if (folgaCurta.length > 0) {
-                folgaCurta.forEach(motorista => {
-                    const dias = naoEscaladosAnalysis.diasSemTrabalhar[motorista] || 999;
-                    const padrao = naoEscaladosAnalysis.padroesFolga[motorista];
-                    const ultimoTrabalho = naoEscaladosAnalysis.ultimoTrabalho[motorista] || 'Nunca trabalhou';
-                    
-                    let statusClass = 'nao-escalados-status folga';
-                    let statusText = dias === 999 ? 'NOVO' : 'FOLGA';
-                    
-                    if (dias >= 7 && dias < 14) {
-                        statusClass = 'nao-escalados-status folga';
-                        statusText = 'FOLGA LONGA';
-                    }
-                    
-                    folgaHtml += `
-                        <div class="nao-escalados-item">
-                            <div class="nao-escalados-nome">
-                                ${motorista}
-                                <div style="font-size: 0.8rem; color: #666; margin-top: 2px;">
-                                    Último trabalho: ${ultimoTrabalho}
-                                </div>
-                            </div>
-                            <div class="nao-escalados-info">
-                                <div class="nao-escalados-dias">${dias === 999 ? '?' : dias} dias</div>
-                                <div class="${statusClass}">${statusText}</div>
-                            </div>
-                        </div>
-                    `;
-                });
-            } else {
-                folgaHtml = '<div style="text-align: center; padding: 20px; color: #666;">Todos os motoristas escalados hoje</div>';
-            }
-            
-            if (possiveisFerias.length > 0) {
-                possiveisFerias.forEach(motorista => {
-                    const dias = naoEscaladosAnalysis.diasSemTrabalhar[motorista] || 0;
-                    const padrao = naoEscaladosAnalysis.padroesFolga[motorista];
-                    const ultimoTrabalho = naoEscaladosAnalysis.ultimoTrabalho[motorista] || 'Nunca trabalhou';
-                    
-                    let statusClass = 'nao-escalados-status ferias';
-                    let statusText = 'POSSÍVEL FÉRIAS';
-                    
-                    if (dias >= 30) {
-                        statusClass = 'nao-escalados-status inativo';
-                        statusText = 'INATIVO';
-                    }
-                    
-                    feriasHtml += `
-                        <div class="nao-escalados-item">
-                            <div class="nao-escalados-nome">
-                                ${motorista}
-                                <div style="font-size: 0.8rem; color: #666; margin-top: 2px;">
-                                    Último: ${ultimoTrabalho}
-                                </div>
-                            </div>
-                            <div class="nao-escalados-info">
-                                <div class="nao-escalados-dias">${dias} dias</div>
-                                <div class="${statusClass}">${statusText}</div>
-                            </div>
-                        </div>
-                    `;
-                });
-            } else {
-                feriasHtml = '<div style="text-align: center; padding: 20px; color: #666;">Nenhum motorista com padrão de férias</div>';
-            }
-            
-            folgaList.innerHTML = folgaHtml;
-            feriasList.innerHTML = feriasHtml;
-            
-            // Atualizar estatísticas
-            const totalMotoristas = todosMotoristas.length;
-            const motoristasHojeCount = motoristasHoje.length;
-            const naoEscaladosHojeCount = motoristasNaoEscaladosHoje.length;
-            const motoristasComDestinoValidoCount = motoristasComDestinoValidoHoje.length;
-            
-            // Calcular média de dias de folga (apenas para os não escalados)
-            let somaDiasFolga = 0;
-            let countDiasFolga = 0;
-            
-            motoristasNaoEscaladosHoje.forEach(m => {
-                const dias = naoEscaladosAnalysis.diasSemTrabalhar[m];
-                if (dias && dias < 999) { // Ignorar "nunca trabalhou"
-                    somaDiasFolga += dias;
-                    countDiasFolga++;
-                }
-            });
-            
-            const mediaDiasFolga = countDiasFolga > 0 ? Math.round(somaDiasFolga / countDiasFolga) : 0;
-            
-            // Atualizar os valores na interface
-            document.getElementById('totalMotoristasTodos').textContent = totalMotoristas;
-            document.getElementById('motoristasHoje').textContent = motoristasHojeCount;
-            document.getElementById('naoEscaladosHoje').textContent = naoEscaladosHojeCount;
-            document.getElementById('mediaDiasFolga').textContent = mediaDiasFolga;
-            
-            // Adicionar informação sobre motoristas com/sem destino válido
-            console.log(`Motoristas hoje: ${motoristasHojeCount} (${motoristasComDestinoValidoCount} com destino válido)`);
-        }
-
-        // CARREGAR RESUMO DOS ÚLTIMOS 3 DIAS (COMEÇANDO DO DIA ATUAL)
+        // CARREGAR RESUMO DOS ÚLTIMOS 3 DIAS
         function loadLast3DaysSummary() {
             const daysSummary = {};
             
@@ -3522,17 +2882,7 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                 day.operations[item.OP].vehicles.add(item.VEICULO);
             });
             
-            // Ordenar datas de forma decrescente (mais recente primeiro)
-            const sortedDates = Object.keys(daysSummary).sort((a, b) => {
-                const dateA = parseDate(a);
-                const dateB = parseDate(b);
-                return dateB - dateA;
-            });
-            
-            // Pegar as 3 datas mais recentes
-            const last3Dates = sortedDates.slice(0, 3);
-            
-            console.log('Últimas 3 datas:', last3Dates);
+            const last3Dates = allDates.slice(0, 3);
             
             let html = '';
             last3Dates.forEach(date => {
@@ -3600,7 +2950,7 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
         // CARREGAR CONTROLE DIÁRIO DA FROTA COM ANÁLISE DE CONTRATAÇÃO
         function loadControleDiario() {
             const dateFilter = document.getElementById('dateFilter').value;
-            let targetDate = dateFilter !== 'all' ? dateFilter : getTodayDateString();
+            let targetDate = dateFilter !== 'all' ? dateFilter : allDates[0] || '31/01/26';
             
             const viagensDoDia = frotaData.filter(item => item.DATA === targetDate && item.TEM_DESTINO);
             
@@ -3841,15 +3191,13 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
 
         // ATUALIZAR RELAÇÃO VEÍCULOS/MOTORISTAS (ORDENADA)
         function updateRelacaoVeiculosMotoristas() {
-            console.log('Atualizando relação veículos/motoristas...');
-            
             // Atualizar totais
             document.getElementById('totalVeiculos').textContent = veiculosData.total;
             document.getElementById('totalMotoristas').textContent = motoristasData.total;
             document.getElementById('totalVeiculosInfo').textContent = `Total: ${veiculosData.total}`;
             document.getElementById('totalMotoristasInfo').textContent = `Total: ${motoristasData.total}`;
             
-            // Calcular estatísticas de uso de veículos
+            // Calcular estatísticas de uso
             const veiculoUsage = {};
             const motoristaUsage = {};
             
@@ -3892,6 +3240,13 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                         </div>
                     `;
                 });
+                
+                // Atualizar total se não estiver definido
+                if (veiculosData.total === 0) {
+                    veiculosData.total = sortedVeiculos.length;
+                    document.getElementById('totalVeiculos').textContent = veiculosData.total;
+                    document.getElementById('totalVeiculosInfo').textContent = `Total: ${veiculosData.total}`;
+                }
             } else {
                 veiculosHtml = '<div style="text-align: center; padding: 20px; color: #666;">Nenhum veículo encontrado</div>';
             }
@@ -3902,30 +3257,21 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             const motoristasList = document.getElementById('motoristasList');
             let motoristasHtml = '';
             
-            // Combina motoristas do sistema com motoristas cadastrados manualmente
-            const motoristasDoSistema = new Set(Object.keys(motoristaUsage));
-            const motoristasCadastrados = new Set(motoristasData.lista);
-            
-            // União de todos os motoristas
-            const todosMotoristas = [...new Set([...motoristasDoSistema, ...motoristasCadastrados])];
-            
-            if (todosMotoristas.length > 0) {
-                todosMotoristas.forEach(motorista => {
-                    const count = motoristaUsage[motorista] || 0;
+            if (sortedMotoristas.length > 0) {
+                sortedMotoristas.forEach((item, index) => {
                     motoristasHtml += `
                         <div class="relacao-item">
-                            <div class="relacao-nome">${motorista}</div>
-                            <div class="relacao-count">${count}</div>
+                            <div class="relacao-nome">${item.motorista}</div>
+                            <div class="relacao-count">${item.count}</div>
                         </div>
                     `;
                 });
                 
                 // Atualizar total se não estiver definido
                 if (motoristasData.total === 0) {
-                    motoristasData.total = todosMotoristas.length;
+                    motoristasData.total = sortedMotoristas.length;
                     document.getElementById('totalMotoristas').textContent = motoristasData.total;
                     document.getElementById('totalMotoristasInfo').textContent = `Total: ${motoristasData.total}`;
-                    saveVeiculosMotoristasData();
                 }
             } else {
                 motoristasHtml = '<div style="text-align: center; padding: 20px; color: #666;">Nenhum motorista encontrado</div>';
@@ -3933,11 +3279,8 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             
             motoristasList.innerHTML = motoristasHtml;
             
-            console.log('Relação atualizada:', {
-                veiculos: veiculosData.total,
-                motoristas: motoristasData.total,
-                listaMotoristas: motoristasData.lista
-            });
+            // Salvar dados atualizados
+            saveVeiculosMotoristasData();
             
             // Atualizar também o Controle Diário para refletir os novos totais
             loadControleDiario();
@@ -3965,16 +3308,13 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                 select.appendChild(option);
             });
             
-            // Selecionar a data de hoje se disponível
-            const hoje = getTodayDateString();
-            if (allDates.includes(hoje)) {
-                select.value = hoje;
-            } else if (allDates.length > 0) {
+            // Selecionar a primeira data disponível
+            if (allDates.length > 0) {
                 select.value = allDates[0];
             }
         }
 
-        // CARREGAR DADOS DA TABELA - MODIFICADA PARA NOVO BOTÃO
+        // CARREGAR DADOS DA TABELA
         function loadTableData() {
             const filteredData = getFilteredData();
             const tableBody = document.getElementById('tableBody');
@@ -4010,28 +3350,6 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                     statusText = 'SEM DESTINO VÁLIDO';
                 }
                 
-                // Determinar o tipo de botão
-                let controleBtnHtml = '';
-                if (!temDestino) {
-                    controleBtnHtml = `
-                        <button class="controle-btn sem-destino" disabled>
-                            Sem Destino
-                        </button>
-                    `;
-                } else if (isFinalizadoManualmente) {
-                    controleBtnHtml = `
-                        <button class="controle-btn fim-viagem" disabled>
-                            FIM DE VIAGEM
-                        </button>
-                    `;
-                } else {
-                    controleBtnHtml = `
-                        <button class="controle-btn inicial" onclick="toggleControleBtn('${item.id}')" title="Clique para finalizar viagem">
-                            ○
-                        </button>
-                    `;
-                }
-                
                 html += `
                     <tr class="${rowClass}" data-id="${item.id}">
                         <td style="font-weight: 700; color: ${temDestino ? '#424242' : '#9e9e9e'};">${index + 1}</td>
@@ -4054,7 +3372,17 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                             </span>
                         </td>
                         <td>
-                            ${controleBtnHtml}
+                            ${temDestino ? `
+                                <button class="finalizar-btn ${isFinalizadoManualmente ? 'finalized' : ''}" 
+                                        onclick="toggleFinalization('${item.id}')"
+                                        ${isFinalizadoManualmente ? 'disabled' : ''}>
+                                    ${isFinalizadoManualmente ? 'Finalizado' : 'Finalizar'}
+                                </button>
+                            ` : `
+                                <button class="finalizar-btn sem-destino" disabled>
+                                    Sem Destino Válido
+                                </button>
+                            `}
                         </td>
                         <td>
                             ${temDestino ? (
@@ -4089,78 +3417,6 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             } else {
                 document.getElementById('tripCount').textContent = `(${totalViagensCount} viagens total)`;
             }
-        }
-
-        // TOGGLE CONTROLE BUTTON - NOVA FUNÇÃO PARA O BOTÃO REDONDO
-        function toggleControleBtn(id) {
-            const item = frotaData.find(item => item.id === id);
-            if (!item) return;
-            
-            if (!item.TEM_DESTINO) {
-                showNotification('Não é possível finalizar uma viagem sem destino válido', 'error');
-                return;
-            }
-            
-            if (item.FINALIZADO_MANUALMENTE) {
-                showNotification('Esta viagem já foi finalizada!', 'info');
-                return;
-            }
-            
-            // Alternar finalização manual
-            if (manualFinalizations[id]) {
-                delete manualFinalizations[id];
-                item.STATUS_MANUAL = null;
-                item.FINALIZADO_MANUALMENTE = false;
-            } else {
-                manualFinalizations[id] = {
-                    timestamp: new Date().toISOString(),
-                    autoStatus: item.STATUS_AUTO
-                };
-                item.STATUS_MANUAL = 'finalizado';
-                item.FINALIZADO_MANUALMENTE = true;
-            }
-            
-            saveManualFinalizations();
-            
-            // Atualizar a linha específica em vez de recarregar toda a tabela
-            const row = document.querySelector(`tr[data-id="${id}"]`);
-            if (row) {
-                const controleTd = row.cells[10]; // Coluna Controle é a 11ª (índice 10)
-                if (item.FINALIZADO_MANUALMENTE) {
-                    controleTd.innerHTML = `
-                        <button class="controle-btn fim-viagem" disabled>
-                            FIM DE VIAGEM
-                        </button>
-                    `;
-                    
-                    // Atualizar status também
-                    const statusTd = row.cells[9];
-                    statusTd.innerHTML = `
-                        <span class="status-indicator status-finalizado">
-                            ✓ FINALIZADO
-                        </span>
-                    `;
-                    
-                    // Adicionar classe de finalizado à linha
-                    row.classList.add('veiculo-finalizado');
-                    row.classList.remove('em-rota', 'pendente');
-                    row.classList.add('finalizado');
-                }
-            }
-            
-            // Atualizar outras seções
-            loadControleDiario();
-            calculateAdvancedStatistics();
-            calculateNaoEscaladosAnalysis();
-            updateNaoEscalados();
-            updateRotaFrequente();
-            
-            showNotification(
-                item.FINALIZADO_MANUALMENTE ? 
-                `✅ Viagem finalizada com sucesso!` :
-                `📝 Finalização removida`,
-                item.FINALIZADO_MANUALMENTE ? 'success' : 'info'
-            );
         }
 
         // FORMATAR DESTINO
@@ -4234,8 +3490,6 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             loadTableData();
             loadControleDiario();
             calculateAdvancedStatistics();
-            calculateNaoEscaladosAnalysis();
-            updateNaoEscalados();
             updateRotaFrequente();
             updateRelacaoVeiculosMotoristas();
         }
@@ -4248,7 +3502,7 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             switch(type) {
                 case 'today':
                     const today = new Date();
-                    const todayFormatted = getTodayDateString();
+                    const todayFormatted = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear().toString().slice(2)}`;
                     targetDate = todayFormatted;
                     displayText = today.toLocaleDateString('pt-BR', { 
                         weekday: 'long', 
@@ -4260,7 +3514,7 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                 case 'yesterday':
                     const yesterday = new Date();
                     yesterday.setDate(yesterday.getDate() - 1);
-                    const yesterdayFormatted = getYesterdayDateString();
+                    const yesterdayFormatted = `${yesterday.getDate().toString().padStart(2, '0')}/${(yesterday.getMonth() + 1).toString().padStart(2, '0')}/${yesterday.getFullYear().toString().slice(2)}`;
                     targetDate = yesterdayFormatted;
                     displayText = yesterday.toLocaleDateString('pt-BR', { 
                         weekday: 'long', 
@@ -4286,17 +3540,49 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
             filterTable();
         }
 
-        // TOGGLE FINALIZAÇÃO MANUAL - MANTIDA PARA COMPATIBILIDADE
+        // TOGGLE FINALIZAÇÃO MANUAL
         function toggleFinalization(id) {
-            // Esta função é mantida apenas para compatibilidade
-            // A nova função toggleControleBtn é a que realmente funciona
-            toggleControleBtn(id);
+            const item = frotaData.find(item => item.id === id);
+            if (!item) return;
+            
+            if (!item.TEM_DESTINO) {
+                showNotification('Não é possível finalizar uma viagem sem destino válido', 'error');
+                return;
+            }
+            
+            if (manualFinalizations[id]) {
+                delete manualFinalizations[id];
+                item.STATUS_MANUAL = null;
+                item.FINALIZADO_MANUALMENTE = false;
+            } else {
+                manualFinalizations[id] = {
+                    timestamp: new Date().toISOString(),
+                    autoStatus: item.STATUS_AUTO
+                };
+                item.STATUS_MANUAL = 'finalizado';
+                item.FINALIZADO_MANUALMENTE = true;
+            }
+            
+            saveManualFinalizations();
+            
+            // ATUALIZAR TUDO
+            filterTable();
+            loadControleDiario();
+            calculateAdvancedStatistics();
+            updateRotaFrequente();
+            
+            showNotification(
+                item.FINALIZADO_MANUALMENTE ? 
+                `Viagem finalizada manualmente` :
+                `Finalização manual removida`,
+                item.FINALIZADO_MANUALMENTE ? 'success' : 'info'
+            );
         }
 
         // ATUALIZAR ROTAS FREQUENTES
         function updateRotaFrequente() {
             const routes = Object.values(routeStatistics)
-                .sort((a, b) => b.totalViagens - a[1].totalViagens)
+                .sort((a, b) => b.totalViagens - a.totalViagens)
                 .slice(0, 10);
             
             let html = '';
@@ -4541,7 +3827,7 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
 
         // CONFIRMAR LIMPEZA DE DADOS
         function confirmClearData() {
-            if (confirm('⚠️ ATENÇÃO: Esta ação irá REMOVER TODOS os dados do sistema!\n\nIsso inclui:\n• Todos os registros de viagens\n• Finalizações manuais\n• Estatísticas\n• Dados de veículos e motoristas\n• Análise de motoristas não escalados\n\nVocê poderá importar um novo arquivo CSV após a limpeza.\n\nTem certeza que deseja continuar?')) {
+            if (confirm('⚠️ ATENÇÃO: Esta ação irá REMOVER TODOS os dados do sistema!\n\nIsso inclui:\n• Todos os registros de viagens\n• Finalizações manuais\n• Estatísticas\n• Dados de veículos e motoristas\n\nVocê poderá importar um novo arquivo CSV após a limpeza.\n\nTem certeza que deseja continuar?')) {
                 clearAllData();
             }
         }
@@ -4558,15 +3844,6 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                 driverStatistics = {};
                 routeStatistics = {};
                 vehicleStatistics = {};
-                naoEscaladosAnalysis = {
-                    motoristasHoje: new Set(),
-                    motoristasTodos: new Set(),
-                    diasSemTrabalhar: {},
-                    ultimoTrabalho: {},
-                    padroesFolga: {},
-                    motoristasEscaladosHoje: new Set(),
-                    motoristasComDestinoValidoHoje: new Set()
-                };
                 
                 // Limpar dados de veículos e motoristas
                 veiculosData = {
@@ -4591,10 +3868,10 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
                 localStorage.removeItem('frotaVeiculosData');
                 localStorage.removeItem('frotaMotoristasData');
                 
-                // Resetar para dados iniciais
-                processCSVData(initialFrotaData);
+                // Resetar para dados iniciais vazios
+                processCSVData('DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,PRÓX_HORA_DISP,DESTINO,SAÍDA_VEÍCULO_CD');
                 
-                showNotification('✅ Todos os dados foram removidos com sucesso!', 'success');
+                showNotification('✅ Todos os dados foram removidos com sucesso! Agora você pode importar um novo arquivo CSV.', 'success');
             } catch (error) {
                 console.error('Erro ao limpar dados:', error);
                 showNotification('Erro ao limpar dados: ' + error.message, 'error');
@@ -4627,7 +3904,7 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
         // GERAR DADOS PARA EXPORTAÇÃO EM FORMATO CSV
         function generateExcelExportData() {
             const routes = Object.values(routeStatistics)
-                .sort((a, b) => b.totalViagens - a[1].totalViagens);
+                .sort((a, b) => b.totalViagens - a.totalViagens);
             
             let csvData = "Rota,Total Viagens,Dias Operação,Veículo Mais Usado,Veículo Uso Count,Motorista Mais Frequente,Operação Principal\n";
             
@@ -4666,7 +3943,7 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
         // GERAR DADOS JSON PARA EXPORTAÇÃO
         function generateJsonExportData() {
             const routes = Object.values(routeStatistics)
-                .sort((a, b) => b.totalViagens - a[1].totalViagens)
+                .sort((a, b) => b.totalViagens - a.totalViagens)
                 .map(route => ({
                     rota: route.nome,
                     totalViagens: route.totalViagens,
@@ -4734,7 +4011,7 @@ ${getTodayDateString()},sex.,LS,068 LUV 9297,ANTÔNIO,05:00:00,10:00:00,,,025 - 
         // COPIAR ROTAS PARA PLANILHA
         function copyRoutesToClipboard() {
             const routes = Object.values(routeStatistics)
-                .sort((a, b) => b.totalViagens - a[1].totalViagens)
+                .sort((a, b) => b.totalViagens - a.totalViagens)
                 .slice(0, 20);
             
             if (routes.length === 0) {
