@@ -823,7 +823,7 @@
             opacity: 0.9;
         }
 
-        /* NECESSIDADE DE CONTRATAÇÃO - MELHORADA */
+        /* NECESSIDADE DE CONTRATAÇÃO - RESTAURADA PARA ORIGINAL */
         .contratacao-status {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -856,15 +856,9 @@
 
         .contratacao-content {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
             margin-top: 10px;
-        }
-
-        @media (max-width: 768px) {
-            .contratacao-content {
-                grid-template-columns: 1fr;
-            }
         }
 
         .contratacao-item {
@@ -918,9 +912,6 @@
             align-items: center;
             gap: 6px;
             margin-top: 10px;
-            width: 100%;
-            justify-content: center;
-            text-align: center;
         }
 
         .contratacao-status-badge.sufficient {
@@ -939,28 +930,6 @@
             background: rgba(255, 152, 0, 0.3);
             color: #ffcc80;
             border: 2px solid rgba(255, 193, 7, 0.3);
-        }
-
-        .contratacao-analysis {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
-        }
-
-        .contratacao-analysis-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            padding: 6px 0;
-        }
-
-        .contratacao-analysis-label {
-            opacity: 0.9;
-        }
-
-        .contratacao-analysis-value {
-            font-weight: 700;
         }
 
         /* RELAÇÃO VEÍCULOS/MOTORISTAS */
@@ -1611,15 +1580,6 @@
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 2px solid #f0f0f0;
-        }
-
-        .export-modal-title {
-            color: #1a237e;
-            font-size: 1.4rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
         .export-options {
@@ -2594,13 +2554,6 @@ Carlos Oliveira"></textarea>
             diasFolga: {} // { data: [motoristas] }
         };
         
-        // Dados históricos para análise de capacidade
-        let historicoCapacidade = {
-            mesesAnoAtual: {}, // { "01/2024": { motoristasNecessarios: X, viagens: Y } }
-            mesesAnoAnterior: {}, // { "01/2023": { motoristasNecessarios: X, viagens: Y } }
-            tendenciaMensal: []
-        };
-        
         // Senha de supervisão
         const SUPERVISOR_PASSWORD = "@admin0768#";
 
@@ -2636,9 +2589,6 @@ Carlos Oliveira"></textarea>
                 // Carregar dados de veículos e motoristas
                 loadVeiculosMotoristasData();
                 
-                // Carregar dados históricos
-                loadHistoricoCapacidade();
-                
                 // Carregar finalizações manuais
                 loadManualFinalizations();
                 
@@ -2656,9 +2606,6 @@ Carlos Oliveira"></textarea>
                 
                 // Calcular folgas dos motoristas
                 calculateFolgasMotoristas();
-                
-                // Calcular análise histórica de capacidade
-                calcularAnaliseCapacidade();
                 
                 // Carregar interface
                 loadLast3DaysSummary();
@@ -2681,115 +2628,6 @@ Carlos Oliveira"></textarea>
             } finally {
                 hideLoading();
             }
-        }
-
-        // CARREGAR DADOS HISTÓRICOS DE CAPACIDADE
-        function loadHistoricoCapacidade() {
-            const savedHistorico = localStorage.getItem('frotaHistoricoCapacidade');
-            if (savedHistorico) {
-                try {
-                    historicoCapacidade = JSON.parse(savedHistorico);
-                } catch (e) {
-                    historicoCapacidade = {
-                        mesesAnoAtual: {},
-                        mesesAnoAnterior: {},
-                        tendenciaMensal: []
-                    };
-                }
-            }
-        }
-
-        // SALVAR DADOS HISTÓRICOS DE CAPACIDADE
-        function saveHistoricoCapacidade() {
-            localStorage.setItem('frotaHistoricoCapacidade', JSON.stringify(historicoCapacidade));
-        }
-
-        // CALCULAR ANÁLISE HISTÓRICA DE CAPACIDADE
-        function calcularAnaliseCapacidade() {
-            const agora = new Date();
-            const anoAtual = agora.getFullYear();
-            const anoAnterior = anoAtual - 1;
-            const mesAtual = agora.getMonth() + 1;
-            
-            // Agrupar viagens por mês
-            const viagensPorMesAtual = {};
-            const viagensPorMesAnterior = {};
-            
-            frotaData.forEach(item => {
-                if (!item.DATA || !item.TEM_DESTINO) return;
-                
-                const [dia, mes, ano] = item.DATA.split('/');
-                const anoCompleto = parseInt('20' + ano);
-                const mesCompleto = `${mes}/${anoCompleto}`;
-                
-                if (anoCompleto === anoAtual) {
-                    if (!viagensPorMesAtual[mesCompleto]) {
-                        viagensPorMesAtual[mesCompleto] = {
-                            viagens: 0,
-                            motoristasUtilizados: new Set(),
-                            veiculosUtilizados: new Set()
-                        };
-                    }
-                    viagensPorMesAtual[mesCompleto].viagens++;
-                    if (item.MOTORISTA) viagensPorMesAtual[mesCompleto].motoristasUtilizados.add(item.MOTORISTA);
-                    if (item.VEICULO) viagensPorMesAtual[mesCompleto].veiculosUtilizados.add(item.VEICULO);
-                } else if (anoCompleto === anoAnterior) {
-                    if (!viagensPorMesAnterior[mesCompleto]) {
-                        viagensPorMesAnterior[mesCompleto] = {
-                            viagens: 0,
-                            motoristasUtilizados: new Set(),
-                            veiculosUtilizados: new Set()
-                        };
-                    }
-                    viagensPorMesAnterior[mesCompleto].viagens++;
-                    if (item.MOTORISTA) viagensPorMesAnterior[mesCompleto].motoristasUtilizados.add(item.MOTORISTA);
-                    if (item.VEICULO) viagensPorMesAnterior[mesCompleto].veiculosUtilizados.add(item.VEICULO);
-                }
-            });
-            
-            // Atualizar dados históricos
-            historicoCapacidade.mesesAnoAtual = {};
-            historicoCapacidade.mesesAnoAnterior = {};
-            
-            Object.keys(viagensPorMesAtual).forEach(mes => {
-                const dados = viagensPorMesAtual[mes];
-                historicoCapacidade.mesesAnoAtual[mes] = {
-                    viagens: dados.viagens,
-                    motoristasNecessarios: dados.motoristasUtilizados.size,
-                    veiculosNecessarios: dados.veiculosUtilizados.size,
-                    mediaViagensPorMotorista: dados.viagens / Math.max(dados.motoristasUtilizados.size, 1)
-                };
-            });
-            
-            Object.keys(viagensPorMesAnterior).forEach(mes => {
-                const dados = viagensPorMesAnterior[mes];
-                historicoCapacidade.mesesAnoAnterior[mes] = {
-                    viagens: dados.viagens,
-                    motoristasNecessarios: dados.motoristasUtilizados.size,
-                    veiculosNecessarios: dados.veiculosUtilizados.size,
-                    mediaViagensPorMotorista: dados.viagens / Math.max(dados.motoristasUtilizados.size, 1)
-                };
-            });
-            
-            // Calcular tendência
-            historicoCapacidade.tendenciaMensal = [];
-            
-            // Meses do ano atual
-            Object.keys(historicoCapacidade.mesesAnoAtual)
-                .sort((a, b) => {
-                    const [mesA, anoA] = a.split('/');
-                    const [mesB, anoB] = b.split('/');
-                    return new Date(anoA, mesA - 1) - new Date(anoB, mesB - 1);
-                })
-                .forEach(mes => {
-                    historicoCapacidade.tendenciaMensal.push({
-                        mes: mes,
-                        motoristasNecessarios: historicoCapacidade.mesesAnoAtual[mes].motoristasNecessarios,
-                        viagens: historicoCapacidade.mesesAnoAtual[mes].viagens
-                    });
-                });
-            
-            saveHistoricoCapacidade();
         }
 
         // CALCULAR FOLGAS DOS MOTORISTAS (SIMPLIFICADO)
@@ -3382,7 +3220,6 @@ Carlos Oliveira"></textarea>
             identifyMultipleTrips();
             extractAllDates();
             calculateAdvancedStatistics();
-            calcularAnaliseCapacidade();
             calculateFolgasMotoristas();
             loadLast3DaysSummary();
             loadControleDiario();
@@ -3617,7 +3454,7 @@ Carlos Oliveira"></textarea>
             document.getElementById('last3DaysSummary').innerHTML = html;
         }
 
-        // CARREGAR CONTROLE DIÁRIO DA FROTA COM ANÁLISE DE CONTRATAÇÃO MELHORADA
+        // CARREGAR CONTROLE DIÁRIO DA FROTA COM ANÁLISE DE CONTRATAÇÃO RESTAURADA (ORIGINAL)
         function loadControleDiario() {
             const dateFilter = document.getElementById('dateFilter').value;
             let targetDate = dateFilter !== 'all' ? dateFilter : allDates[0] || '31/01/26';
@@ -3678,70 +3515,35 @@ Carlos Oliveira"></textarea>
             const emRotaPercent = totalViagens > 0 ? Math.round((emRotaCount / totalViagens) * 100) : 0;
             const pendentesPercent = totalViagens > 0 ? Math.round((pendentesCount / totalViagens) * 100) : 0;
             
-            // ANÁLISE AVANÇADA DE NECESSIDADE DE CONTRATAÇÃO
-            const agora = new Date();
-            const mesAtual = (agora.getMonth() + 1).toString().padStart(2, '0');
-            const anoAtual = agora.getFullYear();
-            const mesAnterior = (agora.getMonth() === 0 ? 12 : agora.getMonth()).toString().padStart(2, '0');
-            const anoAnteriorMesAnterior = agora.getMonth() === 0 ? anoAtual - 1 : anoAtual;
+            // ANÁLISE DE NECESSIDADE DE CONTRATAÇÃO (RESTAURADA PARA ORIGINAL)
+            const totalMotoristasDisponiveis = motoristasData.total;
+            const necessidadeContratacao = totalMotoristas > totalMotoristasDisponiveis ? 
+                totalMotoristas - totalMotoristasDisponiveis : 0;
             
-            const chaveMesAtual = `${mesAtual}/${anoAtual}`;
-            const chaveMesAnterior = `${mesAnterior}/${anoAnteriorMesAnterior}`;
-            const chaveMesAnoPassado = `${mesAtual}/${anoAtual - 1}`;
-            
-            const dadosMesAtual = historicoCapacidade.mesesAnoAtual[chaveMesAtual] || { motoristasNecessarios: 0, viagens: 0 };
-            const dadosMesAnterior = historicoCapacidade.mesesAnoAtual[chaveMesAnterior] || { motoristasNecessarios: 0, viagens: 0 };
-            const dadosAnoPassado = historicoCapacidade.mesesAnoAnterior[chaveMesAnoPassado] || { motoristasNecessarios: 0, viagens: 0 };
-            
-            const mediaViagensPorMotoristaMesAtual = dadosMesAtual.viagens / Math.max(dadosMesAtual.motoristasNecessarios, 1);
-            const mediaViagensPorMotoristaAnoPassado = dadosAnoPassado.viagens / Math.max(dadosAnoPassado.motoristasNecessarios, 1);
-            
-            const crescimentoDemanda = dadosAnoPassado.viagens > 0 ? 
-                ((dadosMesAtual.viagens - dadosAnoPassado.viagens) / dadosAnoPassado.viagens) * 100 : 0;
-            
-            const necessidadeBase = totalMotoristas > motoristasData.total ? 
-                totalMotoristas - motoristasData.total : 0;
-            
-            // Calcular necessidade projetada considerando crescimento e antecedência de 15 dias
-            const necessidadeProjetada = Math.max(
-                0,
-                Math.ceil(dadosMesAtual.motoristasNecessarios * (1 + crescimentoDemanda/100)) - motoristasData.total
-            );
-            
-            const diferencaMotoristas = motoristasData.total - totalMotoristas;
-            const percentualUtilizacao = motoristasData.total > 0 ? 
-                Math.round((totalMotoristas / motoristasData.total) * 100) : 100;
-            
-            const diasAntecedenciaTreinamento = 15;
-            const necessidadeAntecipada = necessidadeProjetada > 0 ? necessidadeProjetada : 0;
+            const diferencaMotoristas = totalMotoristasDisponiveis - totalMotoristas;
+            const percentualUtilizacao = totalMotoristasDisponiveis > 0 ? 
+                Math.round((totalMotoristas / totalMotoristasDisponiveis) * 100) : 100;
             
             let statusContratacao = '';
             let statusClasse = '';
             let statusIcon = '';
             let statusTexto = '';
-            let detalhesAnalise = '';
             
-            if (necessidadeAntecipada > 0) {
+            if (necessidadeContratacao > 0) {
                 statusContratacao = 'insufficient';
                 statusClasse = 'contratacao-status-badge insufficient';
                 statusIcon = '⚠️';
-                statusTexto = `NECESSIDADE DE CONTRATAÇÃO ANTECIPADA: +${necessidadeAntecipada} motoristas`;
-                detalhesAnalise = `Demanda projetada: ${Math.ceil(dadosMesAtual.motoristasNecessarios * (1 + crescimentoDemanda/100))} motoristas. 
-                Necessidade antecipada de ${diasAntecedenciaTreinamento} dias para treinamento.`;
+                statusTexto = `NECESSIDADE DE CONTRATAÇÃO: +${necessidadeContratacao} motoristas`;
             } else if (diferencaMotoristas <= 2) {
                 statusContratacao = 'marginal';
                 statusClasse = 'contratacao-status-badge marginal';
                 statusIcon = '📊';
-                statusTexto = 'CAPACIDADE NO LIMITE - Monitorar de perto';
-                detalhesAnalise = `Crescimento da demanda: ${crescimentoDemanda.toFixed(1)}% em relação ao ano anterior. 
-                Diferença atual: ${diferencaMotoristas} motorista(s) disponível(eis).`;
+                statusTexto = 'CAPACIDADE NO LIMITE - Monitorar';
             } else {
                 statusContratacao = 'sufficient';
                 statusClasse = 'contratacao-status-badge sufficient';
                 statusIcon = '✅';
                 statusTexto = 'CAPACIDADE SUFICIENTE';
-                detalhesAnalise = `Capacidade adequada com ${diferencaMotoristas} motorista(s) disponível(eis). 
-                Crescimento da demanda: ${crescimentoDemanda.toFixed(1)}%.`;
             }
             
             const statsHtml = `
@@ -3817,13 +3619,13 @@ Carlos Oliveira"></textarea>
                     `;
                 }).join('');
             
-            // HTML PARA ANÁLISE AVANÇADA DE CONTRATAÇÃO
+            // HTML PARA ANÁLISE DE CONTRATAÇÃO (RESTAURADA)
             const contratacaoHtml = `
                 <div class="contratacao-status">
                     <div class="contratacao-header">
                         <div class="contratacao-title">
                             <span class="contratacao-icon">👥</span>
-                            Análise de Capacidade de Motoristas (Histórico + Projeção)
+                            Análise de Capacidade de Motoristas
                         </div>
                     </div>
                     
@@ -3835,34 +3637,7 @@ Carlos Oliveira"></textarea>
                         
                         <div class="contratacao-item">
                             <div class="contratacao-label">Motoristas Disponíveis</div>
-                            <div class="contratacao-value">${motoristasData.total}</div>
-                        </div>
-                        
-                        <div class="contratacao-item">
-                            <div class="contratacao-label">Crescimento Demanda</div>
-                            <div class="contratacao-value">${crescimentoDemanda.toFixed(1)}%</div>
-                            <div class="contratacao-difference ${crescimentoDemanda > 0 ? 'negative' : 'positive'}">
-                                ${crescimentoDemanda > 0 ? '▲' : '▼'} vs ano anterior
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="contratacao-analysis">
-                        <div class="contratacao-analysis-item">
-                            <div class="contratacao-analysis-label">Média viagens/motorista (atual):</div>
-                            <div class="contratacao-analysis-value">${mediaViagensPorMotoristaMesAtual.toFixed(1)}</div>
-                        </div>
-                        <div class="contratacao-analysis-item">
-                            <div class="contratacao-analysis-label">Média viagens/motorista (ano passado):</div>
-                            <div class="contratacao-analysis-value">${mediaViagensPorMotoristaAnoPassado.toFixed(1)}</div>
-                        </div>
-                        <div class="contratacao-analysis-item">
-                            <div class="contratacao-analysis-label">Necessidade projetada (com crescimento):</div>
-                            <div class="contratacao-analysis-value">${Math.ceil(dadosMesAtual.motoristasNecessarios * (1 + crescimentoDemanda/100))}</div>
-                        </div>
-                        <div class="contratacao-analysis-item">
-                            <div class="contratacao-analysis-label">Antecipação necessária (treinamento):</div>
-                            <div class="contratacao-analysis-value">${diasAntecedenciaTreinamento} dias</div>
+                            <div class="contratacao-value">${totalMotoristasDisponiveis}</div>
                         </div>
                     </div>
                     
@@ -3871,8 +3646,16 @@ Carlos Oliveira"></textarea>
                             ${statusIcon} ${statusTexto}
                         </div>
                         
-                        <div style="margin-top: 10px; font-size: 0.85rem; opacity: 0.9; line-height: 1.4;">
-                            ${detalhesAnalise}
+                        <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.9;">
+                            ${necessidadeContratacao > 0 ? 
+                                `<span style="color: #ffabab;">⚠️ Capacidade insuficiente para a demanda atual. 
+                                Recomendado contratar ${necessidadeContratacao} motorista(s).</span>` :
+                            diferencaMotoristas <= 2 ? 
+                                `<span style="color: #ffcc80;">📊 Capacidade próxima do limite. 
+                                Diferença: ${diferencaMotoristas} motorista(s) disponível(eis).</span>` :
+                                `<span style="color: #a5d6a7;">✅ Capacidade adequada. 
+                                ${diferencaMotoristas} motorista(s) disponível(eis) para demanda extra.</span>`
+                            }
                         </div>
                     </div>
                 </div>
@@ -4611,11 +4394,6 @@ Carlos Oliveira"></textarea>
                     motoristasFolga: {},
                     diasFolga: {}
                 };
-                historicoCapacidade = {
-                    mesesAnoAtual: {},
-                    mesesAnoAnterior: {},
-                    tendenciaMensal: []
-                };
                 
                 // Limpar dados de veículos e motoristas
                 veiculosData = {
@@ -4639,7 +4417,6 @@ Carlos Oliveira"></textarea>
                 localStorage.removeItem('frotaManualFinalizations');
                 localStorage.removeItem('frotaVeiculosData');
                 localStorage.removeItem('frotaMotoristasData');
-                localStorage.removeItem('frotaHistoricoCapacidade');
                 
                 // Resetar para dados iniciais vazios
                 processCSVData('DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,PRÓX_HORA_DISP,DESTINO,SAÍDA_VEÍCULO_CD');
@@ -4724,7 +4501,7 @@ Carlos Oliveira"></textarea>
                     veiculoMaisUtilizado: Object.keys(route.veiculosUtilizados).reduce((a, b) => 
                         route.veiculosUtilizados[a] > route.veiculosUtilizados[b] ? a : b, 'N/A'
                     ),
-                    veiculoUsoCount: route.veiculosUtilizados[Object.keys(route.veiculosUtilizados).reduce((a, b) => 
+                    veiculoUsoCount = route.veiculosUtilizados[Object.keys(route.veiculosUtilizados).reduce((a, b) => 
                         route.veiculosUtilizados[a] > route.veiculosUtilizados[b] ? a : b, 'N/A'
                     )] || 0,
                     motoristaMaisFrequente: Object.keys(route.motoristasUtilizados).reduce((a, b) => 
