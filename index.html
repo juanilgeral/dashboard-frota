@@ -42,7 +42,7 @@
             margin: 0 auto;
         }
 
-        /* NOVO: QUADRO DE FOLGAS DOS MOTORISTAS */
+        /* NOVO: QUADRO DE FOLGAS DOS MOTORISTAS (SIMPLIFICADO) */
         .folgas-card {
             background: white;
             border-radius: 12px;
@@ -105,14 +105,8 @@
 
         .folgas-content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr;
             gap: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .folgas-content {
-                grid-template-columns: 1fr;
-            }
         }
 
         .folgas-dia {
@@ -157,31 +151,43 @@
             color: #ff9800;
         }
 
-        .folgas-list {
-            max-height: 200px;
+        .folgas-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .folgas-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .folgas-motoristas {
+            max-height: 300px;
             overflow-y: auto;
             padding-right: 10px;
         }
 
-        .folgas-list::-webkit-scrollbar {
+        .folgas-motoristas::-webkit-scrollbar {
             width: 6px;
         }
 
-        .folgas-list::-webkit-scrollbar-track {
+        .folgas-motoristas::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 10px;
         }
 
-        .folgas-list::-webkit-scrollbar-thumb {
+        .folgas-motoristas::-webkit-scrollbar-thumb {
             background: #c5c5c5;
             border-radius: 10px;
         }
 
-        .folga-item {
+        .folga-motorista-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 12px;
+            padding: 12px;
             background: white;
             border-radius: 6px;
             margin-bottom: 8px;
@@ -189,18 +195,18 @@
             transition: all 0.2s;
         }
 
-        .folga-item:hover {
+        .folga-motorista-item:hover {
             background: #fff3e0;
             transform: translateX(3px);
         }
 
-        .folga-nome {
+        .folga-motorista-nome {
             font-weight: 600;
             color: #424242;
             flex: 1;
         }
 
-        .folga-frequencia {
+        .folga-motorista-dias {
             background: #ffcc80;
             color: #e65100;
             padding: 4px 10px;
@@ -211,60 +217,54 @@
             text-align: center;
         }
 
-        .folga-frequencia.alta {
-            background: #ffab91;
-            color: #bf360c;
-        }
-
-        .folga-frequencia.muito-alta {
-            background: #ff8a80;
-            color: #c62828;
-        }
-
-        .folgas-summary {
-            background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+        .folga-dias-lista {
+            background: #f5f5f5;
             border-radius: 8px;
-            padding: 20px;
-            margin-top: 20px;
-            color: white;
-            grid-column: 1 / -1;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
         }
 
-        .folgas-summary-header {
+        .folga-dias-lista::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .folga-dias-lista::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        .folga-dias-lista::-webkit-scrollbar-thumb {
+            background: #c5c5c5;
+            border-radius: 10px;
+        }
+
+        .folga-dia-item {
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 15px;
-            font-size: 1.1rem;
+        }
+
+        .folga-dia-data {
+            font-weight: 600;
+            color: #1a237e;
+        }
+
+        .folga-dia-count {
+            background: #e0e0e0;
+            color: #666;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
             font-weight: 700;
         }
 
-        .folgas-summary-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .folgas-summary-item {
-            text-align: center;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 6px;
-            backdrop-filter: blur(10px);
-        }
-
-        .folgas-summary-label {
-            font-size: 0.85rem;
-            opacity: 0.9;
-            margin-bottom: 5px;
-        }
-
-        .folgas-summary-value {
-            font-size: 1.5rem;
-            font-weight: 800;
-        }
-
-        /* NOVO: BOTÃO CIRCULAR DE CONTROLE (LIGA/DESLIGA) */
+        /* BOTÃO CIRCULAR DE CONTROLE (LIGA/DESLIGA) */
         .controle-circular-btn {
             width: 50px;
             height: 50px;
@@ -359,8 +359,6 @@
             align-items: center;
             min-height: 70px;
         }
-
-        /* Restante do CSS mantido igual... */
 
         /* HEADER */
         .header {
@@ -825,7 +823,7 @@
             opacity: 0.9;
         }
 
-        /* NECESSIDADE DE CONTRATAÇÃO */
+        /* NECESSIDADE DE CONTRATAÇÃO - MELHORADA */
         .contratacao-status {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
@@ -858,9 +856,15 @@
 
         .contratacao-content {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
             margin-top: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .contratacao-content {
+                grid-template-columns: 1fr;
+            }
         }
 
         .contratacao-item {
@@ -914,6 +918,9 @@
             align-items: center;
             gap: 6px;
             margin-top: 10px;
+            width: 100%;
+            justify-content: center;
+            text-align: center;
         }
 
         .contratacao-status-badge.sufficient {
@@ -932,6 +939,28 @@
             background: rgba(255, 152, 0, 0.3);
             color: #ffcc80;
             border: 2px solid rgba(255, 193, 7, 0.3);
+        }
+
+        .contratacao-analysis {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        .contratacao-analysis-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 6px 0;
+        }
+
+        .contratacao-analysis-label {
+            opacity: 0.9;
+        }
+
+        .contratacao-analysis-value {
+            font-weight: 700;
         }
 
         /* RELAÇÃO VEÍCULOS/MOTORISTAS */
@@ -1249,7 +1278,7 @@
             margin-bottom: 25px;
         }
 
-        /* TABELA PRINCIPAL */
+        /* TABELA PRINCIPAL - ATUALIZADA (sem coluna Viagem) */
         .table-card {
             background: white;
             border-radius: 12px;
@@ -1315,7 +1344,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1400px;
+            min-width: 1200px; /* Reduzido de 1400px para 1200px */
         }
 
         th {
@@ -1395,6 +1424,18 @@
         .op-cell.CV { background: var(--cv-color); }
         .op-cell.NL { background: var(--nl-color); }
 
+        /* NOVO: Estilo para mostrar contagem de viagens */
+        .viagem-count {
+            background: #ff9800;
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 700;
+            margin-left: 5px;
+            vertical-align: super;
+        }
+
         .status-indicator {
             padding: 8px 16px;
             border-radius: 20px;
@@ -1429,18 +1470,6 @@
             background: #f5f5f5;
             color: #757575;
             border: 2px solid #e0e0e0;
-        }
-
-        /* BOTÃO FINALIZAR ANTIGO REMOVIDO */
-
-        .trip-badge {
-            background: #ff9800;
-            color: white;
-            font-size: 0.75rem;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-weight: 700;
-            margin-left: 6px;
         }
 
         /* ESTATÍSTICAS DE ROTA */
@@ -1591,27 +1620,6 @@
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            color: #666;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s;
-        }
-
-        .close-btn:hover {
-            background: #f5f5f5;
-            color: #c62828;
         }
 
         .export-options {
@@ -2145,7 +2153,7 @@
             </div>
         </div>
 
-        <!-- NOVO: QUADRO DE FOLGAS DOS MOTORISTAS -->
+        <!-- NOVO: QUADRO DE FOLGAS DOS MOTORISTAS (SIMPLIFICADO) -->
         <div class="folgas-card" id="folgasCard">
             <div class="folgas-header">
                 <div class="folgas-titulo">
@@ -2154,11 +2162,10 @@
                 </div>
                 <div class="folgas-filtros">
                     <select class="folgas-select" id="folgasDiasFilter" onchange="updateFolgasQuadro()">
-                        <option value="3">Últimos 3 dias</option>
-                        <option value="5">Últimos 5 dias</option>
+                        <option value="hoje">Hoje</option>
+                        <option value="ontem">Ontem</option>
                         <option value="7">Últimos 7 dias</option>
                         <option value="30">Últimos 30 dias</option>
-                        <option value="all">Todos os dias</option>
                     </select>
                 </div>
             </div>
@@ -2235,7 +2242,7 @@
             </div>
         </div>
 
-        <!-- DASHBOARD PRINCIPAL -->
+        <!-- DASHBOARD PRINCIPAL (TABELA ATUALIZADA - SEM COLUNA VIAGEM) -->
         <div class="dashboard-main">
             <div class="table-card">
                 <div class="card-header">
@@ -2288,7 +2295,7 @@
                                 <th>Ponto OFF</th>
                                 <th>Status</th>
                                 <th>Controle</th>
-                                <th>Viagem</th>
+                                <!-- COLUNA VIAGEM REMOVIDA -->
                             </tr>
                         </thead>
                         <tbody id="tableBody">
@@ -2581,10 +2588,17 @@ Carlos Oliveira"></textarea>
             lista: []
         };
         
-        // NOVO: Dados de folgas dos motoristas
+        // Dados de folgas dos motoristas
         let folgasData = {
             motoristasFolga: {}, // { motorista: { totalDiasFolga: X, dias: [datas] } }
             diasFolga: {} // { data: [motoristas] }
+        };
+        
+        // Dados históricos para análise de capacidade
+        let historicoCapacidade = {
+            mesesAnoAtual: {}, // { "01/2024": { motoristasNecessarios: X, viagens: Y } }
+            mesesAnoAnterior: {}, // { "01/2023": { motoristasNecessarios: X, viagens: Y } }
+            tendenciaMensal: []
         };
         
         // Senha de supervisão
@@ -2622,6 +2636,9 @@ Carlos Oliveira"></textarea>
                 // Carregar dados de veículos e motoristas
                 loadVeiculosMotoristasData();
                 
+                // Carregar dados históricos
+                loadHistoricoCapacidade();
+                
                 // Carregar finalizações manuais
                 loadManualFinalizations();
                 
@@ -2637,8 +2654,11 @@ Carlos Oliveira"></textarea>
                 // Calcular estatísticas avançadas
                 calculateAdvancedStatistics();
                 
-                // NOVO: Calcular folgas dos motoristas
+                // Calcular folgas dos motoristas
                 calculateFolgasMotoristas();
+                
+                // Calcular análise histórica de capacidade
+                calcularAnaliseCapacidade();
                 
                 // Carregar interface
                 loadLast3DaysSummary();
@@ -2649,7 +2669,7 @@ Carlos Oliveira"></textarea>
                 updateRelacaoVeiculosMotoristas();
                 updateTimestamp();
                 
-                // NOVO: Carregar quadro de folgas
+                // Carregar quadro de folgas
                 updateFolgasQuadro();
                 
                 // Atualizar contadores
@@ -2663,7 +2683,116 @@ Carlos Oliveira"></textarea>
             }
         }
 
-        // NOVO: CALCULAR FOLGAS DOS MOTORISTAS
+        // CARREGAR DADOS HISTÓRICOS DE CAPACIDADE
+        function loadHistoricoCapacidade() {
+            const savedHistorico = localStorage.getItem('frotaHistoricoCapacidade');
+            if (savedHistorico) {
+                try {
+                    historicoCapacidade = JSON.parse(savedHistorico);
+                } catch (e) {
+                    historicoCapacidade = {
+                        mesesAnoAtual: {},
+                        mesesAnoAnterior: {},
+                        tendenciaMensal: []
+                    };
+                }
+            }
+        }
+
+        // SALVAR DADOS HISTÓRICOS DE CAPACIDADE
+        function saveHistoricoCapacidade() {
+            localStorage.setItem('frotaHistoricoCapacidade', JSON.stringify(historicoCapacidade));
+        }
+
+        // CALCULAR ANÁLISE HISTÓRICA DE CAPACIDADE
+        function calcularAnaliseCapacidade() {
+            const agora = new Date();
+            const anoAtual = agora.getFullYear();
+            const anoAnterior = anoAtual - 1;
+            const mesAtual = agora.getMonth() + 1;
+            
+            // Agrupar viagens por mês
+            const viagensPorMesAtual = {};
+            const viagensPorMesAnterior = {};
+            
+            frotaData.forEach(item => {
+                if (!item.DATA || !item.TEM_DESTINO) return;
+                
+                const [dia, mes, ano] = item.DATA.split('/');
+                const anoCompleto = parseInt('20' + ano);
+                const mesCompleto = `${mes}/${anoCompleto}`;
+                
+                if (anoCompleto === anoAtual) {
+                    if (!viagensPorMesAtual[mesCompleto]) {
+                        viagensPorMesAtual[mesCompleto] = {
+                            viagens: 0,
+                            motoristasUtilizados: new Set(),
+                            veiculosUtilizados: new Set()
+                        };
+                    }
+                    viagensPorMesAtual[mesCompleto].viagens++;
+                    if (item.MOTORISTA) viagensPorMesAtual[mesCompleto].motoristasUtilizados.add(item.MOTORISTA);
+                    if (item.VEICULO) viagensPorMesAtual[mesCompleto].veiculosUtilizados.add(item.VEICULO);
+                } else if (anoCompleto === anoAnterior) {
+                    if (!viagensPorMesAnterior[mesCompleto]) {
+                        viagensPorMesAnterior[mesCompleto] = {
+                            viagens: 0,
+                            motoristasUtilizados: new Set(),
+                            veiculosUtilizados: new Set()
+                        };
+                    }
+                    viagensPorMesAnterior[mesCompleto].viagens++;
+                    if (item.MOTORISTA) viagensPorMesAnterior[mesCompleto].motoristasUtilizados.add(item.MOTORISTA);
+                    if (item.VEICULO) viagensPorMesAnterior[mesCompleto].veiculosUtilizados.add(item.VEICULO);
+                }
+            });
+            
+            // Atualizar dados históricos
+            historicoCapacidade.mesesAnoAtual = {};
+            historicoCapacidade.mesesAnoAnterior = {};
+            
+            Object.keys(viagensPorMesAtual).forEach(mes => {
+                const dados = viagensPorMesAtual[mes];
+                historicoCapacidade.mesesAnoAtual[mes] = {
+                    viagens: dados.viagens,
+                    motoristasNecessarios: dados.motoristasUtilizados.size,
+                    veiculosNecessarios: dados.veiculosUtilizados.size,
+                    mediaViagensPorMotorista: dados.viagens / Math.max(dados.motoristasUtilizados.size, 1)
+                };
+            });
+            
+            Object.keys(viagensPorMesAnterior).forEach(mes => {
+                const dados = viagensPorMesAnterior[mes];
+                historicoCapacidade.mesesAnoAnterior[mes] = {
+                    viagens: dados.viagens,
+                    motoristasNecessarios: dados.motoristasUtilizados.size,
+                    veiculosNecessarios: dados.veiculosUtilizados.size,
+                    mediaViagensPorMotorista: dados.viagens / Math.max(dados.motoristasUtilizados.size, 1)
+                };
+            });
+            
+            // Calcular tendência
+            historicoCapacidade.tendenciaMensal = [];
+            
+            // Meses do ano atual
+            Object.keys(historicoCapacidade.mesesAnoAtual)
+                .sort((a, b) => {
+                    const [mesA, anoA] = a.split('/');
+                    const [mesB, anoB] = b.split('/');
+                    return new Date(anoA, mesA - 1) - new Date(anoB, mesB - 1);
+                })
+                .forEach(mes => {
+                    historicoCapacidade.tendenciaMensal.push({
+                        mes: mes,
+                        motoristasNecessarios: historicoCapacidade.mesesAnoAtual[mes].motoristasNecessarios,
+                        viagens: historicoCapacidade.mesesAnoAtual[mes].viagens
+                    });
+                });
+            
+            saveHistoricoCapacidade();
+        }
+
+        // CALCULAR FOLGAS DOS MOTORISTAS (SIMPLIFICADO)
         function calculateFolgasMotoristas() {
             folgasData = {
                 motoristasFolga: {},
@@ -2685,8 +2814,20 @@ Carlos Oliveira"></textarea>
                 }
             });
             
-            // Para cada data disponível
-            allDates.forEach(data => {
+            // Obter mês atual
+            const agora = new Date();
+            const mesAtual = (agora.getMonth() + 1).toString().padStart(2, '0');
+            const anoAtual = agora.getFullYear();
+            
+            // Filtrar datas do mês atual
+            const datasDoMes = allDates.filter(data => {
+                const [dia, mes, ano] = data.split('/');
+                const anoCompleto = parseInt('20' + ano);
+                return anoCompleto === anoAtual && mes === mesAtual;
+            });
+            
+            // Para cada data do mês
+            datasDoMes.forEach(data => {
                 // Obter motoristas que trabalharam nesse dia
                 const motoristasTrabalhando = new Set();
                 frotaData.forEach(item => {
@@ -2715,117 +2856,148 @@ Carlos Oliveira"></textarea>
                     folgasData.motoristasFolga[motorista].dias.push(data);
                 });
             });
-            
-            console.log('Folgas calculadas:', folgasData);
         }
 
-        // NOVO: ATUALIZAR QUADRO DE FOLGAS
+        // ATUALIZAR QUADRO DE FOLGAS (SIMPLIFICADO)
         function updateFolgasQuadro() {
-            const diasFiltro = parseInt(document.getElementById('folgasDiasFilter').value) || 3;
-            const datasParaExibir = diasFiltro === 'all' ? 
-                allDates : 
-                allDates.slice(0, diasFiltro);
+            const filtro = document.getElementById('folgasDiasFilter').value;
+            const agora = new Date();
+            const hoje = formatDate(agora);
+            const ontem = formatDate(new Date(agora.getTime() - 24 * 60 * 60 * 1000));
             
-            let html = '';
+            let dataAlvo = hoje;
+            let titulo = "Hoje";
             
-            // Exibir folgas por dia
-            datasParaExibir.forEach(data => {
-                const motoristasFolga = folgasData.diasFolga[data] || [];
-                const totalFolga = motoristasFolga.length;
+            if (filtro === 'ontem') {
+                dataAlvo = ontem;
+                titulo = "Ontem";
+            } else if (filtro === 'hoje') {
+                dataAlvo = hoje;
+                titulo = "Hoje";
+            }
+            
+            // Encontrar a data nos dados
+            let dataFormatada = dataAlvo;
+            let motoristasFolga = [];
+            
+            // Procurar pela data formatada corretamente
+            Object.keys(folgasData.diasFolga).forEach(data => {
+                if (data === dataAlvo || data.includes(dataAlvo.substring(0, 5))) {
+                    dataFormatada = data;
+                    motoristasFolga = folgasData.diasFolga[data] || [];
+                }
+            });
+            
+            if (filtro === '7' || filtro === '30') {
+                const dias = parseInt(filtro);
+                const datasRecentes = allDates.slice(0, dias);
                 
-                let folgasListHtml = '';
+                let html = `<div class="folgas-dia">
+                    <div class="folgas-dia-header">
+                        <div class="folgas-dia-titulo">Últimos ${dias} dias</div>
+                        <div class="folgas-dia-data">${datasRecentes.length} dias</div>
+                    </div>
+                    <div class="folgas-container">
+                        <div class="folgas-motoristas">
+                            <h4 style="color: #1a237e; margin-bottom: 10px; font-size: 0.9rem;">Motoristas de Folga (total ${Object.keys(folgasData.motoristasFolga).length})</h4>`;
                 
-                if (motoristasFolga.length > 0) {
-                    // Ordenar por frequência de folga
-                    const motoristasOrdenados = motoristasFolga.sort((a, b) => {
-                        const freqA = folgasData.motoristasFolga[a]?.totalDiasFolga || 0;
-                        const freqB = folgasData.motoristasFolga[b]?.totalDiasFolga || 0;
-                        return freqB - freqA;
-                    });
-                    
-                    motoristasOrdenados.forEach(motorista => {
-                        const frequenciaFolga = folgasData.motoristasFolga[motorista]?.totalDiasFolga || 0;
-                        let frequenciaClasse = '';
-                        
-                        if (frequenciaFolga >= 5) frequenciaClasse = 'muito-alta';
-                        else if (frequenciaFolga >= 3) frequenciaClasse = 'alta';
-                        
-                        folgasListHtml += `
-                            <div class="folga-item">
-                                <div class="folga-nome">${motorista}</div>
-                                <div class="folga-frequencia ${frequenciaClasse}">
-                                    ${frequenciaFolga} dias
+                // Listar motoristas com suas folgas
+                Object.entries(folgasData.motoristasFolga)
+                    .sort((a, b) => b[1].totalDiasFolga - a[1].totalDiasFolga)
+                    .forEach(([motorista, dados]) => {
+                        if (dados.totalDiasFolga > 0) {
+                            html += `
+                                <div class="folga-motorista-item">
+                                    <div class="folga-motorista-nome">${motorista}</div>
+                                    <div class="folga-motorista-dias">${dados.totalDiasFolga} dias</div>
                                 </div>
+                            `;
+                        }
+                    });
+                
+                html += `</div>
+                        <div class="folga-dias-lista">
+                            <h4 style="color: #1a237e; margin-bottom: 10px; font-size: 0.9rem;">Dias com folgas</h4>`;
+                
+                // Listar dias com contagem de folgas
+                datasRecentes.forEach(data => {
+                    const folgasNoDia = folgasData.diasFolga[data] || [];
+                    if (folgasNoDia.length > 0) {
+                        html += `
+                            <div class="folga-dia-item">
+                                <div class="folga-dia-data">${formatDateForDisplay(data)}</div>
+                                <div class="folga-dia-count">${folgasNoDia.length}</div>
                             </div>
                         `;
-                    });
-                } else {
-                    folgasListHtml = '<div style="text-align: center; padding: 20px; color: #666;">Nenhum motorista de folga</div>';
-                }
+                    }
+                });
                 
-                html += `
-                    <div class="folgas-dia">
-                        <div class="folgas-dia-header">
-                            <div class="folgas-dia-titulo">${formatDateForDisplay(data)}</div>
-                            <div class="folgas-dia-data">${totalFolga} folgas</div>
-                        </div>
-                        <div class="folgas-dia-total">
-                            Total de motoristas: <span>${motoristasData.lista.length || Object.keys(folgasData.motoristasFolga).length}</span>
-                        </div>
-                        <div class="folgas-list">
-                            ${folgasListHtml}
-                        </div>
-                    </div>
-                `;
-            });
+                html += `</div></div></div>`;
+                
+                document.getElementById('folgasContent').innerHTML = html;
+                return;
+            }
             
-            // Adicionar resumo
-            const totalMotoristas = motoristasData.lista.length || Object.keys(folgasData.motoristasFolga).length;
-            const totalDias = datasParaExibir.length;
-            const totalFolgasPeriodo = Object.values(folgasData.diasFolga)
-                .slice(0, diasFiltro === 'all' ? undefined : diasFiltro)
-                .reduce((total, folgasDia) => total + folgasDia.length, 0);
-            
-            // Encontrar motorista com mais folgas
-            let motoristaMaisFolgas = 'Nenhum';
-            let maxFolgas = 0;
-            
-            Object.entries(folgasData.motoristasFolga).forEach(([motorista, dados]) => {
-                if (dados.totalDiasFolga > maxFolgas) {
-                    maxFolgas = dados.totalDiasFolga;
-                    motoristaMaisFolgas = motorista;
-                }
-            });
-            
-            html += `
-                <div class="folgas-summary">
-                    <div class="folgas-summary-header">
-                        <span>📊</span>
-                        Resumo do Período
-                    </div>
-                    <div class="folgas-summary-content">
-                        <div class="folgas-summary-item">
-                            <div class="folgas-summary-label">Total de Motoristas</div>
-                            <div class="folgas-summary-value">${totalMotoristas}</div>
-                        </div>
-                        <div class="folgas-summary-item">
-                            <div class="folgas-summary-label">Total de Folgas</div>
-                            <div class="folgas-summary-value">${totalFolgasPeriodo}</div>
-                        </div>
-                        <div class="folgas-summary-item">
-                            <div class="folgas-summary-label">Média por Dia</div>
-                            <div class="folgas-summary-value">${totalDias > 0 ? (totalFolgasPeriodo / totalDias).toFixed(1) : 0}</div>
-                        </div>
-                        <div class="folgas-summary-item">
-                            <div class="folgas-summary-label">Mais Folgas</div>
-                            <div class="folgas-summary-value" style="font-size: 1.2rem;">${motoristaMaisFolgas}</div>
-                            <div style="font-size: 0.8rem;">${maxFolgas} dias</div>
-                        </div>
-                    </div>
+            let html = `<div class="folgas-dia">
+                <div class="folgas-dia-header">
+                    <div class="folgas-dia-titulo">${titulo}</div>
+                    <div class="folgas-dia-data">${motoristasFolga.length} folgas</div>
                 </div>
-            `;
+                <div class="folgas-dia-total">
+                    Total de motoristas: <span>${motoristasData.lista.length || Object.keys(folgasData.motoristasFolga).length}</span>
+                </div>
+                <div class="folgas-container">
+                    <div class="folgas-motoristas">`;
+            
+            if (motoristasFolga.length > 0) {
+                motoristasFolga.sort().forEach(motorista => {
+                    const diasFolga = folgasData.motoristasFolga[motorista]?.totalDiasFolga || 0;
+                    html += `
+                        <div class="folga-motorista-item">
+                            <div class="folga-motorista-nome">${motorista}</div>
+                            <div class="folga-motorista-dias">${diasFolga} dias</div>
+                        </div>
+                    `;
+                });
+            } else {
+                html += '<div style="text-align: center; padding: 30px; color: #666;">Todos os motoristas foram escalados</div>';
+            }
+            
+            html += `</div>
+                    <div class="folga-dias-lista">
+                        <h4 style="color: #1a237e; margin-bottom: 10px; font-size: 0.9rem;">Dias do mês em que não foram escalados:</h4>`;
+            
+            // Listar dias do mês atual em que o motorista não foi escalado
+            const mesAtual = (new Date().getMonth() + 1).toString().padStart(2, '0');
+            const datasDoMes = allDates.filter(data => data.split('/')[1] === mesAtual);
+            
+            if (datasDoMes.length > 0) {
+                datasDoMes.forEach(data => {
+                    const folgasNoDia = folgasData.diasFolga[data] || [];
+                    if (folgasNoDia.length > 0) {
+                        html += `
+                            <div class="folga-dia-item">
+                                <div class="folga-dia-data">${data}</div>
+                                <div class="folga-dia-count">${folgasNoDia.length} folgas</div>
+                            </div>
+                        `;
+                    }
+                });
+            } else {
+                html += '<div style="text-align: center; padding: 20px; color: #666;">Sem dados do mês atual</div>';
+            }
+            
+            html += `</div></div></div>`;
             
             document.getElementById('folgasContent').innerHTML = html;
+        }
+
+        // FORMATAR DATA PARA STRING
+        function formatDate(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear().toString().slice(2);
+            return `${day}/${month}/${year}`;
         }
 
         // ATUALIZAR DATA DE EXIBIÇÃO ATUAL
@@ -3127,13 +3299,28 @@ Carlos Oliveira"></textarea>
             });
         }
 
-        // IDENTIFICAR VIAGENS MÚLTIPLAS
+        // IDENTIFICAR VIAGENS MÚLTIPLAS (ATUALIZADA PARA CONTAGEM)
         function identifyMultipleTrips() {
             const tripsByVehicleDriverDate = {};
+            const contagemViagens = {}; // Para contar viagens por veículo/motorista/dia
             
             const viagensComDestino = frotaData.filter(item => item.TEM_DESTINO);
             
+            // Primeiro passagem: contar viagens
             viagensComDestino.forEach(item => {
+                const keyVeiculoDia = `${item.VEICULO}_${item.DATA}`;
+                const keyMotoristaDia = `${item.MOTORISTA}_${item.DATA}`;
+                
+                if (!contagemViagens[keyVeiculoDia]) {
+                    contagemViagens[keyVeiculoDia] = 0;
+                }
+                contagemViagens[keyVeiculoDia]++;
+                
+                if (!contagemViagens[keyMotoristaDia]) {
+                    contagemViagens[keyMotoristaDia] = 0;
+                }
+                contagemViagens[keyMotoristaDia]++;
+                
                 const key = `${item.VEICULO}_${item.MOTORISTA}_${item.DATA}`;
                 if (!tripsByVehicleDriverDate[key]) {
                     tripsByVehicleDriverDate[key] = [];
@@ -3141,12 +3328,18 @@ Carlos Oliveira"></textarea>
                 tripsByVehicleDriverDate[key].push(item);
             });
             
+            // Segunda passagem: atribuir números de viagem
             frotaData.forEach(item => {
-                item.VIAGEM_NUMERO = 1;
-                item.TOTAL_VIAGENS = 1;
+                const keyVeiculoDia = `${item.VEICULO}_${item.DATA}`;
+                const keyMotoristaDia = `${item.MOTORISTA}_${item.DATA}`;
+                
+                // Armazenar contagem para uso posterior
+                item.CONTAGEM_VIAGENS_VEICULO = contagemViagens[keyVeiculoDia] || 1;
+                item.CONTAGEM_VIAGENS_MOTORISTA = contagemViagens[keyMotoristaDia] || 1;
                 item.VIAGEM_MULTIPLA = false;
             });
             
+            // Atribuir números sequenciais para viagens múltiplas do mesmo veículo/motorista
             Object.values(tripsByVehicleDriverDate).forEach(trips => {
                 if (trips.length > 1) {
                     trips.forEach((trip, index) => {
@@ -3189,7 +3382,7 @@ Carlos Oliveira"></textarea>
             identifyMultipleTrips();
             extractAllDates();
             calculateAdvancedStatistics();
-            // NOVO: Calcular folgas
+            calcularAnaliseCapacidade();
             calculateFolgasMotoristas();
             loadLast3DaysSummary();
             loadControleDiario();
@@ -3199,7 +3392,6 @@ Carlos Oliveira"></textarea>
             updateRelacaoVeiculosMotoristas();
             updateTimestamp();
             updateCounters();
-            // NOVO: Atualizar quadro de folgas
             updateFolgasQuadro();
         }
 
@@ -3425,7 +3617,7 @@ Carlos Oliveira"></textarea>
             document.getElementById('last3DaysSummary').innerHTML = html;
         }
 
-        // CARREGAR CONTROLE DIÁRIO DA FROTA COM ANÁLISE DE CONTRATAÇÃO
+        // CARREGAR CONTROLE DIÁRIO DA FROTA COM ANÁLISE DE CONTRATAÇÃO MELHORADA
         function loadControleDiario() {
             const dateFilter = document.getElementById('dateFilter').value;
             let targetDate = dateFilter !== 'all' ? dateFilter : allDates[0] || '31/01/26';
@@ -3486,35 +3678,70 @@ Carlos Oliveira"></textarea>
             const emRotaPercent = totalViagens > 0 ? Math.round((emRotaCount / totalViagens) * 100) : 0;
             const pendentesPercent = totalViagens > 0 ? Math.round((pendentesCount / totalViagens) * 100) : 0;
             
-            // ANÁLISE DE NECESSIDADE DE CONTRATAÇÃO
-            const totalMotoristasDisponiveis = motoristasData.total;
-            const necessidadeContratacao = totalMotoristas > totalMotoristasDisponiveis ? 
-                totalMotoristas - totalMotoristasDisponiveis : 0;
+            // ANÁLISE AVANÇADA DE NECESSIDADE DE CONTRATAÇÃO
+            const agora = new Date();
+            const mesAtual = (agora.getMonth() + 1).toString().padStart(2, '0');
+            const anoAtual = agora.getFullYear();
+            const mesAnterior = (agora.getMonth() === 0 ? 12 : agora.getMonth()).toString().padStart(2, '0');
+            const anoAnteriorMesAnterior = agora.getMonth() === 0 ? anoAtual - 1 : anoAtual;
             
-            const diferencaMotoristas = totalMotoristasDisponiveis - totalMotoristas;
-            const percentualUtilizacao = totalMotoristasDisponiveis > 0 ? 
-                Math.round((totalMotoristas / totalMotoristasDisponiveis) * 100) : 100;
+            const chaveMesAtual = `${mesAtual}/${anoAtual}`;
+            const chaveMesAnterior = `${mesAnterior}/${anoAnteriorMesAnterior}`;
+            const chaveMesAnoPassado = `${mesAtual}/${anoAtual - 1}`;
+            
+            const dadosMesAtual = historicoCapacidade.mesesAnoAtual[chaveMesAtual] || { motoristasNecessarios: 0, viagens: 0 };
+            const dadosMesAnterior = historicoCapacidade.mesesAnoAtual[chaveMesAnterior] || { motoristasNecessarios: 0, viagens: 0 };
+            const dadosAnoPassado = historicoCapacidade.mesesAnoAnterior[chaveMesAnoPassado] || { motoristasNecessarios: 0, viagens: 0 };
+            
+            const mediaViagensPorMotoristaMesAtual = dadosMesAtual.viagens / Math.max(dadosMesAtual.motoristasNecessarios, 1);
+            const mediaViagensPorMotoristaAnoPassado = dadosAnoPassado.viagens / Math.max(dadosAnoPassado.motoristasNecessarios, 1);
+            
+            const crescimentoDemanda = dadosAnoPassado.viagens > 0 ? 
+                ((dadosMesAtual.viagens - dadosAnoPassado.viagens) / dadosAnoPassado.viagens) * 100 : 0;
+            
+            const necessidadeBase = totalMotoristas > motoristasData.total ? 
+                totalMotoristas - motoristasData.total : 0;
+            
+            // Calcular necessidade projetada considerando crescimento e antecedência de 15 dias
+            const necessidadeProjetada = Math.max(
+                0,
+                Math.ceil(dadosMesAtual.motoristasNecessarios * (1 + crescimentoDemanda/100)) - motoristasData.total
+            );
+            
+            const diferencaMotoristas = motoristasData.total - totalMotoristas;
+            const percentualUtilizacao = motoristasData.total > 0 ? 
+                Math.round((totalMotoristas / motoristasData.total) * 100) : 100;
+            
+            const diasAntecedenciaTreinamento = 15;
+            const necessidadeAntecipada = necessidadeProjetada > 0 ? necessidadeProjetada : 0;
             
             let statusContratacao = '';
             let statusClasse = '';
             let statusIcon = '';
             let statusTexto = '';
+            let detalhesAnalise = '';
             
-            if (necessidadeContratacao > 0) {
+            if (necessidadeAntecipada > 0) {
                 statusContratacao = 'insufficient';
                 statusClasse = 'contratacao-status-badge insufficient';
                 statusIcon = '⚠️';
-                statusTexto = `NECESSIDADE DE CONTRATAÇÃO: +${necessidadeContratacao} motoristas`;
+                statusTexto = `NECESSIDADE DE CONTRATAÇÃO ANTECIPADA: +${necessidadeAntecipada} motoristas`;
+                detalhesAnalise = `Demanda projetada: ${Math.ceil(dadosMesAtual.motoristasNecessarios * (1 + crescimentoDemanda/100))} motoristas. 
+                Necessidade antecipada de ${diasAntecedenciaTreinamento} dias para treinamento.`;
             } else if (diferencaMotoristas <= 2) {
                 statusContratacao = 'marginal';
                 statusClasse = 'contratacao-status-badge marginal';
                 statusIcon = '📊';
-                statusTexto = 'CAPACIDADE NO LIMITE - Monitorar';
+                statusTexto = 'CAPACIDADE NO LIMITE - Monitorar de perto';
+                detalhesAnalise = `Crescimento da demanda: ${crescimentoDemanda.toFixed(1)}% em relação ao ano anterior. 
+                Diferença atual: ${diferencaMotoristas} motorista(s) disponível(eis).`;
             } else {
                 statusContratacao = 'sufficient';
                 statusClasse = 'contratacao-status-badge sufficient';
                 statusIcon = '✅';
                 statusTexto = 'CAPACIDADE SUFICIENTE';
+                detalhesAnalise = `Capacidade adequada com ${diferencaMotoristas} motorista(s) disponível(eis). 
+                Crescimento da demanda: ${crescimentoDemanda.toFixed(1)}%.`;
             }
             
             const statsHtml = `
@@ -3590,13 +3817,13 @@ Carlos Oliveira"></textarea>
                     `;
                 }).join('');
             
-            // HTML PARA ANÁLISE DE CONTRATAÇÃO
+            // HTML PARA ANÁLISE AVANÇADA DE CONTRATAÇÃO
             const contratacaoHtml = `
                 <div class="contratacao-status">
                     <div class="contratacao-header">
                         <div class="contratacao-title">
                             <span class="contratacao-icon">👥</span>
-                            Análise de Capacidade de Motoristas
+                            Análise de Capacidade de Motoristas (Histórico + Projeção)
                         </div>
                     </div>
                     
@@ -3608,7 +3835,34 @@ Carlos Oliveira"></textarea>
                         
                         <div class="contratacao-item">
                             <div class="contratacao-label">Motoristas Disponíveis</div>
-                            <div class="contratacao-value">${totalMotoristasDisponiveis}</div>
+                            <div class="contratacao-value">${motoristasData.total}</div>
+                        </div>
+                        
+                        <div class="contratacao-item">
+                            <div class="contratacao-label">Crescimento Demanda</div>
+                            <div class="contratacao-value">${crescimentoDemanda.toFixed(1)}%</div>
+                            <div class="contratacao-difference ${crescimentoDemanda > 0 ? 'negative' : 'positive'}">
+                                ${crescimentoDemanda > 0 ? '▲' : '▼'} vs ano anterior
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contratacao-analysis">
+                        <div class="contratacao-analysis-item">
+                            <div class="contratacao-analysis-label">Média viagens/motorista (atual):</div>
+                            <div class="contratacao-analysis-value">${mediaViagensPorMotoristaMesAtual.toFixed(1)}</div>
+                        </div>
+                        <div class="contratacao-analysis-item">
+                            <div class="contratacao-analysis-label">Média viagens/motorista (ano passado):</div>
+                            <div class="contratacao-analysis-value">${mediaViagensPorMotoristaAnoPassado.toFixed(1)}</div>
+                        </div>
+                        <div class="contratacao-analysis-item">
+                            <div class="contratacao-analysis-label">Necessidade projetada (com crescimento):</div>
+                            <div class="contratacao-analysis-value">${Math.ceil(dadosMesAtual.motoristasNecessarios * (1 + crescimentoDemanda/100))}</div>
+                        </div>
+                        <div class="contratacao-analysis-item">
+                            <div class="contratacao-analysis-label">Antecipação necessária (treinamento):</div>
+                            <div class="contratacao-analysis-value">${diasAntecedenciaTreinamento} dias</div>
                         </div>
                     </div>
                     
@@ -3617,16 +3871,8 @@ Carlos Oliveira"></textarea>
                             ${statusIcon} ${statusTexto}
                         </div>
                         
-                        <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.9;">
-                            ${necessidadeContratacao > 0 ? 
-                                `<span style="color: #ffabab;">⚠️ Capacidade insuficiente para a demanda atual. 
-                                Recomendado contratar ${necessidadeContratacao} motorista(s).</span>` :
-                            diferencaMotoristas <= 2 ? 
-                                `<span style="color: #ffcc80;">📊 Capacidade próxima do limite. 
-                                Diferença: ${diferencaMotoristas} motorista(s) disponível(eis).</span>` :
-                                `<span style="color: #a5d6a7;">✅ Capacidade adequada. 
-                                ${diferencaMotoristas} motorista(s) disponível(eis) para demanda extra.</span>`
-                            }
+                        <div style="margin-top: 10px; font-size: 0.85rem; opacity: 0.9; line-height: 1.4;">
+                            ${detalhesAnalise}
                         </div>
                     </div>
                 </div>
@@ -3763,7 +4009,7 @@ Carlos Oliveira"></textarea>
             // Atualizar também o Controle Diário para refletir os novos totais
             loadControleDiario();
             
-            // NOVO: Recalcular folgas após atualizar motoristas
+            // Recalcular folgas após atualizar motoristas
             calculateFolgasMotoristas();
             updateFolgasQuadro();
         }
@@ -3796,7 +4042,7 @@ Carlos Oliveira"></textarea>
             }
         }
 
-        // CARREGAR DADOS DA TABELA (ATUALIZADO COM BOTÃO CIRCULAR)
+        // CARREGAR DADOS DA TABELA (ATUALIZADA COM CONTAGEM DE VIAGENS NAS COLUNAS)
         function loadTableData() {
             const filteredData = getFilteredData();
             const tableBody = document.getElementById('tableBody');
@@ -3824,7 +4070,6 @@ Carlos Oliveira"></textarea>
                 }
                 
                 const destino = formatDestination(item.DESTINO || '');
-                const isMultipleTrip = temDestino && item.VIAGEM_MULTIPLA;
                 const opInfo = item.OP_INFO || operacoesMap[item.OP] || { nome: item.OP, cor: '#666' };
                 
                 let statusText = statusFinal.toUpperCase();
@@ -3832,7 +4077,22 @@ Carlos Oliveira"></textarea>
                     statusText = 'SEM DESTINO VÁLIDO';
                 }
                 
-                // NOVO: Botão circular de controle
+                // Determinar contagem de viagens para veículo e motorista
+                let contagemVeiculo = '';
+                let contagemMotorista = '';
+                
+                if (temDestino) {
+                    // Mostrar contagem apenas se for maior que 1
+                    if (item.CONTAGEM_VIAGENS_VEICULO > 1) {
+                        contagemVeiculo = `<span class="viagem-count">${item.CONTAGEM_VIAGENS_VEICULO}ª viagem</span>`;
+                    }
+                    
+                    if (item.CONTAGEM_VIAGENS_MOTORISTA > 1) {
+                        contagemMotorista = `<span class="viagem-count">${item.CONTAGEM_VIAGENS_MOTORISTA}ª viagem</span>`;
+                    }
+                }
+                
+                // Botão circular de controle
                 let controleBtnHtml = '';
                 
                 if (!temDestino) {
@@ -3872,8 +4132,14 @@ Carlos Oliveira"></textarea>
                                 ${item.OP}
                             </div>
                         </td>
-                        <td style="font-weight: 600; color: ${temDestino ? '#1a237e' : '#9e9e9e'};">${item.VEICULO}</td>
-                        <td style="font-weight: 600; color: ${temDestino ? '#1a237e' : '#9e9e9e'};">${item.MOTORISTA}</td>
+                        <td style="font-weight: 600; color: ${temDestino ? '#1a237e' : '#9e9e9e'};">
+                            ${item.VEICULO}
+                            ${contagemVeiculo}
+                        </td>
+                        <td style="font-weight: 600; color: ${temDestino ? '#1a237e' : '#9e9e9e'};">
+                            ${item.MOTORISTA}
+                            ${contagemMotorista}
+                        </td>
                         <td>${item['PONTO_ON_MOT.'] || '-'}</td>
                         <td>${item['SAÍDA_VEÍCULO_CD'] || '-'}</td>
                         <td style="color: ${temDestino ? '#1a237e' : '#9e9e9e'};">${destino}</td>
@@ -3887,23 +4153,13 @@ Carlos Oliveira"></textarea>
                         <td>
                             ${controleBtnHtml}
                         </td>
-                        <td>
-                            ${temDestino ? (
-                                isMultipleTrip ? 
-                                    `<span style="color: #ff9800; font-weight: 700;">
-                                        ${item.VIAGEM_NUMERO}ª de ${item.TOTAL_VIAGENS}
-                                        <span class="trip-badge">MÚLTIPLA</span>
-                                    </span>` : 
-                                    '1ª viagem'
-                            ) : 'N/A'}
-                        </td>
                     </tr>
                 `;
             });
             
             tableBody.innerHTML = html || `
                 <tr>
-                    <td colspan="12" style="text-align: center; padding: 50px; color: #666; font-size: 1.1rem;">
+                    <td colspan="11" style="text-align: center; padding: 50px; color: #666; font-size: 1.1rem;">
                         Nenhuma viagem encontrada com os filtros atuais
                     </td>
                 </tr>
@@ -3922,7 +4178,7 @@ Carlos Oliveira"></textarea>
             }
         }
 
-        // NOVO: TOGGLE FINALIZAÇÃO COM BOTÃO CIRCULAR
+        // TOGGLE FINALIZAÇÃO COM BOTÃO CIRCULAR
         function toggleFinalizationCircular(id) {
             const item = frotaData.find(item => item.id === id);
             if (!item) return;
@@ -4084,11 +4340,6 @@ Carlos Oliveira"></textarea>
             document.getElementById('dateFilter').value = targetDate;
             
             filterTable();
-        }
-
-        // TOGGLE FINALIZAÇÃO MANUAL (mantida para compatibilidade)
-        function toggleFinalization(id) {
-            toggleFinalizationCircular(id);
         }
 
         // ATUALIZAR ROTAS FREQUENTES
@@ -4360,6 +4611,11 @@ Carlos Oliveira"></textarea>
                     motoristasFolga: {},
                     diasFolga: {}
                 };
+                historicoCapacidade = {
+                    mesesAnoAtual: {},
+                    mesesAnoAnterior: {},
+                    tendenciaMensal: []
+                };
                 
                 // Limpar dados de veículos e motoristas
                 veiculosData = {
@@ -4383,6 +4639,7 @@ Carlos Oliveira"></textarea>
                 localStorage.removeItem('frotaManualFinalizations');
                 localStorage.removeItem('frotaVeiculosData');
                 localStorage.removeItem('frotaMotoristasData');
+                localStorage.removeItem('frotaHistoricoCapacidade');
                 
                 // Resetar para dados iniciais vazios
                 processCSVData('DATA,DIA,OP,VEICULO,MOTORISTA,PONTO_ON_MOT.,PREVISÃO_REFEIÇÃO,PONTO_OFF_MOTO.,PRÓX_HORA_DISP,DESTINO,SAÍDA_VEÍCULO_CD');
