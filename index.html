@@ -42,8 +42,8 @@
             margin: 0 auto;
         }
 
-        /* NOVO: QUADRO DE FOLGAS DOS MOTORISTAS */
-        .folgas-card {
+        /* NOVO: RANKING DOS MELHORES MOTORISTAS */
+        .ranking-card {
             background: white;
             border-radius: 12px;
             padding: 25px;
@@ -52,18 +52,18 @@
             position: relative;
         }
 
-        .folgas-card::before {
+        .ranking-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 5px;
-            background: linear-gradient(90deg, #ff9800, #ffb74d, #ffcc80);
+            background: linear-gradient(90deg, #1a237e, #283593, #3949ab);
             border-radius: 12px 12px 0 0;
         }
 
-        .folgas-header {
+        .ranking-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -72,7 +72,7 @@
             border-bottom: 2px solid #f0f0f0;
         }
 
-        .folgas-titulo {
+        .ranking-titulo {
             color: #1a237e;
             font-size: 1.4rem;
             font-weight: 700;
@@ -81,17 +81,17 @@
             gap: 12px;
         }
 
-        .folgas-titulo span {
+        .ranking-titulo span {
             font-size: 2rem;
         }
 
-        .folgas-filtros {
+        .ranking-filtros {
             display: flex;
             gap: 10px;
             align-items: center;
         }
 
-        .folgas-select {
+        .ranking-select {
             padding: 10px 20px;
             border: 2px solid #e0e0e0;
             border-radius: 8px;
@@ -99,30 +99,30 @@
             font-weight: 600;
             color: #424242;
             cursor: pointer;
-            min-width: 150px;
+            min-width: 180px;
             font-size: 0.95rem;
         }
 
-        .folgas-content {
+        .ranking-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
 
         @media (max-width: 768px) {
-            .folgas-content {
+            .ranking-content {
                 grid-template-columns: 1fr;
             }
         }
 
-        .folgas-dia {
+        .ranking-coluna {
             background: #f9f9f9;
             border-radius: 8px;
             padding: 20px;
             border: 1px solid #e0e0e0;
         }
 
-        .folgas-dia-header {
+        .ranking-coluna-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -131,14 +131,17 @@
             border-bottom: 2px solid #e0e0e0;
         }
 
-        .folgas-dia-titulo {
+        .ranking-coluna-titulo {
             font-weight: 700;
             color: #1a237e;
             font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .folgas-dia-data {
-            background: #ff9800;
+        .ranking-coluna-badge {
+            background: #1a237e;
             color: white;
             padding: 4px 12px;
             border-radius: 15px;
@@ -146,83 +149,132 @@
             font-weight: 700;
         }
 
-        .folgas-dia-total {
-            font-size: 0.9rem;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .folgas-dia-total span {
-            font-weight: 700;
-            color: #ff9800;
-        }
-
-        .folgas-list {
-            max-height: 200px;
+        .ranking-list {
+            max-height: 400px;
             overflow-y: auto;
             padding-right: 10px;
         }
 
-        .folgas-list::-webkit-scrollbar {
+        .ranking-list::-webkit-scrollbar {
             width: 6px;
         }
 
-        .folgas-list::-webkit-scrollbar-track {
+        .ranking-list::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 10px;
         }
 
-        .folgas-list::-webkit-scrollbar-thumb {
+        .ranking-list::-webkit-scrollbar-thumb {
             background: #c5c5c5;
             border-radius: 10px;
         }
 
-        .folga-item {
+        .ranking-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            padding: 10px 12px;
+            padding: 12px 15px;
             background: white;
-            border-radius: 6px;
+            border-radius: 8px;
             margin-bottom: 8px;
-            border-left: 4px solid #ff9800;
+            border-left: 4px solid #1a237e;
             transition: all 0.2s;
+            gap: 12px;
         }
 
-        .folga-item:hover {
-            background: #fff3e0;
+        .ranking-item:hover {
+            background: #f0f0f0;
             transform: translateX(3px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        .folga-nome {
-            font-weight: 600;
-            color: #424242;
+        .ranking-posicao {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .ranking-posicao.ouro {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a237e;
+            box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+        }
+
+        .ranking-posicao.prata {
+            background: linear-gradient(135deg, #c0c0c0, #e0e0e0);
+            color: #1a237e;
+            box-shadow: 0 2px 8px rgba(192, 192, 192, 0.4);
+        }
+
+        .ranking-posicao.bronze {
+            background: linear-gradient(135deg, #cd7f32, #e9967a);
+            color: white;
+            box-shadow: 0 2px 8px rgba(205, 127, 50, 0.4);
+        }
+
+        .ranking-info {
             flex: 1;
         }
 
-        .folga-frequencia {
-            background: #ffcc80;
-            color: #e65100;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 0.8rem;
+        .ranking-nome {
             font-weight: 700;
-            min-width: 60px;
-            text-align: center;
+            color: #424242;
+            font-size: 1rem;
+            margin-bottom: 4px;
         }
 
-        .folga-frequencia.alta {
-            background: #ffab91;
-            color: #bf360c;
+        .ranking-metricas {
+            display: flex;
+            gap: 15px;
+            font-size: 0.85rem;
+            color: #666;
         }
 
-        .folga-frequencia.muito-alta {
-            background: #ff8a80;
-            color: #c62828;
+        .ranking-metrica {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
-        .folgas-summary {
-            background: linear-gradient(135deg, #ff9800 0%, #ffb74d 100%);
+        .ranking-badge {
+            background: #1a237e;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .ranking-operacoes {
+            display: flex;
+            gap: 3px;
+            flex-wrap: wrap;
+            margin-top: 5px;
+        }
+
+        .ranking-op-tag {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .ranking-op-tag.LS { background: var(--ls-color); }
+        .ranking-op-tag.HT { background: var(--ht-color); }
+        .ranking-op-tag.TL { background: var(--tl-color); }
+        .ranking-op-tag.CV { background: var(--cv-color); }
+        .ranking-op-tag.NL { background: var(--nl-color); }
+
+        .ranking-summary {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 100%);
             border-radius: 8px;
             padding: 20px;
             margin-top: 20px;
@@ -230,7 +282,7 @@
             grid-column: 1 / -1;
         }
 
-        .folgas-summary-header {
+        .ranking-summary-header {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -239,32 +291,38 @@
             font-weight: 700;
         }
 
-        .folgas-summary-content {
+        .ranking-summary-content {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 15px;
         }
 
-        .folgas-summary-item {
+        .ranking-summary-item {
             text-align: center;
-            padding: 10px;
+            padding: 15px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 6px;
             backdrop-filter: blur(10px);
         }
 
-        .folgas-summary-label {
+        .ranking-summary-label {
             font-size: 0.85rem;
             opacity: 0.9;
             margin-bottom: 5px;
         }
 
-        .folgas-summary-value {
+        .ranking-summary-value {
             font-size: 1.5rem;
             font-weight: 800;
+            margin-bottom: 5px;
         }
 
-        /* NOVO: BOTÃO CIRCULAR DE CONTROLE (LIGA/DESLIGA) */
+        .ranking-summary-sub {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+
+        /* BOTÃO CIRCULAR DE CONTROLE (LIGA/DESLIGA) */
         .controle-circular-btn {
             width: 50px;
             height: 50px;
@@ -359,8 +417,6 @@
             align-items: center;
             min-height: 70px;
         }
-
-        /* Restante do CSS mantido igual... */
 
         /* HEADER */
         .header {
@@ -541,7 +597,7 @@
             font-weight: 600;
         }
 
-        /* OPERAÇÕES SUMMARY */
+        /* RESUMO DOS ÚLTIMOS 3 DIAS */
         .day-operations {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -1431,8 +1487,6 @@
             border: 2px solid #e0e0e0;
         }
 
-        /* BOTÃO FINALIZAR ANTIGO REMOVIDO */
-
         .trip-badge {
             background: #ff9800;
             color: white;
@@ -2145,24 +2199,27 @@
             </div>
         </div>
 
-        <!-- NOVO: QUADRO DE FOLGAS DOS MOTORISTAS -->
-        <div class="folgas-card" id="folgasCard">
-            <div class="folgas-header">
-                <div class="folgas-titulo">
-                    <span>🏖️</span>
-                    Controle de Folgas dos Motoristas
+        <!-- NOVO: RANKING DOS MELHORES MOTORISTAS -->
+        <div class="ranking-card" id="rankingCard">
+            <div class="ranking-header">
+                <div class="ranking-titulo">
+                    <span>🏆</span>
+                    Ranking dos Melhores Motoristas
                 </div>
-                <div class="folgas-filtros">
-                    <select class="folgas-select" id="folgasDiasFilter" onchange="updateFolgasQuadro()">
-                        <option value="3">Últimos 3 dias</option>
-                        <option value="5">Últimos 5 dias</option>
+                <div class="ranking-filtros">
+                    <select class="ranking-select" id="rankingPeriodoFilter" onchange="updateRankingMotoristas()">
                         <option value="7">Últimos 7 dias</option>
+                        <option value="15">Últimos 15 dias</option>
                         <option value="30">Últimos 30 dias</option>
-                        <option value="all">Todos os dias</option>
+                        <option value="all">Todo período</option>
+                    </select>
+                    <select class="ranking-select" id="rankingTipoFilter" onchange="updateRankingMotoristas()">
+                        <option value="quantidade">Por Quantidade</option>
+                        <option value="dias">Por Dias Trabalhados</option>
                     </select>
                 </div>
             </div>
-            <div class="folgas-content" id="folgasContent">
+            <div class="ranking-content" id="rankingContent">
                 <!-- Carregado dinamicamente -->
             </div>
         </div>
@@ -2581,10 +2638,10 @@ Carlos Oliveira"></textarea>
             lista: []
         };
         
-        // NOVO: Dados de folgas dos motoristas
-        let folgasData = {
-            motoristasFolga: {}, // { motorista: { totalDiasFolga: X, dias: [datas] } }
-            diasFolga: {} // { data: [motoristas] }
+        // NOVO: Ranking dos motoristas
+        let motoristasRanking = {
+            porQuantidade: [],
+            porDias: []
         };
         
         // Senha de supervisão
@@ -2637,8 +2694,8 @@ Carlos Oliveira"></textarea>
                 // Calcular estatísticas avançadas
                 calculateAdvancedStatistics();
                 
-                // NOVO: Calcular folgas dos motoristas
-                calculateFolgasMotoristas();
+                // NOVO: Calcular ranking dos motoristas
+                calculateRankingMotoristas();
                 
                 // Carregar interface
                 loadLast3DaysSummary();
@@ -2649,8 +2706,8 @@ Carlos Oliveira"></textarea>
                 updateRelacaoVeiculosMotoristas();
                 updateTimestamp();
                 
-                // NOVO: Carregar quadro de folgas
-                updateFolgasQuadro();
+                // NOVO: Carregar ranking
+                updateRankingMotoristas();
                 
                 // Atualizar contadores
                 updateCounters();
@@ -2663,169 +2720,289 @@ Carlos Oliveira"></textarea>
             }
         }
 
-        // NOVO: CALCULAR FOLGAS DOS MOTORISTAS
-        function calculateFolgasMotoristas() {
-            folgasData = {
-                motoristasFolga: {},
-                diasFolga: {}
-            };
+        // NOVO: CALCULAR RANKING DOS MOTORISTAS
+        function calculateRankingMotoristas() {
+            const rankingQuantidade = {};
+            const rankingDias = {};
             
-            // Obter todos os motoristas do sistema
-            const todosMotoristas = new Set();
-            frotaData.forEach(item => {
-                if (item.MOTORISTA && item.MOTORISTA.trim()) {
-                    todosMotoristas.add(item.MOTORISTA.trim());
+            // Filtrar apenas viagens com destino válido
+            const viagensValidas = frotaData.filter(item => item.TEM_DESTINO);
+            
+            viagensValidas.forEach(item => {
+                const motorista = item.MOTORISTA;
+                if (!motorista || motorista.trim() === '') return;
+                
+                // Para ranking por quantidade
+                if (!rankingQuantidade[motorista]) {
+                    rankingQuantidade[motorista] = {
+                        nome: motorista,
+                        totalViagens: 0,
+                        diasTrabalhados: new Set(),
+                        operacoes: {}
+                    };
                 }
-            });
-            
-            // Adicionar motoristas da lista
-            motoristasData.lista.forEach(motorista => {
-                if (motorista && motorista.trim()) {
-                    todosMotoristas.add(motorista.trim());
+                rankingQuantidade[motorista].totalViagens++;
+                rankingQuantidade[motorista].diasTrabalhados.add(item.DATA);
+                
+                if (!rankingQuantidade[motorista].operacoes[item.OP]) {
+                    rankingQuantidade[motorista].operacoes[item.OP] = 0;
                 }
+                rankingQuantidade[motorista].operacoes[item.OP]++;
+                
+                // Para ranking por dias
+                if (!rankingDias[motorista]) {
+                    rankingDias[motorista] = {
+                        nome: motorista,
+                        totalDias: new Set(),
+                        totalViagens: 0,
+                        operacoes: {}
+                    };
+                }
+                rankingDias[motorista].totalDias.add(item.DATA);
+                rankingDias[motorista].totalViagens++;
+                
+                if (!rankingDias[motorista].operacoes[item.OP]) {
+                    rankingDias[motorista].operacoes[item.OP] = 0;
+                }
+                rankingDias[motorista].operacoes[item.OP]++;
             });
             
-            // Para cada data disponível
-            allDates.forEach(data => {
-                // Obter motoristas que trabalharam nesse dia
-                const motoristasTrabalhando = new Set();
-                frotaData.forEach(item => {
-                    if (item.DATA === data && item.MOTORISTA && item.MOTORISTA.trim() && item.TEM_DESTINO) {
-                        motoristasTrabalhando.add(item.MOTORISTA.trim());
-                    }
-                });
-                
-                // Motoristas de folga = todos os motoristas - os que trabalharam
-                const motoristasFolgaNoDia = Array.from(todosMotoristas).filter(motorista => 
-                    !motoristasTrabalhando.has(motorista)
-                );
-                
-                // Salvar no objeto diasFolga
-                folgasData.diasFolga[data] = motoristasFolgaNoDia;
-                
-                // Atualizar estatísticas por motorista
-                motoristasFolgaNoDia.forEach(motorista => {
-                    if (!folgasData.motoristasFolga[motorista]) {
-                        folgasData.motoristasFolga[motorista] = {
-                            totalDiasFolga: 0,
-                            dias: []
-                        };
-                    }
-                    folgasData.motoristasFolga[motorista].totalDiasFolga++;
-                    folgasData.motoristasFolga[motorista].dias.push(data);
-                });
-            });
+            // Converter para arrays ordenados
+            motoristasRanking.porQuantidade = Object.values(rankingQuantidade)
+                .map(item => ({
+                    ...item,
+                    diasTrabalhados: item.diasTrabalhados.size
+                }))
+                .sort((a, b) => b.totalViagens - a.totalViagens);
             
-            console.log('Folgas calculadas:', folgasData);
+            motoristasRanking.porDias = Object.values(rankingDias)
+                .map(item => ({
+                    ...item,
+                    totalDias: item.totalDias.size
+                }))
+                .sort((a, b) => b.totalDias - a.totalDias);
+            
+            console.log('Ranking calculado:', motoristasRanking);
         }
 
-        // NOVO: ATUALIZAR QUADRO DE FOLGAS
-        function updateFolgasQuadro() {
-            const diasFiltro = parseInt(document.getElementById('folgasDiasFilter').value) || 3;
-            const datasParaExibir = diasFiltro === 'all' ? 
-                allDates : 
-                allDates.slice(0, diasFiltro);
+        // NOVO: ATUALIZAR RANKING DOS MOTORISTAS
+        function updateRankingMotoristas() {
+            const periodo = document.getElementById('rankingPeriodoFilter').value;
+            const tipo = document.getElementById('rankingTipoFilter').value;
+            
+            // Filtrar por período
+            const hoje = new Date();
+            const dataLimite = new Date();
+            
+            if (periodo !== 'all') {
+                dataLimite.setDate(hoje.getDate() - parseInt(periodo));
+            }
+            
+            // Obter dados filtrados por período
+            let dadosRanking = tipo === 'quantidade' ? 
+                [...motoristasRanking.porQuantidade] : 
+                [...motoristasRanking.porDias];
+            
+            // Aplicar filtro de período se necessário
+            if (periodo !== 'all') {
+                // Recalcular estatísticas para o período específico
+                const rankingFiltrado = {};
+                const viagensFiltradas = frotaData.filter(item => {
+                    if (!item.TEM_DESTINO || !item.MOTORISTA) return false;
+                    const itemDate = parseDate(item.DATA);
+                    return itemDate && itemDate >= dataLimite;
+                });
+                
+                viagensFiltradas.forEach(item => {
+                    const motorista = item.MOTORISTA;
+                    if (!motorista) return;
+                    
+                    if (!rankingFiltrado[motorista]) {
+                        rankingFiltrado[motorista] = {
+                            nome: motorista,
+                            totalViagens: 0,
+                            totalDias: new Set(),
+                            diasTrabalhados: new Set(),
+                            operacoes: {}
+                        };
+                    }
+                    
+                    rankingFiltrado[motorista].totalViagens++;
+                    rankingFiltrado[motorista].totalDias.add(item.DATA);
+                    rankingFiltrado[motorista].diasTrabalhados.add(item.DATA);
+                    
+                    if (!rankingFiltrado[motorista].operacoes[item.OP]) {
+                        rankingFiltrado[motorista].operacoes[item.OP] = 0;
+                    }
+                    rankingFiltrado[motorista].operacoes[item.OP]++;
+                });
+                
+                dadosRanking = Object.values(rankingFiltrado)
+                    .map(item => ({
+                        ...item,
+                        totalDias: item.totalDias.size,
+                        diasTrabalhados: item.diasTrabalhados.size
+                    }))
+                    .sort((a, b) => tipo === 'quantidade' ? 
+                        b.totalViagens - a.totalViagens : 
+                        b.totalDias - a.totalDias);
+            }
+            
+            // Separar top 10 em duas colunas
+            const top10 = dadosRanking.slice(0, 10);
+            const coluna1 = top10.slice(0, 5);
+            const coluna2 = top10.slice(5, 10);
             
             let html = '';
             
-            // Exibir folgas por dia
-            datasParaExibir.forEach(data => {
-                const motoristasFolga = folgasData.diasFolga[data] || [];
-                const totalFolga = motoristasFolga.length;
+            // Primeira coluna
+            html += '<div class="ranking-coluna">';
+            html += `<div class="ranking-coluna-header">
+                <div class="ranking-coluna-titulo">
+                    <span>${tipo === 'quantidade' ? '📊' : '📅'}</span>
+                    Top ${tipo === 'quantidade' ? 'Mais Viagens' : 'Mais Dias Trabalhados'}
+                </div>
+                <div class="ranking-coluna-badge">${top10.length} motoristas</div>
+            </div>`;
+            html += '<div class="ranking-list">';
+            
+            coluna1.forEach((motorista, index) => {
+                const posicao = index + 1;
+                let posicaoClasse = '';
+                if (posicao === 1) posicaoClasse = 'ouro';
+                else if (posicao === 2) posicaoClasse = 'prata';
+                else if (posicao === 3) posicaoClasse = 'bronze';
                 
-                let folgasListHtml = '';
+                const metricas = tipo === 'quantidade' ? 
+                    `<span class="ranking-metrica">📊 ${motorista.totalViagens} viagens</span>
+                     <span class="ranking-metrica">📅 ${motorista.diasTrabalhados} dias</span>` :
+                    `<span class="ranking-metrica">📅 ${motorista.totalDias} dias</span>
+                     <span class="ranking-metrica">📊 ${motorista.totalViagens} viagens</span>`;
                 
-                if (motoristasFolga.length > 0) {
-                    // Ordenar por frequência de folga
-                    const motoristasOrdenados = motoristasFolga.sort((a, b) => {
-                        const freqA = folgasData.motoristasFolga[a]?.totalDiasFolga || 0;
-                        const freqB = folgasData.motoristasFolga[b]?.totalDiasFolga || 0;
-                        return freqB - freqA;
-                    });
-                    
-                    motoristasOrdenados.forEach(motorista => {
-                        const frequenciaFolga = folgasData.motoristasFolga[motorista]?.totalDiasFolga || 0;
-                        let frequenciaClasse = '';
-                        
-                        if (frequenciaFolga >= 5) frequenciaClasse = 'muito-alta';
-                        else if (frequenciaFolga >= 3) frequenciaClasse = 'alta';
-                        
-                        folgasListHtml += `
-                            <div class="folga-item">
-                                <div class="folga-nome">${motorista}</div>
-                                <div class="folga-frequencia ${frequenciaClasse}">
-                                    ${frequenciaFolga} dias
-                                </div>
-                            </div>
-                        `;
-                    });
-                } else {
-                    folgasListHtml = '<div style="text-align: center; padding: 20px; color: #666;">Nenhum motorista de folga</div>';
-                }
+                // Operações do motorista
+                const operacoesHtml = Object.entries(motorista.operacoes || {})
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 3)
+                    .map(([op, count]) => 
+                        `<span class="ranking-op-tag ${op}">${op} ${count}</span>`
+                    ).join('');
                 
                 html += `
-                    <div class="folgas-dia">
-                        <div class="folgas-dia-header">
-                            <div class="folgas-dia-titulo">${formatDateForDisplay(data)}</div>
-                            <div class="folgas-dia-data">${totalFolga} folgas</div>
-                        </div>
-                        <div class="folgas-dia-total">
-                            Total de motoristas: <span>${motoristasData.lista.length || Object.keys(folgasData.motoristasFolga).length}</span>
-                        </div>
-                        <div class="folgas-list">
-                            ${folgasListHtml}
+                    <div class="ranking-item">
+                        <div class="ranking-posicao ${posicaoClasse}">${posicao}</div>
+                        <div class="ranking-info">
+                            <div class="ranking-nome">${motorista.nome}</div>
+                            <div class="ranking-metricas">
+                                ${metricas}
+                            </div>
+                            <div class="ranking-operacoes">
+                                ${operacoesHtml}
+                            </div>
                         </div>
                     </div>
                 `;
             });
             
-            // Adicionar resumo
-            const totalMotoristas = motoristasData.lista.length || Object.keys(folgasData.motoristasFolga).length;
-            const totalDias = datasParaExibir.length;
-            const totalFolgasPeriodo = Object.values(folgasData.diasFolga)
-                .slice(0, diasFiltro === 'all' ? undefined : diasFiltro)
-                .reduce((total, folgasDia) => total + folgasDia.length, 0);
+            if (coluna1.length === 0) {
+                html += '<div style="text-align: center; padding: 20px; color: #666;">Nenhum dado disponível</div>';
+            }
             
-            // Encontrar motorista com mais folgas
-            let motoristaMaisFolgas = 'Nenhum';
-            let maxFolgas = 0;
+            html += '</div></div>';
             
-            Object.entries(folgasData.motoristasFolga).forEach(([motorista, dados]) => {
-                if (dados.totalDiasFolga > maxFolgas) {
-                    maxFolgas = dados.totalDiasFolga;
-                    motoristaMaisFolgas = motorista;
-                }
+            // Segunda coluna
+            html += '<div class="ranking-coluna">';
+            html += `<div class="ranking-coluna-header">
+                <div class="ranking-coluna-titulo">
+                    <span>🏅</span>
+                    Destaques da Semana
+                </div>
+                <div class="ranking-coluna-badge">${Math.min(5, coluna2.length)} destaques</div>
+            </div>`;
+            html += '<div class="ranking-list">';
+            
+            coluna2.forEach((motorista, index) => {
+                const posicao = index + 6;
+                let posicaoClasse = '';
+                
+                const metricas = tipo === 'quantidade' ? 
+                    `<span class="ranking-metrica">📊 ${motorista.totalViagens} viagens</span>
+                     <span class="ranking-metrica">📅 ${motorista.diasTrabalhados} dias</span>` :
+                    `<span class="ranking-metrica">📅 ${motorista.totalDias} dias</span>
+                     <span class="ranking-metrica">📊 ${motorista.totalViagens} viagens</span>`;
+                
+                // Operações do motorista
+                const operacoesHtml = Object.entries(motorista.operacoes || {})
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 2)
+                    .map(([op, count]) => 
+                        `<span class="ranking-op-tag ${op}">${op} ${count}</span>`
+                    ).join('');
+                
+                html += `
+                    <div class="ranking-item">
+                        <div class="ranking-posicao">${posicao}</div>
+                        <div class="ranking-info">
+                            <div class="ranking-nome">${motorista.nome}</div>
+                            <div class="ranking-metricas">
+                                ${metricas}
+                            </div>
+                            <div class="ranking-operacoes">
+                                ${operacoesHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
             });
             
+            if (coluna2.length === 0) {
+                html += '<div style="text-align: center; padding: 20px; color: #666;">Mais destaques em breve</div>';
+            }
+            
+            html += '</div></div>';
+            
+            // Adicionar resumo
+            const totalMotoristasRanking = dadosRanking.length;
+            const totalViagensRanking = dadosRanking.reduce((sum, m) => sum + m.totalViagens, 0);
+            const mediaViagensPorMotorista = totalMotoristasRanking > 0 ? 
+                (totalViagensRanking / totalMotoristasRanking).toFixed(1) : 0;
+            
+            // Melhor motorista
+            const melhorMotorista = dadosRanking[0] || null;
+            
             html += `
-                <div class="folgas-summary">
-                    <div class="folgas-summary-header">
+                <div class="ranking-summary">
+                    <div class="ranking-summary-header">
                         <span>📊</span>
-                        Resumo do Período
+                        Resumo do Ranking
                     </div>
-                    <div class="folgas-summary-content">
-                        <div class="folgas-summary-item">
-                            <div class="folgas-summary-label">Total de Motoristas</div>
-                            <div class="folgas-summary-value">${totalMotoristas}</div>
+                    <div class="ranking-summary-content">
+                        <div class="ranking-summary-item">
+                            <div class="ranking-summary-label">Total de Motoristas</div>
+                            <div class="ranking-summary-value">${totalMotoristasRanking}</div>
+                            <div class="ranking-summary-sub">no ranking</div>
                         </div>
-                        <div class="folgas-summary-item">
-                            <div class="folgas-summary-label">Total de Folgas</div>
-                            <div class="folgas-summary-value">${totalFolgasPeriodo}</div>
+                        <div class="ranking-summary-item">
+                            <div class="ranking-summary-label">Total de Viagens</div>
+                            <div class="ranking-summary-value">${totalViagensRanking}</div>
+                            <div class="ranking-summary-sub">no período</div>
                         </div>
-                        <div class="folgas-summary-item">
-                            <div class="folgas-summary-label">Média por Dia</div>
-                            <div class="folgas-summary-value">${totalDias > 0 ? (totalFolgasPeriodo / totalDias).toFixed(1) : 0}</div>
+                        <div class="ranking-summary-item">
+                            <div class="ranking-summary-label">Média por Motorista</div>
+                            <div class="ranking-summary-value">${mediaViagensPorMotorista}</div>
+                            <div class="ranking-summary-sub">viagens</div>
                         </div>
-                        <div class="folgas-summary-item">
-                            <div class="folgas-summary-label">Mais Folgas</div>
-                            <div class="folgas-summary-value" style="font-size: 1.2rem;">${motoristaMaisFolgas}</div>
-                            <div style="font-size: 0.8rem;">${maxFolgas} dias</div>
+                        <div class="ranking-summary-item">
+                            <div class="ranking-summary-label">Melhor Motorista</div>
+                            <div class="ranking-summary-value" style="font-size: 1.2rem;">${melhorMotorista?.nome || 'N/A'}</div>
+                            <div class="ranking-summary-sub">${melhorMotorista ? 
+                                (tipo === 'quantidade' ? `${melhorMotorista.totalViagens} viagens` : `${melhorMotorista.totalDias} dias`) 
+                                : ''}</div>
                         </div>
                     </div>
                 </div>
             `;
             
-            document.getElementById('folgasContent').innerHTML = html;
+            document.getElementById('rankingContent').innerHTML = html;
         }
 
         // ATUALIZAR DATA DE EXIBIÇÃO ATUAL
@@ -3189,8 +3366,8 @@ Carlos Oliveira"></textarea>
             identifyMultipleTrips();
             extractAllDates();
             calculateAdvancedStatistics();
-            // NOVO: Calcular folgas
-            calculateFolgasMotoristas();
+            // NOVO: Calcular ranking
+            calculateRankingMotoristas();
             loadLast3DaysSummary();
             loadControleDiario();
             updateDateFilterOptions();
@@ -3199,8 +3376,8 @@ Carlos Oliveira"></textarea>
             updateRelacaoVeiculosMotoristas();
             updateTimestamp();
             updateCounters();
-            // NOVO: Atualizar quadro de folgas
-            updateFolgasQuadro();
+            // NOVO: Atualizar ranking
+            updateRankingMotoristas();
         }
 
         // CALCULAR ESTATÍSTICAS AVANÇADAS
@@ -3763,9 +3940,9 @@ Carlos Oliveira"></textarea>
             // Atualizar também o Controle Diário para refletir os novos totais
             loadControleDiario();
             
-            // NOVO: Recalcular folgas após atualizar motoristas
-            calculateFolgasMotoristas();
-            updateFolgasQuadro();
+            // NOVO: Recalcular ranking após atualizar motoristas
+            calculateRankingMotoristas();
+            updateRankingMotoristas();
         }
 
         // ATUALIZAR OPÇÕES DO FILTRO DE DATA
@@ -3952,8 +4129,8 @@ Carlos Oliveira"></textarea>
             loadControleDiario();
             calculateAdvancedStatistics();
             updateRotaFrequente();
-            calculateFolgasMotoristas();
-            updateFolgasQuadro();
+            calculateRankingMotoristas();
+            updateRankingMotoristas();
             
             showNotification(
                 item.FINALIZADO_MANUALMENTE ? 
@@ -4036,8 +4213,8 @@ Carlos Oliveira"></textarea>
             calculateAdvancedStatistics();
             updateRotaFrequente();
             updateRelacaoVeiculosMotoristas();
-            calculateFolgasMotoristas();
-            updateFolgasQuadro();
+            calculateRankingMotoristas();
+            updateRankingMotoristas();
         }
 
         // CARREGAR DATA ESPECÍFICA
@@ -4339,7 +4516,7 @@ Carlos Oliveira"></textarea>
 
         // CONFIRMAR LIMPEZA DE DADOS
         function confirmClearData() {
-            if (confirm('⚠️ ATENÇÃO: Esta ação irá REMOVER TODOS os dados do sistema!\n\nIsso inclui:\n• Todos os registros de viagens\n• Finalizações manuais\n• Estatísticas\n• Dados de veículos e motoristas\n• Dados de folgas\n\nVocê poderá importar um novo arquivo CSV após a limpeza.\n\nTem certeza que deseja continuar?')) {
+            if (confirm('⚠️ ATENÇÃO: Esta ação irá REMOVER TODOS os dados do sistema!\n\nIsso inclui:\n• Todos os registros de viagens\n• Finalizações manuais\n• Estatísticas\n• Dados de veículos e motoristas\n• Dados de ranking\n\nVocê poderá importar um novo arquivo CSV após a limpeza.\n\nTem certeza que deseja continuar?')) {
                 clearAllData();
             }
         }
@@ -4356,9 +4533,9 @@ Carlos Oliveira"></textarea>
                 driverStatistics = {};
                 routeStatistics = {};
                 vehicleStatistics = {};
-                folgasData = {
-                    motoristasFolga: {},
-                    diasFolga: {}
+                motoristasRanking = {
+                    porQuantidade: [],
+                    porDias: []
                 };
                 
                 // Limpar dados de veículos e motoristas
