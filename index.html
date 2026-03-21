@@ -898,8 +898,7 @@
     <div class="two-col">
         <!-- CONTROLE DIÁRIO (DARK CARD) - CORRIGIDO -->
         <div class="controle-diario-wrap" id="controleDiarioSection">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                <div class="cd-title">📊 CONTROLE DIÁRIO DA FROTA</div>
+            <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 15px;">
                 <div class="print-actions" style="gap:5px;">
                     <button class="print-btn small" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);" onclick="printSection('controleDiarioSection', 'Controle Diario da Frota')">
                         🖨️ Print
@@ -2519,6 +2518,9 @@
                         <span style="opacity:.8;">🌴 Férias em ${mesAnoAtual}:</span>
                         <strong style="margin-left:4px;">${nomesFerias_str}</strong>
                     </div>` : ''}
+                    <div style="background:rgba(255,180,0,0.1);border:1px solid rgba(255,180,0,0.25);border-radius:8px;padding:9px 12px;margin-bottom:10px;font-size:0.78rem;">
+                        <strong>⚠️ Motoristas em LICENÇA não estão sendo contabilizados neste controle.</strong>
+                    </div>
 
                     <div style="margin-top:6px;">
                         <div class="${badgeClass}" style="display:inline-flex;">
