@@ -1,0 +1,3691 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procedimento Administrativo de Apuração de Sinistro – CAAA</title>
+<style id="printOverrideStyle"></style>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #1a2e45;
+    --navy-light: #243b55;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --cream: #f5f0e8;
+    --cream-dark: #ede7d9;
+    --text: #1a1a2e;
+    --text-mid: #3a3a5c;
+    --text-light: #6b6b8a;
+    --red: #b03030;
+    --green: #1e6b3e;
+    --border: #c4bdb0;
+    --shadow: 0 4px 24px rgba(13,27,42,0.13);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #e8e2d8;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    padding: 40px 20px 80px;
+  }
+
+  /* ---------- PRINT MENU ---------- */
+  .print-menu {
+    max-width: 920px;
+    margin: 0 auto 18px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .print-menu-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6b6060;
+    margin-right: 4px;
+  }
+  .print-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    border: 1px solid #b0a898;
+    background: #fff;
+    color: var(--navy);
+    padding: 6px 12px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .print-btn:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
+
+  /* ---------- PAPER ---------- */
+  .paper {
+    max-width: 920px;
+    margin: 0 auto;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow), 0 1px 0 var(--gold) inset;
+    position: relative;
+  }
+
+  /* ---------- HEADER ---------- */
+  .doc-header {
+    background: var(--navy);
+    padding: 36px 48px 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    border-bottom: 4px solid var(--gold);
+    position: relative;
+    overflow: hidden;
+  }
+  .doc-header::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    border: 40px solid rgba(201,168,76,0.08);
+  }
+  .doc-header::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 40px;
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    border: 28px solid rgba(201,168,76,0.06);
+  }
+  .header-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.8;
+  }
+  .header-title {
+    font-family: 'EB Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.25;
+    max-width: 600px;
+  }
+  .header-sub {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+  .header-badge {
+    position: absolute;
+    right: 48px; top: 50%;
+    transform: translateY(-50%);
+    background: rgba(201,168,76,0.12);
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    padding: 8px 16px;
+    border-radius: 2px;
+  }
+
+  /* ---------- PROGRESS BAR ---------- */
+  .progress-bar {
+    background: var(--navy-mid);
+    padding: 0;
+    display: flex;
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+  }
+  .prog-step {
+    flex: 1;
+    padding: 12px 8px;
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.35);
+    border-right: 1px solid rgba(255,255,255,0.06);
+    cursor: pointer;
+    transition: all 0.25s;
+  }
+  .prog-step:last-child { border-right: none; }
+  .prog-step.active { color: var(--gold); background: rgba(201,168,76,0.08); }
+  .prog-step.done { color: rgba(255,255,255,0.55); }
+  .prog-step .step-num {
+    display: block;
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 3px;
+  }
+
+  /* ---------- CONTENT ---------- */
+  .doc-content { padding: 40px 48px 48px; }
+
+  /* ---------- SECTION ---------- */
+  .section {
+    display: block;
+    height: 0;
+    overflow: hidden;
+    animation: none;
+  }
+  .section.visible {
+    display: block;
+    height: auto;
+    overflow: visible;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-family: 'EB Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 6px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title .num {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    padding: 3px 9px;
+    border-radius: 2px;
+  }
+  .section-desc {
+    font-size: 12.5px;
+    color: var(--text-light);
+    margin-bottom: 28px;
+    line-height: 1.6;
+  }
+
+  /* ---------- FIELD ---------- */
+  .field-group { margin-bottom: 22px; }
+  .field-row { display: grid; gap: 16px; margin-bottom: 16px; }
+  .field-row.cols-2 { grid-template-columns: 1fr 1fr; }
+  .field-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .field-row.cols-1-2 { grid-template-columns: 1fr 2fr; }
+  .field-row.cols-2-1 { grid-template-columns: 2fr 1fr; }
+
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-mid);
+    margin-bottom: 6px;
+  }
+  label .req { color: var(--red); margin-left: 2px; }
+  label .hint {
+    font-weight: 300;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 11px;
+    color: var(--text-light);
+    margin-left: 4px;
+  }
+
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  input[type="number"],
+  input[type="email"],
+  select,
+  textarea {
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 12px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--text);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--navy-light);
+    box-shadow: 0 0 0 3px rgba(13,27,42,0.08);
+  }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b6b8a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    cursor: pointer;
+  }
+  textarea { resize: vertical; min-height: 90px; line-height: 1.55; }
+
+  /* ---------- OPTIONS ---------- */
+  .options-grid { display: grid; gap: 8px; }
+  .options-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .options-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .opt-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    padding: 11px 13px;
+    cursor: pointer;
+    transition: all 0.18s;
+    user-select: none;
+  }
+  .opt-item:hover { border-color: var(--navy-light); background: #fafbfc; }
+  .opt-item input[type="radio"],
+  .opt-item input[type="checkbox"] {
+    width: 16px; height: 16px;
+    min-width: 16px;
+    margin-top: 1px;
+    accent-color: var(--navy);
+    cursor: pointer;
+  }
+  .opt-item.selected { border-color: var(--navy); background: rgba(13,27,42,0.04); }
+  .opt-item .opt-label { font-size: 13px; line-height: 1.45; color: var(--text); }
+  .opt-item .opt-sub { font-size: 11px; color: var(--text-light); margin-top: 2px; }
+
+  /* ---------- MEMBER BLOCK ---------- */
+  .member-block {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .member-header {
+    background: var(--navy);
+    color: rgba(255,255,255,0.9);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 8px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .member-header .tag {
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 9px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .member-fields {
+    padding: 14px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .member-parecer {
+    padding: 0 14px 14px;
+    border-top: 1px dashed var(--border);
+  }
+  .member-parecer label { margin-top: 12px; }
+
+  /* ---------- ALERT BOX ---------- */
+  .alert {
+    border-radius: 3px;
+    padding: 12px 16px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    margin-bottom: 20px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .alert.info { background: rgba(13,27,42,0.05); border-left: 3px solid var(--navy-light); }
+  .alert.warn { background: rgba(201,168,76,0.1); border-left: 3px solid var(--gold); }
+  .alert.danger { background: rgba(176,48,48,0.07); border-left: 3px solid var(--red); }
+  .alert.success { background: rgba(30,107,62,0.07); border-left: 3px solid var(--green); }
+
+  /* ---------- SEPARATOR ---------- */
+  .sep { border: none; border-top: 1px dashed var(--border); margin: 24px 0; }
+
+  /* ---------- SUBSECTION ---------- */
+  .subsec-title {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--navy-light);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .subsec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ---------- BUTTONS ---------- */
+  .btn-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 36px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .btn {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: 3px;
+    padding: 12px 28px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary { background: var(--navy); color: #fff; }
+  .btn-primary:hover { background: var(--navy-light); }
+  .btn-secondary { background: transparent; color: var(--text-mid); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--navy-light); color: var(--navy); }
+  .btn-gold { background: var(--gold); color: var(--navy); font-weight: 600; }
+  .btn-gold:hover { background: var(--gold-light); }
+  .btn-sm { padding: 7px 14px; font-size: 11px; }
+
+  /* ---------- PROC NUMBER ---------- */
+  .proc-number {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    background: #fff;
+    border: 1.5px dashed var(--gold);
+    color: var(--text);
+    padding: 10px 14px;
+    letter-spacing: 2px;
+    border-radius: 3px;
+    width: 100%;
+  }
+
+  /* ---------- DECISION GRID ---------- */
+  .decision-card {
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+  .decision-card:hover { border-color: var(--navy-light); }
+  .decision-card.selected-card { border-color: var(--navy); background: rgba(13,27,42,0.04); }
+  .decision-card .dc-icon { font-size: 28px; margin-bottom: 8px; }
+  .decision-card .dc-title { font-weight: 600; font-size: 14px; margin-bottom: 4px; }
+  .decision-card .dc-sub { font-size: 11.5px; color: var(--text-light); line-height: 1.4; }
+
+  /* ---------- SIGNATURE BOX ---------- */
+  .sig-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .sig-box { border: 1px solid var(--border); border-radius: 3px; overflow: hidden; }
+  .sig-box-header {
+    background: var(--cream-dark);
+    padding: 8px 12px;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-mid);
+    border-bottom: 1px solid var(--border);
+  }
+  .sig-box-body { padding: 12px; }
+  .sig-line { border-bottom: 1px solid var(--text); height: 40px; margin: 8px 0 6px; }
+  .sig-label { font-size: 10.5px; color: var(--text-light); }
+
+  /* ---------- STANDALONE FORMS (SEPARATE PRINT) ---------- */
+  .standalone-form {
+    max-width: 920px;
+    margin: 32px auto 0;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+  .standalone-header {
+    background: var(--navy);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--gold);
+  }
+  .standalone-header-left .sh-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    opacity: 0.8;
+  }
+  .standalone-header-left .sh-title {
+    font-family: 'EB Garamond', serif;
+    font-size: 18px;
+    color: #fff;
+    font-weight: 600;
+  }
+  .standalone-header-right {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+    text-align: right;
+    line-height: 1.7;
+  }
+  .standalone-body { padding: 32px 40px 40px; }
+
+  /* ---------- PARECER MEMBER FORM ---------- */
+  .parecer-member-card {
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .parecer-member-header {
+    background: var(--navy);
+    color: rgba(255,255,255,0.9);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 10px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .parecer-member-body {
+    background: #fff;
+    padding: 18px;
+  }
+  .parecer-voto-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .voto-opt {
+    border: 1.5px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 12px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.18s;
+    font-size: 12.5px;
+  }
+  .voto-opt:hover { border-color: var(--navy-light); }
+  .voto-opt.voto-selected { border-color: var(--navy); background: rgba(13,27,42,0.05); font-weight: 600; }
+  .handwrite-area {
+    width: 100%;
+    background: repeating-linear-gradient(
+      transparent,
+      transparent 27px,
+      #d8d2c8 27px,
+      #d8d2c8 28px
+    );
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 8px 10px;
+    min-height: 120px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 28px;
+    resize: vertical;
+  }
+  .handwrite-area:focus {
+    outline: none;
+    border-color: var(--navy-light);
+    box-shadow: 0 0 0 3px rgba(13,27,42,0.08);
+  }
+
+  /* ---------- COMUNICACAO FORM ---------- */
+  .comunicacao-block {
+    background: #fff;
+    border: 2px solid var(--navy);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .comunicacao-titulo {
+    font-family: 'EB Garamond', serif;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ---------- SECTION PRINT BUTTONS ---------- */
+  .section-print-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+  }
+
+  /* ---------- PRINT STYLES ---------- */
+  @media print {
+    /* Hide UI controls always */
+    .db-bar, .modal-overlay, .save-indicator, .autocomplete-toast,
+    .print-menu, .btn-row, .progress-bar, .section-print-bar { display: none !important; }
+
+    /* Logo always hidden in print (JS also hides via inline style) */
+    #logoWrapper { display: none !important; }
+
+    /* Clean up paper styling for print */
+    body { background: #fff; padding: 0; margin: 0; }
+    .paper { box-shadow: none !important; border: none !important; max-width: 100% !important; margin: 0 !important; }
+    .standalone-form { box-shadow: none !important; border: none !important; max-width: 100% !important; margin: 0 !important; }
+
+    /* Page breaks — JS controls visibility, CSS controls layout */
+    .standalone-form + .standalone-form { page-break-before: always; break-before: page; }
+    .section + .section               { page-break-before: always; break-before: page; }
+
+    /* Avoid breaks inside important blocks */
+    .doc-header, .section-title, .subsec-title { page-break-after: avoid; break-after: avoid; }
+    .comunicacao-block, .member-block, .sig-grid,
+    .parecer-member-card, .alert      { page-break-inside: avoid; break-inside: avoid; }
+  }
+  /* ---------- DI MEMBER TABS ---------- */
+  .di-tab-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.6);
+    padding: 6px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .di-tab-btn:hover { background: rgba(201,168,76,0.15); color: var(--gold); border-color: var(--gold); }
+  .di-tab-btn.active { background: var(--gold); color: var(--navy); border-color: var(--gold); font-weight: 700; }
+
+  /* ---------- DI VOTO REGISTRO ---------- */
+  .di-voto-registro {
+    margin: 6px 0 4px;
+    padding: 10px 14px;
+    background: rgba(13,27,42,0.06);
+    border-left: 3px solid var(--gold);
+    border-radius: 3px;
+    font-size: 13px;
+    color: var(--navy);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 640px) {
+    .doc-content { padding: 24px 20px 32px; }
+    .field-row.cols-2, .field-row.cols-3 { grid-template-columns: 1fr; }
+    .options-grid.cols-2, .options-grid.cols-3 { grid-template-columns: 1fr; }
+    .member-fields { grid-template-columns: 1fr; }
+    .header-badge { display: none; }
+    .sig-grid { grid-template-columns: 1fr; }
+    .doc-header { padding: 24px 20px; }
+    .prog-step { font-size: 9px; }
+    .standalone-body { padding: 20px; }
+    .parecer-voto-grid { grid-template-columns: 1fr; }
+  }
+
+  /* ---------- MODAL OVERLAY ---------- */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(13,27,42,0.72);
+    z-index: 1000;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-y: auto;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal-box {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--gold);
+    width: 100%;
+    max-width: 860px;
+    border-radius: 3px;
+    box-shadow: 0 8px 40px rgba(13,27,42,0.35);
+    animation: fadeIn 0.25s ease;
+  }
+  .modal-header {
+    background: var(--navy);
+    padding: 18px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--gold);
+  }
+  .modal-header-title {
+    font-family: 'EB Garamond', serif;
+    font-size: 19px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .modal-close {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.7);
+    font-size: 18px;
+    width: 32px; height: 32px;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.18s;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.1); color: #fff; }
+  .modal-body { padding: 28px; }
+  .search-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .search-bar input {
+    flex: 1;
+    padding: 11px 14px;
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    background: #fff;
+  }
+  .search-bar input:focus { outline: none; border-color: var(--navy-light); box-shadow: 0 0 0 3px rgba(13,27,42,0.08); }
+  .search-bar button {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 11px 20px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.18s;
+  }
+  .search-bar button:hover { background: var(--navy-light); }
+  .records-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .records-table th {
+    background: var(--navy);
+    color: var(--gold);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 10px 12px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .records-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: middle;
+  }
+  .records-table tr:nth-child(even) td { background: rgba(13,27,42,0.02); }
+  .records-table tr:hover td { background: rgba(201,168,76,0.07); cursor: pointer; }
+  .rec-badge {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .rec-badge.em-andamento { background: rgba(201,168,76,0.15); color: #7a5e10; border: 1px solid #c9a84c; }
+  .rec-badge.finalizado { background: rgba(30,107,62,0.12); color: #1e6b3e; border: 1px solid #1e6b3e; }
+  .rec-badge.sem-culpa { background: rgba(13,27,42,0.07); color: var(--navy); border: 1px solid var(--navy-light); }
+  .rec-badge.culpa { background: rgba(201,168,76,0.12); color: #7a5e10; border: 1px solid #c9a84c; }
+  .rec-badge.dolo { background: rgba(176,48,48,0.1); color: var(--red); border: 1px solid var(--red); }
+  .rec-actions { display: flex; gap: 6px; }
+  .rec-btn {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    border-radius: 2px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--text-mid);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .rec-btn:hover { border-color: var(--navy); color: var(--navy); }
+  .rec-btn.danger:hover { border-color: var(--red); color: var(--red); }
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+    font-size: 14px;
+  }
+  .empty-state .empty-icon { font-size: 36px; margin-bottom: 10px; }
+  .rec-count {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-light);
+    margin-bottom: 12px;
+  }
+  /* ---------- SAVE INDICATOR ---------- */
+  .save-indicator {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--navy);
+    color: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 10px 18px;
+    border-radius: 3px;
+    border-left: 3px solid var(--gold);
+    box-shadow: 0 4px 20px rgba(13,27,42,0.3);
+    z-index: 2000;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  .save-indicator.show { transform: translateY(0); opacity: 1; }
+  /* ---------- TOP BAR WITH DB CONTROLS ---------- */
+  .db-bar {
+    max-width: 920px;
+    margin: 0 auto 12px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .db-bar-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6b6060;
+    margin-right: 4px;
+  }
+  .db-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+    border: 1px solid #b0a898;
+    background: #fff;
+    color: var(--navy);
+    padding: 7px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.18s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .db-btn:hover { background: var(--navy); color: var(--gold); border-color: var(--navy); }
+  .db-btn.highlight { background: var(--gold); color: var(--navy); border-color: var(--gold); font-weight: 600; }
+  .db-btn.highlight:hover { background: var(--gold-light); }
+
+
+  /* ---------- DEFESA DO COLABORADOR FORM ---------- */
+  .defesa-lined-area {
+    width: 100%;
+    background: repeating-linear-gradient(
+      transparent,
+      transparent 31px,
+      #c9b89a 31px,
+      #c9b89a 32px
+    );
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 6px 12px;
+    min-height: 160px;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 32px;
+    resize: vertical;
+  }
+  .defesa-lined-area:focus {
+    outline: none;
+    border-color: var(--navy-light);
+    box-shadow: 0 0 0 3px rgba(13,27,42,0.08);
+  }
+  /* ---------- AUTOCOMPLETE TOAST ---------- */
+  .autocomplete-toast {
+    position: fixed;
+    bottom: 70px;
+    right: 24px;
+    background: var(--green);
+    color: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.8px;
+    padding: 10px 18px;
+    border-radius: 3px;
+    box-shadow: 0 4px 20px rgba(13,27,42,0.25);
+    z-index: 2000;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  .autocomplete-toast.show { transform: translateY(0); opacity: 1; }
+  /* ---------- FIELD SYNCED HIGHLIGHT ---------- */
+  @keyframes syncPulse {
+    0%   { background-color: rgba(201,168,76,0.25); }
+    100% { background-color: #fff; }
+  }
+  .sync-flash { animation: syncPulse 1.2s ease forwards; }
+
+</style>
+</head>
+<body>
+
+<!-- ===================== DB BAR ===================== -->
+<div class="db-bar" id="dbBar">
+  <span class="db-bar-label">📂 Processos:</span>
+  <button class="db-btn highlight" onclick="abrirConsulta()">🔍 Consultar / Abrir Processo</button>
+  <button class="db-btn" onclick="novoProcesso()">➕ Novo Processo</button>
+  <button class="db-btn" onclick="salvarRascunho()">💾 Salvar Rascunho</button>
+  <span id="dbStatus" style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#8a7a6a;margin-left:6px;"></span>
+</div>
+
+<!-- ===================== MODAL CONSULTA ===================== -->
+<div class="modal-overlay" id="modalConsulta">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span class="modal-header-title">🗂️ Consulta de Processos — CAAA</span>
+      <button class="modal-close" onclick="fecharConsulta()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Buscar por nome do empregado, placa do veículo ou Nº do procedimento..." oninput="buscarRegistros()">
+        <button onclick="buscarRegistros()">Buscar</button>
+      </div>
+      <div class="rec-count" id="recCount"></div>
+      <div id="recordsContainer"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== AUTOCOMPLETE TOAST ===================== -->
+<div class="autocomplete-toast" id="autocompleteToast">⚡ Campos preenchidos automaticamente</div>
+
+<!-- ===================== SAVE INDICATOR ===================== -->
+<div class="save-indicator" id="saveIndicator">✓ Salvo automaticamente</div>
+
+<!-- ===================== PRINT MENU ===================== -->
+<div class="print-menu" id="printMenu">
+  <span class="print-menu-label">🖨️ Imprimir:</span>
+  <button class="print-btn" onclick="printSection(0)">Seção 1 · Identificação</button>
+  <button class="print-btn" onclick="printSection(1)">Seção 2 · Comunicação</button>
+  <button class="print-btn" onclick="printSection(2)">Seção 3 · CAAA</button>
+  <button class="print-btn" onclick="printSection(3)">Seção 4 · Instrução</button>
+  <button class="print-btn" onclick="printSection(4)">Seção 5 · Decisão</button>
+  <button class="print-btn" onclick="printSection(5)">Seção 6 · Penalidade</button>
+  <button class="print-btn" onclick="printSection(6)">Seção 7 · Recurso</button>
+  <button class="print-btn" onclick="printStandalone('formParecer')">📋 Pareceres Individuais</button>
+  <button class="print-btn" onclick="printStandalone('formDecisaoIndividual')">⚖️ Decisão Individual</button>
+  <button class="print-btn" onclick="printStandalone('formComunicacao')">📬 Comunicação ao Empregado</button>
+  <button class="print-btn" onclick="printStandalone('formDefesa')">✍️ Defesa – Parte A</button>
+  <button class="print-btn" onclick="printStandalone('formDefesaB')">📑 Defesa – Parte B</button>
+  <button class="print-btn" onclick="printAll()" style="background:var(--navy);color:var(--gold);border-color:var(--navy);">Imprimir Tudo</button>
+</div>
+
+<!-- ===================== MAIN PAPER ===================== -->
+<div class="paper" id="mainPaper">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <span class="header-label">Formulário Oficial · CAAA</span>
+    <h1 class="header-title">Procedimento Administrativo de Apuração de Sinistro</h1>
+    <p class="header-sub">Comissão de Apuração de Acidentes e Avarias · Em conformidade com a legislação trabalhista e o TAC/MPT</p>
+    <div id="logoWrapper" style="position:absolute;right:48px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:2;">
+      <img src="data:image/jpeg;base64,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" alt="Juanil Transportes e Locações" style="height:56px;object-fit:contain;border-radius:4px;box-shadow:0 2px 8px rgba(0,0,0,0.3);">
+      <div id="headerBadge" style="background:rgba(201,168,76,0.12);border:1px solid #c9a84c;color:#c9a84c;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:1.5px;padding:5px 12px;border-radius:2px;">CAAA-FORM v1.0</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-bar" id="progressBar">
+    <div class="prog-step active" onclick="goTo(0)"><span class="step-num">1</span>Identificação</div>
+    <div class="prog-step" onclick="goTo(1)"><span class="step-num">2</span>Comunicação</div>
+    <div class="prog-step" onclick="goTo(2)"><span class="step-num">3</span>Constituição CAAA</div>
+    <div class="prog-step" onclick="goTo(3)"><span class="step-num">4</span>Instrução</div>
+    <div class="prog-step" onclick="goTo(4)"><span class="step-num">5</span>Decisão</div>
+    <div class="prog-step" onclick="goTo(5)"><span class="step-num">6</span>Penalidade/Desconto</div>
+    <div class="prog-step" onclick="goTo(6)"><span class="step-num">7</span>Recurso e Assinaturas</div>
+  </div>
+
+  <div class="doc-content">
+
+    <!-- ===================== SEÇÃO 1 ===================== -->
+    <div class="section visible" id="sec0">
+      <div class="section-print-bar">
+        <button class="btn btn-secondary btn-sm" onclick="printSection(0)">🖨️ Imprimir esta seção</button>
+      </div>
+      <h2 class="section-title"><span class="num">1</span>Identificação do Procedimento e do Empregado</h2>
+      <p class="section-desc">Preencha os dados de identificação do processo, do empregado, do terceiro (se houver) e dos bens envolvidos. Campos marcados com <span style="color:var(--red)">*</span> são obrigatórios.</p>
+
+      <div class="subsec-title">Numeração e Data</div>
+      <div class="field-row cols-3">
+        <div>
+          <label>Nº do Procedimento <span class="req">*</span></label>
+          <input class="proc-number" type="text" id="numProc" placeholder="CAAA-0001/2025" oninput="updateBadge()">
+        </div>
+        <div>
+          <label>Data de Instauração <span class="req">*</span></label>
+          <input type="date" id="dataInst">
+        </div>
+        <div>
+          <label>Hora da Instauração</label>
+          <input type="time" id="horaInst">
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Dados do Empregado Envolvido</div>
+
+      <div class="field-row cols-2">
+        <div>
+          <label>Nome Completo <span class="req">*</span></label>
+          <input type="text" id="nomeEmp" placeholder="Nome completo do empregado">
+        </div>
+        <div>
+          <label>Matrícula / Nº de Registro</label>
+          <input type="text" id="matricula" placeholder="Ex.: 00123">
+        </div>
+      </div>
+
+      <div class="field-row cols-3">
+        <div>
+          <label>Função / Cargo <span class="req">*</span></label>
+          <select id="funcaoEmp">
+            <option value="">Selecione...</option>
+            <option>Motorista</option>
+            <option>Operador de Equipamento</option>
+            <option>Auxiliar de Operação</option>
+            <option>Técnico</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div>
+          <label>Setor / Departamento</label>
+          <input type="text" id="setor" placeholder="Ex.: Logística">
+        </div>
+        <div>
+          <label>Data de Admissão</label>
+          <input type="date" id="dataAdmissao">
+        </div>
+      </div>
+
+      <div class="field-row cols-2">
+        <div>
+          <label>Supervisor / Encarregado Direto <span class="req">*</span></label>
+          <input type="text" id="supervisor" placeholder="Nome do supervisor">
+        </div>
+        <div>
+          <label>Unidade / Estabelecimento</label>
+          <input type="text" id="unidade" placeholder="Ex.: Filial São Paulo">
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Dados do Terceiro Envolvido <span style="font-weight:300;font-size:11px;text-transform:none;letter-spacing:0">(se aplicável)</span></div>
+
+      <div class="field-group">
+        <label>Há terceiro envolvido?</label>
+        <div class="options-grid cols-2" style="margin-top:6px;max-width:360px;">
+          <label class="opt-item" onclick="toggleOpt(this);toggleTerceiro(true)">
+            <input type="radio" name="haTerceiro" value="sim"> <div class="opt-label">✅ Sim</div>
+          </label>
+          <label class="opt-item selected" onclick="toggleOpt(this);toggleTerceiro(false)">
+            <input type="radio" name="haTerceiro" value="nao" checked> <div class="opt-label">❌ Não</div>
+          </label>
+        </div>
+      </div>
+
+      <div id="blocoTerceiro" style="display:none;">
+        <div class="field-row cols-2">
+          <div>
+            <label>Nome / Razão Social do Terceiro <span class="req">*</span></label>
+            <input type="text" id="nomeTerceiro" placeholder="Nome completo ou Razão Social">
+          </div>
+          <div>
+            <label>CPF / CNPJ</label>
+            <input type="text" id="docTerceiro" placeholder="000.000.000-00 ou 00.000.000/0001-00">
+          </div>
+        </div>
+        <div class="field-row cols-3">
+          <div>
+            <label>Telefone de Contato</label>
+            <input type="text" id="telTerceiro" placeholder="(00) 00000-0000">
+          </div>
+          <div>
+            <label>E-mail</label>
+            <input type="email" id="emailTerceiro" placeholder="exemplo@email.com">
+          </div>
+          <div>
+            <label>Seguradora do Terceiro</label>
+            <input type="text" id="seguradoraTerceiro" placeholder="Nome da seguradora">
+          </div>
+        </div>
+        <div class="field-row cols-2">
+          <div>
+            <label>Endereço do Terceiro</label>
+            <input type="text" id="endTerceiro" placeholder="Rua, número, bairro, cidade – UF">
+          </div>
+          <div>
+            <label>Nº do Boletim de Ocorrência</label>
+            <input type="text" id="boTerceiro" placeholder="Ex.: BO 2025/000123">
+          </div>
+        </div>
+
+        <div class="field-row cols-3">
+          <div>
+            <label>CNH do Condutor Terceiro <span class="hint">(se veículo)</span></label>
+            <input type="text" id="cnhTerceiro" placeholder="Nº da CNH">
+          </div>
+          <div>
+            <label>Categoria CNH</label>
+            <select id="categCnhTerceiro">
+              <option value="">Selecione...</option>
+              <option>A</option><option>B</option><option>C</option>
+              <option>D</option><option>E</option><option>AB</option>
+            </select>
+          </div>
+          <div>
+            <label>Nº Apólice Seguro do Terceiro</label>
+            <input type="text" id="apoliceTerceiro" placeholder="Nº da apólice">
+          </div>
+        </div>
+
+        <div class="subsec-title" style="margin-top:8px;">1º Bem / Veículo do Terceiro</div>
+        <div class="field-row cols-3">
+          <div>
+            <label>Tipo de Bem</label>
+            <select id="tipoBemTerceiro">
+              <option value="">Selecione...</option>
+              <option>Veículo automotor</option>
+              <option>Imóvel / Estrutura</option>
+              <option>Equipamento</option>
+              <option>Carga / Mercadoria</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div>
+            <label>Placa / Identificação</label>
+            <input type="text" id="placaTerceiro" placeholder="Ex.: XYZ-9876">
+          </div>
+          <div>
+            <label>Marca / Modelo / Ano</label>
+            <input type="text" id="modeloTerceiro" placeholder="Ex.: VW Gol 2020">
+          </div>
+        </div>
+        <div class="field-row cols-2">
+          <div>
+            <label>Descrição dos Danos ao 1º Bem</label>
+            <textarea id="danosTerceiro" rows="3" placeholder="Descreva os danos identificados no bem do terceiro..."></textarea>
+          </div>
+          <div>
+            <label>Valor do Orçamento / Dano (R$)</label>
+            <input type="number" id="valorDanoTerceiro" placeholder="0.00" step="0.01" min="0" style="margin-bottom:8px">
+            <label>Empresa / Oficina que orçou</label>
+            <input type="text" id="oficinaTerceiro" placeholder="Nome da oficina ou perito">
+          </div>
+        </div>
+
+        <div class="subsec-title" style="margin-top:12px;">2º Bem / Veículo do Terceiro <span style="font-weight:300;font-size:11px;text-transform:none;letter-spacing:0">(se houver)</span></div>
+        <div class="field-row cols-3">
+          <div>
+            <label>Tipo de Bem</label>
+            <select id="tipoBemTerceiro2">
+              <option value="">Selecione...</option>
+              <option>Veículo automotor</option>
+              <option>Imóvel / Estrutura</option>
+              <option>Equipamento</option>
+              <option>Carga / Mercadoria</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div>
+            <label>Placa / Identificação</label>
+            <input type="text" id="placaTerceiro2" placeholder="Ex.: XYZ-9877">
+          </div>
+          <div>
+            <label>Marca / Modelo / Ano</label>
+            <input type="text" id="modeloTerceiro2" placeholder="Ex.: VW Polo 2021">
+          </div>
+        </div>
+        <div class="field-row cols-2">
+          <div>
+            <label>Descrição dos Danos ao 2º Bem</label>
+            <textarea id="danosTerceiro2" rows="3" placeholder="Descreva os danos identificados..."></textarea>
+          </div>
+          <div>
+            <label>Valor do Orçamento / Dano (R$)</label>
+            <input type="number" id="valorDanoTerceiro2" placeholder="0.00" step="0.01" min="0" style="margin-bottom:8px">
+            <label>Empresa / Oficina que orçou</label>
+            <input type="text" id="oficinaTerceiro2" placeholder="Nome da oficina ou perito">
+          </div>
+        </div>
+
+        <div class="subsec-title" style="margin-top:12px;">Outros Envolvidos / Vítimas <span style="font-weight:300;font-size:11px;text-transform:none;letter-spacing:0">(se houver)</span></div>
+        <div class="field-row cols-2">
+          <div>
+            <label>Houve vítimas / feridos?</label>
+            <div class="options-grid cols-2" style="margin-top:6px;">
+              <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="haVitimas"> <div class="opt-label">✅ Sim</div></label>
+              <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="haVitimas"> <div class="opt-label">❌ Não</div></label>
+            </div>
+          </div>
+          <div>
+            <label>Descrição das vítimas / feridos</label>
+            <input type="text" id="vitimas" placeholder="Nome, grau do ferimento, atendimento médico...">
+          </div>
+        </div>
+        <div class="field-row">
+          <div>
+            <label>Observações Gerais sobre Terceiros / Outros Envolvidos</label>
+            <textarea id="obsTerceiros" rows="3" placeholder="Informe outros envolvidos no sinistro, testemunhas presenciais, autoridades acionadas..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Identificação do Bem / Veículo da Empresa Envolvido</div>
+
+      <div class="field-row cols-3">
+        <div>
+          <label>Tipo de Bem <span class="req">*</span></label>
+          <select id="tipoBem">
+            <option value="">Selecione...</option>
+            <option>Veículo da empresa</option>
+            <option>Veículo de terceiro em uso pela empresa</option>
+            <option>Equipamento da empresa</option>
+            <option>Bem patrimonial</option>
+            <option>Carga transportada</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div>
+          <label>Identificação (Placa / Patrimônio)</label>
+          <input type="text" id="placaBem" placeholder="Ex.: ABC-1234">
+        </div>
+        <div>
+          <label>Marca / Modelo / Ano</label>
+          <input type="text" id="modeloBem" placeholder="Ex.: Scania R450 2022">
+        </div>
+      </div>
+
+      <div class="field-row cols-3">
+        <div>
+          <label>Pertencente a</label>
+          <select id="pertencente">
+            <option value="">Selecione...</option>
+            <option>Empresa</option>
+            <option>Terceiro (informar)</option>
+          </select>
+        </div>
+        <div>
+          <label>Proprietário Terceiro <span class="hint">(se aplicável)</span></label>
+          <input type="text" id="propTerceiro" placeholder="Nome / Razão Social">
+        </div>
+        <div>
+          <label>Nº Patrimônio / Frota</label>
+          <input type="text" id="numPatrimonio" placeholder="Ex.: FROTA-042">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>Observações sobre o Bem da Empresa</label>
+          <input type="text" id="obsBem" placeholder="Características relevantes, estado geral pré-ocorrência, histórico de avarias anteriores...">
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <span></span>
+        <button class="btn btn-primary" onclick="goTo(1)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- ===================== SEÇÃO 2 ===================== -->
+    <div class="section" id="sec1">
+      <div class="section-print-bar">
+        <button class="btn btn-secondary btn-sm" onclick="printSection(1)">🖨️ Imprimir esta seção</button>
+      </div>
+      <h2 class="section-title"><span class="num">2</span>Comunicação do Fato e Levantamento Preliminar</h2>
+      <p class="section-desc">Registre as informações sobre a ocorrência, cumprindo o item 2.1 (Comunicação do Fato) e 2.2 (Levantamento Preliminar) do procedimento.</p>
+
+      <div class="subsec-title">Dados da Ocorrência</div>
+      <div class="field-row cols-3">
+        <div>
+          <label>Data do Acidente / Avaria <span class="req">*</span></label>
+          <input type="date" id="dataOcorrencia">
+        </div>
+        <div>
+          <label>Hora Aproximada</label>
+          <input type="time" id="horaOcorrencia">
+        </div>
+        <div>
+          <label>Tipo de Ocorrência <span class="req">*</span></label>
+          <select id="tipoOcorrencia">
+            <option value="">Selecione...</option>
+            <option>Acidente de trânsito</option>
+            <option>Avaria em veículo</option>
+            <option>Dano a bem patrimonial</option>
+            <option>Dano a bem de terceiro</option>
+            <option>Perda de carga</option>
+            <option>Multa de trânsito</option>
+            <option>Outro</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row cols-2">
+        <div>
+          <label>Local da Ocorrência <span class="req">*</span></label>
+          <input type="text" id="local" placeholder="Endereço completo ou descrição do local">
+        </div>
+        <div>
+          <label>Município / UF</label>
+          <input type="text" id="municipio" placeholder="Ex.: São Paulo / SP">
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>Descrição dos Fatos <span class="req">*</span> <span class="hint">(descreva o ocorrido de forma objetiva)</span></label>
+          <textarea id="descFatos" rows="5" placeholder="Descreva detalhadamente os fatos: o que aconteceu, como, em que circunstâncias, quais os danos visíveis..."></textarea>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">2.1 · Comunicação do Fato pelo Empregado</div>
+
+      <div class="field-row cols-2">
+        <div>
+          <label>O empregado comunicou o fato imediatamente? <span class="req">*</span></label>
+          <div class="options-grid cols-2" style="margin-top:6px;">
+            <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="comunicou" value="sim"> <div><div class="opt-label">✅ Sim</div></div></label>
+            <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="comunicou" value="nao"> <div><div class="opt-label">❌ Não</div></div></label>
+          </div>
+        </div>
+        <div>
+          <label>Data / Hora da Comunicação ao Supervisor</label>
+          <input type="date" id="dataComunicou" style="margin-bottom:8px">
+          <input type="time" id="horaComunicou">
+        </div>
+      </div>
+
+      <div class="alert warn">
+        <span class="alert-icon">⚠️</span>
+        <div><strong>Atenção (item 2.1):</strong> A não comunicação injustificada constitui falta disciplinar, mas <strong>NÃO</strong> implica presunção de dolo ou culpa em relação ao dano.</div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">2.2 · Levantamento Preliminar</div>
+
+      <div class="field-group">
+        <label>Provas e Documentos Coletados <span class="hint">(marque todos que foram obtidos)</span></label>
+        <div class="options-grid cols-3" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox" name="provas"> <div class="opt-label">📷 Fotografias</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox" name="provas"> <div class="opt-label">🎥 Vídeos</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox" name="provas"> <div class="opt-label">📋 Boletim de Ocorrência</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox" name="provas"> <div class="opt-label">💰 Orçamento de Reparo</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox" name="provas"> <div class="opt-label">👥 Depoimentos Informais</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox" name="provas"> <div class="opt-label">📄 Laudo Técnico</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox" name="provas"> <div class="opt-label">🚦 Auto de Infração</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox" name="provas"> <div class="opt-label">🔧 Histórico de Manutenção</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox" name="provas"> <div class="opt-label">📑 Outros Documentos</div></label>
+        </div>
+      </div>
+
+      <div class="field-row cols-2">
+        <div>
+          <label>Valor do Orçamento Inicial (R$)</label>
+          <input type="number" id="valorOrcamento" placeholder="0,00" step="0.01" min="0">
+        </div>
+        <div>
+          <label>Empresa / Responsável pelo Orçamento</label>
+          <input type="text" id="empresaOrcamento" placeholder="Nome da oficina ou perito">
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">2.3 · Decisão sobre Admissibilidade</div>
+
+      <div class="field-group">
+        <label>A CAAA deliberou pela instauração do processo formal? <span class="req">*</span></label>
+        <div class="options-grid cols-2" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)">
+            <input type="radio" name="instaurar" value="sim">
+            <div><div class="opt-label">✅ Sim — há indícios mínimos</div><div class="opt-sub">Processo será instaurado formalmente</div></div>
+          </label>
+          <label class="opt-item" onclick="toggleOpt(this)">
+            <input type="radio" name="instaurar" value="nao">
+            <div><div class="opt-label">🗂️ Não — arquivamento</div><div class="opt-sub">Processo será arquivado por ausência de indícios</div></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>Justificativa da Decisão de Admissibilidade</label>
+          <textarea id="justAdmissibilidade" rows="3" placeholder="Fundamente a decisão de instaurar ou arquivar..."></textarea>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goTo(0)">← Anterior</button>
+        <button class="btn btn-primary" onclick="goTo(2)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- ===================== SEÇÃO 3 ===================== -->
+    <div class="section" id="sec2">
+      <div class="section-print-bar">
+        <button class="btn btn-secondary btn-sm" onclick="printSection(2)">🖨️ Imprimir esta seção</button>
+      </div>
+      <h2 class="section-title"><span class="num">3</span>Constituição da CAAA</h2>
+      <p class="section-desc">Defina a composição da Comissão de Apuração de Acidentes e Avarias (mínimo 4 membros, sendo ≥ 50% da mesma função do empregado apurado).</p>
+
+      <div class="alert info">
+        <span class="alert-icon">ℹ️</span>
+        <div><strong>Item 1.2:</strong> A CAAA deve ter no mínimo <strong>4 membros</strong>. Pelo menos <strong>50%</strong> devem exercer a mesma função do empregado sob apuração. Os demais são indicados pela administração.</div>
+      </div>
+
+      <div class="subsec-title">Membro 1 · Presidente da Comissão</div>
+      <div class="member-block">
+        <div class="member-header">MEMBRO 1 — PRESIDENTE <span class="tag">Administração</span></div>
+        <div class="member-fields">
+          <div><label>Nome Completo</label><input type="text" id="m1nome" placeholder="Nome"></div>
+          <div><label>Função / Cargo</label><input type="text" id="m1cargo" placeholder="Cargo"></div>
+          <div><label>Tempo de Casa (anos)</label><input type="number" id="m1tempo" placeholder="0" min="0"></div>
+        </div>
+      </div>
+
+      <div class="subsec-title">Membro 2 · Mesma Função do Empregado</div>
+      <div class="member-block">
+        <div class="member-header">MEMBRO 2 — MESMA FUNÇÃO <span class="tag">Pares</span></div>
+        <div class="member-fields">
+          <div><label>Nome Completo</label><input type="text" id="m2nome" placeholder="Nome"></div>
+          <div><label>Função / Cargo</label><input type="text" id="m2cargo" placeholder="Cargo"></div>
+          <div><label>Tempo de Casa (anos)</label><input type="number" id="m2tempo" placeholder="0" min="0"></div>
+        </div>
+      </div>
+
+      <div class="subsec-title">Membro 3 · Mesma Função do Empregado</div>
+      <div class="member-block">
+        <div class="member-header">MEMBRO 3 — MESMA FUNÇÃO <span class="tag">Pares</span></div>
+        <div class="member-fields">
+          <div><label>Nome Completo</label><input type="text" id="m3nome" placeholder="Nome"></div>
+          <div><label>Função / Cargo</label><input type="text" id="m3cargo" placeholder="Cargo"></div>
+          <div><label>Tempo de Casa (anos)</label><input type="number" id="m3tempo" placeholder="0" min="0"></div>
+        </div>
+      </div>
+
+      <div class="subsec-title">Membro 4 · Administração / Jurídico</div>
+      <div class="member-block">
+        <div class="member-header">MEMBRO 4 — ADMINISTRAÇÃO <span class="tag">Administração</span></div>
+        <div class="member-fields">
+          <div><label>Nome Completo</label><input type="text" id="m4nome" placeholder="Nome"></div>
+          <div><label>Função / Cargo</label><input type="text" id="m4cargo" placeholder="Cargo"></div>
+          <div><label>Tempo de Casa (anos)</label><input type="number" id="m4tempo" placeholder="0" min="0"></div>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Notificação ao Empregado (item 2.3)</div>
+
+      <div class="field-row cols-3">
+        <div>
+          <label>Data da Reunião de Instrução <span class="req">*</span></label>
+          <input type="date" id="dataReuniao">
+        </div>
+        <div>
+          <label>Hora da Reunião</label>
+          <input type="time" id="horaReuniao">
+        </div>
+        <div>
+          <label>Prazo Final de Conclusão (máx. 30 dias)</label>
+          <input type="date" id="prazoFinal">
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Forma de Notificação ao Empregado <span class="req">*</span></label>
+        <div class="options-grid cols-3" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="formaNotif"> <div><div class="opt-label">📝 Recibo Assinado</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="formaNotif"> <div><div class="opt-label">👁️ Recusa c/ Testemunhas</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="formaNotif"> <div><div class="opt-label">📬 Outro Meio</div></div></label>
+        </div>
+      </div>
+
+      <div class="alert warn">
+        <span class="alert-icon">⚠️</span>
+        <div>A recusa do empregado em assinar a notificação, desde que acompanhada por <strong>duas testemunhas</strong>, <strong>NÃO implica</strong> reconhecimento de dolo ou culpa.</div>
+      </div>
+
+      <div class="field-row cols-2">
+        <div>
+          <label>Testemunha 1 (se recusa)</label>
+          <input type="text" id="test1" placeholder="Nome da testemunha">
+        </div>
+        <div>
+          <label>Testemunha 2 (se recusa)</label>
+          <input type="text" id="test2" placeholder="Nome da testemunha">
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goTo(1)">← Anterior</button>
+        <button class="btn btn-primary" onclick="goTo(3)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- ===================== SEÇÃO 4 ===================== -->
+    <div class="section" id="sec3">
+      <div class="section-print-bar">
+        <button class="btn btn-secondary btn-sm" onclick="printSection(3)">🖨️ Imprimir esta seção</button>
+      </div>
+      <h2 class="section-title"><span class="num">4</span>Instrução do Processo</h2>
+      <p class="section-desc">Registre o andamento da reunião de instrução, as provas apresentadas, a defesa do empregado e as deliberações da CAAA (item 2.4).</p>
+
+      <div class="subsec-title">Realização da Reunião</div>
+      <div class="field-row cols-3">
+        <div><label>Data de Realização <span class="req">*</span></label><input type="date" id="dataRealiz"></div>
+        <div><label>Hora Início</label><input type="time" id="horaInicio"></div>
+        <div><label>Hora Término</label><input type="time" id="horaFim"></div>
+      </div>
+
+      <div class="field-group">
+        <label>Empregado compareceu à reunião? <span class="req">*</span></label>
+        <div class="options-grid cols-3" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="compareceu"> <div><div class="opt-label">✅ Sim, compareceu</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="compareceu"> <div><div class="opt-label">❌ Não compareceu s/ justificativa</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="compareceu"> <div><div class="opt-label">📋 Justificou ausência</div></div></label>
+        </div>
+      </div>
+
+      <div class="alert info">
+        <span class="alert-icon">ℹ️</span>
+        <div>A ausência injustificada <strong>NÃO será interpretada como confissão</strong>. A CAAA deliberará com base nas provas disponíveis, mantendo a presunção de inocência.</div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Defesa do Empregado</div>
+
+      <div class="field-group">
+        <label>Modalidade da Defesa</label>
+        <div class="options-grid cols-3" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="modalDefesa"> <div><div class="opt-label">📄 Escrita (pelo empregado)</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="modalDefesa"> <div><div class="opt-label">🖊️ Reduzida a termo pela empresa</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="modalDefesa"> <div><div class="opt-label">🔇 Não apresentou defesa</div></div></label>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>Resumo da Defesa Apresentada</label>
+          <textarea id="resumoDefesa" rows="4" placeholder="Registre os principais argumentos e provas apresentadas pelo empregado em sua defesa..."></textarea>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Provas Apresentadas pelo Empregado</label>
+        <div class="options-grid cols-3" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">📷 Fotos / Vídeos</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">💰 Orçamento Alternativo</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">👥 Provas Testemunhais</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">📄 Documentos</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">🔧 Laudos / Perícias</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">🗂️ Outros</div></label>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Condições do Veículo / Bem (item 2.4 — vedação)</div>
+
+      <div class="field-group">
+        <label>Foi identificada falha de manutenção, desgaste natural ou falha imputável à empresa? <span class="req">*</span></label>
+        <div class="options-grid cols-3" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="falhaManu"> <div><div class="opt-label">✅ Sim — falha da empresa</div><div class="opt-sub">Desconto/penalidade vedados</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="falhaManu"> <div><div class="opt-label">🔸 Parcialmente</div><div class="opt-sub">Concausa — mitigar penalidade</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="falhaManu"> <div><div class="opt-label">❌ Não — bem em boas condições</div><div class="opt-sub">Desconto pode ser aplicado</div></div></label>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>Descrição das Condições do Bem</label>
+          <textarea id="condicoesBem" rows="3" placeholder="Descreva o histórico de manutenção e o estado do veículo/bem na data do sinistro..."></textarea>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Prazo para Contraprovas</div>
+
+      <div class="field-group">
+        <label>O empregado solicitou prazo para produção de contraprovas?</label>
+        <div class="options-grid cols-3" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="solicitouPrazo"> <div><div class="opt-label">✅ Sim — prazo concedido</div><div class="opt-sub">Máx. 5 dias úteis</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="solicitouPrazo"> <div><div class="opt-label">❌ Não solicitou</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="solicitouPrazo"> <div><div class="opt-label">🚫 Solicitou, mas negado</div><div class="opt-sub">Com fundamentação</div></div></label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>A reunião foi gravada?</label>
+        <div class="options-grid cols-3" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="gravada"> <div><div class="opt-label">🎙️ Sim — com consentimento de todos</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="gravada"> <div><div class="opt-label">📝 Não — ata detalhada lavrada</div></div></label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goTo(2)">← Anterior</button>
+        <button class="btn btn-primary" onclick="goTo(4)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- ===================== SEÇÃO 5 ===================== -->
+    <div class="section" id="sec4">
+      <div class="section-print-bar">
+        <button class="btn btn-secondary btn-sm" onclick="printSection(4)">🖨️ Imprimir esta seção</button>
+      </div>
+      <h2 class="section-title"><span class="num">5</span>Relatório Conclusivo e Decisão da CAAA</h2>
+      <p class="section-desc">Registre a conclusão coletiva da CAAA. Para os pareceres e votos individuais de cada membro, utilize o formulário separado "Pareceres Individuais" (imprimível).</p>
+
+      <div class="field-row">
+        <div>
+          <label>Resumo dos Fatos Apurados <span class="req">*</span></label>
+          <textarea id="resumoFatos" rows="4" placeholder="Descreva os fatos conforme apurados na instrução do processo..."></textarea>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>Análise das Provas e Defesa</label>
+          <textarea id="analiseProvas" rows="4" placeholder="Analise as provas da empresa e a defesa apresentada pelo empregado..."></textarea>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Decisão Coletiva sobre Dolo ou Culpa</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;">
+        <div class="decision-card" onclick="selectDecision(this,'sem_culpa')">
+          <div class="dc-icon">🏳️</div>
+          <div class="dc-title">Sem Culpa / Dolo</div>
+          <div class="dc-sub">Não há prova suficiente. Arquivamento. Sem penalidade ou desconto.</div>
+        </div>
+        <div class="decision-card" onclick="selectDecision(this,'culpa')">
+          <div class="dc-icon">⚖️</div>
+          <div class="dc-title">Culpa Comprovada</div>
+          <div class="dc-sub">Negligência, imprudência ou imperícia. Penalidade proporcional.</div>
+        </div>
+        <div class="decision-card" onclick="selectDecision(this,'dolo')">
+          <div class="dc-icon">🔴</div>
+          <div class="dc-title">Dolo Comprovado</div>
+          <div class="dc-sub">Ato intencional. Pode ensejar justa causa. Desconto integral.</div>
+        </div>
+      </div>
+      <input type="hidden" id="decisaoTipo" value="">
+      <div id="decisaoTexto" style="margin:-12px 0 16px;padding:10px 16px;background:rgba(13,27,42,0.06);border-left:4px solid var(--gold);border-radius:3px;font-size:13px;color:var(--navy);font-weight:600;display:none;"></div>
+
+      <div class="field-row cols-2">
+        <div>
+          <label>Atenuantes Considerados</label>
+          <textarea id="atenuantes" rows="3" placeholder="Ex.: bom histórico do empregado, condições adversas..."></textarea>
+        </div>
+        <div>
+          <label>Agravantes Considerados</label>
+          <textarea id="agravantes" rows="3" placeholder="Ex.: reincidência, infração grave, dolo..."></textarea>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>Fundamentação da Decisão Coletiva <span class="req">*</span></label>
+          <textarea id="fundDecisao" rows="4" placeholder="Fundamente a decisão da CAAA, indicando as provas que embasaram a conclusão..."></textarea>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Votação (maioria simples — item 2.5)</div>
+
+      <div class="field-row cols-3">
+        <div><label>Votos pela Conclusão Aprovada</label><input type="number" id="votosA" placeholder="0" min="0"></div>
+        <div><label>Votos Contrários</label><input type="number" id="votosC" placeholder="0" min="0"></div>
+        <div>
+          <label>Houve Empate?</label>
+          <select id="empate">
+            <option value="">Selecione</option>
+            <option>Não</option>
+            <option>Sim — desempatado por maior tempo de casa</option>
+            <option>Sim — desempatado pelo Diretor da área</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Nome do Desempatador (se aplicável)</label>
+        <input type="text" id="desempatador" placeholder="Nome e cargo do desempatador">
+      </div>
+
+      <div class="alert info">
+        <span class="alert-icon">📋</span>
+        <div>Para registrar o <strong>parecer individual e o voto de cada membro</strong>, utilize o formulário separado <strong>"Pareceres e Decisão Individual"</strong> acessível no menu de impressão acima.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goTo(3)">← Anterior</button>
+        <button class="btn btn-primary" onclick="goTo(5)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- ===================== SEÇÃO 6 ===================== -->
+    <div class="section" id="sec5">
+      <div class="section-print-bar">
+        <button class="btn btn-secondary btn-sm" onclick="printSection(5)">🖨️ Imprimir esta seção</button>
+      </div>
+      <h2 class="section-title"><span class="num">6</span>Aplicação de Penalidade e/ou Desconto Salarial</h2>
+      <p class="section-desc">Preencha somente se a CAAA concluiu por culpa ou dolo. Observar os limites legais e o item 2.6 do procedimento.</p>
+
+      <div class="subsec-title">Penalidade Disciplinar</div>
+
+      <div class="field-group">
+        <label>Penalidade Aplicada <span class="req">*</span></label>
+        <div class="options-grid cols-2" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="penalidade"> <div><div class="opt-label">📋 Advertência</div><div class="opt-sub">Falta leve, primeira ocorrência</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="penalidade"> <div><div class="opt-label">⏸️ Suspensão</div><div class="opt-sub">Informe o número de dias</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="penalidade"> <div><div class="opt-label">🔴 Justa Causa</div><div class="opt-sub">Dolo comprovado / falta grave</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="penalidade"> <div><div class="opt-label">💼 Apenas Desconto</div><div class="opt-sub">Sem penalidade disciplinar</div></div></label>
+        </div>
+      </div>
+
+      <div class="field-row cols-2">
+        <div><label>Dias de Suspensão (se aplicável)</label><input type="number" id="diasSuspensao" placeholder="0" min="0"></div>
+        <div><label>Data de Aplicação da Penalidade</label><input type="date" id="dataPenalidade"></div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Desconto Salarial</div>
+
+      <div class="field-group">
+        <label>Haverá desconto salarial?</label>
+        <div class="options-grid cols-2" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="haDesconto"> <div><div class="opt-label">✅ Sim</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="haDesconto"> <div><div class="opt-label">❌ Não</div></div></label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Natureza do Desconto <span class="hint">(marque o(s) aplicável(eis))</span></label>
+        <div class="options-grid cols-2" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div><div class="opt-label">🚗 Dano/Avaria a Veículo ou Equipamento</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div><div class="opt-label">🚦 Multa de Trânsito</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div><div class="opt-label">📦 Perda de Carga</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div><div class="opt-label">🏚️ Dano a Bem de Terceiro</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div><div class="opt-label">🧾 Vale Acerto de Viagem</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div><div class="opt-label">👔 Uniforme (mau uso / não devolução)</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div><div class="opt-label">🧪 Exame Toxicológico</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div><div class="opt-label">🍽️ Vale Alimentação</div></div></label>
+        </div>
+      </div>
+
+      <div class="field-row cols-3">
+        <div>
+          <label>Valor Total do Dano Apurado (R$) <span class="req">*</span></label>
+          <input type="number" id="valorDano" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div>
+          <label>Remuneração Líquida do Empregado (R$)</label>
+          <input type="number" id="remuneracao" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div>
+          <label>Limite Mensal (40% da remuneração líquida)</label>
+          <input type="number" id="limiteDesc" placeholder="0.00" step="0.01" min="0" readonly style="background:#f5f5f5;color:var(--text-light)">
+        </div>
+      </div>
+
+      <div class="field-row cols-3">
+        <div><label>Número de Parcelas</label><input type="number" id="numParcelas" placeholder="1" min="1" oninput="calcParcelas()"></div>
+        <div><label>Data 1ª Parcela (mês ref.)</label><input type="month" id="dataPrimParcela" onchange="calcParcelas()"></div>
+        <div><label>Rubrica no Contracheque <span class="req">*</span></label><input type="text" id="rubrica" placeholder="Ex.: Desconto Dano/Avaria – CAAA-0001/2025"></div>
+      </div>
+
+      <div id="tabelaParcelas" style="display:none;margin-bottom:16px;">
+        <div class="subsec-title" style="margin-top:4px;">Cronograma de Parcelas</div>
+        <div style="overflow-x:auto;">
+          <table id="parcelasTable" style="width:100%;border-collapse:collapse;font-size:13px;">
+            <thead>
+              <tr style="background:var(--navy);">
+                <th style="padding:8px 12px;color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;text-align:left;">Nº</th>
+                <th style="padding:8px 12px;color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;text-align:left;">Mês de Referência</th>
+                <th style="padding:8px 12px;color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;text-align:left;">Valor da Parcela (R$)</th>
+                <th style="padding:8px 12px;color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;text-align:left;">Valor Acumulado (R$)</th>
+                <th style="padding:8px 12px;color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;text-align:left;">Situação</th>
+              </tr>
+            </thead>
+            <tbody id="parcelasBody"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:8px;font-size:11.5px;color:var(--text-light);">
+          💡 Os valores das parcelas são calculados automaticamente. A última parcela absorve o saldo residual.
+        </div>
+      </div>
+
+      <div class="alert danger">
+        <span class="alert-icon">🚫</span>
+        <div><strong>Vedação (item 5):</strong> É vedado qualquer ato de pressão ou coação para reconhecimento de culpa. "Confissões" externas ao procedimento formal não têm validade jurídica.</div>
+      </div>
+
+      <div class="field-group">
+        <label>Desconto em Haveres Rescisórios? <span class="hint">(CCT – Cláusula 7ª, § 4º)</span></label>
+        <div class="options-grid cols-2" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="rescisorio"> <div><div class="opt-label">✅ Sim — autorizado pela CCT</div><div class="opt-sub">Acima do limite do art. 477, § 5º, CLT</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="rescisorio"> <div><div class="opt-label">❌ Não aplicável</div></div></label>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goTo(4)">← Anterior</button>
+        <button class="btn btn-primary" onclick="goTo(6)">Próximo →</button>
+      </div>
+    </div>
+
+    <!-- ===================== SEÇÃO 7 ===================== -->
+    <div class="section" id="sec6">
+      <div class="section-print-bar">
+        <button class="btn btn-secondary btn-sm" onclick="printSection(6)">🖨️ Imprimir esta seção</button>
+      </div>
+      <h2 class="section-title"><span class="num">7</span>Recurso Administrativo e Assinaturas</h2>
+      <p class="section-desc">Registre as informações sobre o recurso administrativo e colete as assinaturas de encerramento (item 2.7).</p>
+
+      <div class="subsec-title">Recurso Administrativo (item 2.7)</div>
+
+      <div class="alert info">
+        <span class="alert-icon">ℹ️</span>
+        <div>O empregado tem <strong>2 dias úteis</strong> a contar do recebimento da decisão para interpor recurso escrito. A CAAA terá <strong>5 dias úteis</strong> para reavaliar.</div>
+      </div>
+
+      <div class="field-group">
+        <label>O empregado interpôs recurso administrativo?</label>
+        <div class="options-grid cols-3" style="margin-top:6px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="recurso"> <div><div class="opt-label">✅ Sim, interpôs recurso</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="recurso"> <div><div class="opt-label">❌ Não interpôs recurso</div></div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="radio" name="recurso"> <div><div class="opt-label">⏰ Prazo ainda em curso</div></div></label>
+        </div>
+      </div>
+
+      <div class="field-row cols-3">
+        <div><label>Data de Interposição do Recurso</label><input type="date" id="dataRecurso"></div>
+        <div><label>Data da Reunião de Reanálise</label><input type="date" id="dataReanal"></div>
+        <div>
+          <label>Resultado do Recurso</label>
+          <select id="resultRecurso">
+            <option value="">Selecione</option>
+            <option>Decisão Mantida</option>
+            <option>Decisão Alterada Parcialmente</option>
+            <option>Decisão Revertida</option>
+            <option>Não aplicável</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div>
+          <label>Fundamentação da Decisão do Recurso</label>
+          <textarea id="fundRecurso" rows="3" placeholder="Registre os fundamentos da decisão sobre o recurso..."></textarea>
+        </div>
+      </div>
+
+      <div class="alert success">
+        <span class="alert-icon">⚖️</span>
+        <div><strong>Inalterabilidade do Direito Judicial (item 2.7):</strong> Este procedimento administrativo <strong>NÃO impede</strong> o empregado de buscar a tutela judicial junto à Justiça do Trabalho a qualquer tempo.</div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Encerramento e Arquivamento</div>
+
+      <div class="field-row cols-2">
+        <div><label>Data de Encerramento do Procedimento</label><input type="date" id="dataEncerr"></div>
+        <div><label>Nº da Pasta de Arquivamento</label><input type="text" id="pastaArq" placeholder="Ex.: PASTA-CAAA-2025/001"></div>
+      </div>
+
+      <div class="field-row">
+        <div><label>Observações Finais</label><textarea id="obsFinal" rows="3" placeholder="Registre quaisquer observações finais relevantes..."></textarea></div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="subsec-title">Assinaturas dos Membros da CAAA</div>
+
+      <div class="sig-grid">
+        <div class="sig-box">
+          <div class="sig-box-header">Membro 1 · Presidente</div>
+          <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome / Cargo / Data</div></div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-box-header">Membro 2 · Pares</div>
+          <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome / Cargo / Data</div></div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-box-header">Membro 3 · Pares</div>
+          <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome / Cargo / Data</div></div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-box-header">Membro 4 · Administração</div>
+          <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome / Cargo / Data</div></div>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;">
+        <div class="sig-box" style="max-width:420px">
+          <div class="sig-box-header">Empregado Apurado</div>
+          <div class="sig-box-body">
+            <div class="sig-line"></div>
+            <div class="sig-label">Nome / Matrícula / Data (ou indicar recusa c/ 2 testemunhas)</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" onclick="goTo(5)">← Anterior</button>
+        <div style="display:flex;gap:12px;">
+          <button class="btn btn-secondary" onclick="window.print()">🖨️ Imprimir tudo</button>
+          <button class="btn btn-gold" onclick="finalizarDoc()">✅ Finalizar Documento</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /doc-content -->
+</div><!-- /paper -->
+
+
+<!-- ===================================================== -->
+<!-- FORMULÁRIO SEPARADO: DEFESA PARTE A — ATÉ ARGUMENTOS  -->
+<!-- ===================================================== -->
+<div class="standalone-form" id="formDefesa">
+  <div class="standalone-header">
+    <div class="standalone-header-left">
+      <div class="sh-label">Formulário Separado · CAAA</div>
+      <div class="sh-title">Defesa e Explicação do Colaborador</div>
+    </div>
+    <div class="standalone-header-right">
+      Proc. Nº: <span id="fd_numProc">_______________</span><br>
+      Data: <span id="fd_dataInst">_______________</span>
+    </div>
+  </div>
+  <div class="standalone-body">
+
+    <div class="alert info" style="margin-bottom:24px;">
+      <span class="alert-icon">ℹ️</span>
+      <div>Este formulário destina-se ao registro da <strong>defesa e explicação pessoal do colaborador</strong> sobre os fatos apurados. Conforme o item 2.4 do Procedimento, o colaborador tem pleno direito ao contraditório e à ampla defesa, podendo apresentar argumentos, provas e justificativas. O preenchimento pode ser feito à mão ou digitalmente.</div>
+    </div>
+
+    <!-- IDENTIFICAÇÃO -->
+    <div class="comunicacao-block">
+      <div class="comunicacao-titulo">Identificação do Colaborador</div>
+      <div class="field-row cols-2">
+        <div><label>Nome Completo <span class="req">*</span></label>
+          <input type="text" id="fd_nomeEmp" placeholder="Nome completo do colaborador"></div>
+        <div><label>Matrícula / Nº de Registro</label>
+          <input type="text" id="fd_matricula" placeholder="Nº de registro"></div>
+      </div>
+      <div class="field-row cols-3">
+        <div><label>Cargo / Função</label>
+          <input type="text" id="fd_cargo" placeholder="Cargo na empresa"></div>
+        <div><label>Setor / Unidade</label>
+          <input type="text" id="fd_setor" placeholder="Setor ou Filial"></div>
+        <div><label>Data de Admissão</label>
+          <input type="date" id="fd_dataAdmissao"></div>
+      </div>
+      <div class="field-row cols-3">
+        <div><label>Nº do Procedimento</label>
+          <input type="text" id="fd_proc" placeholder="CAAA-0001/2025"></div>
+        <div><label>Data do Fato / Ocorrência</label>
+          <input type="date" id="fd_dataFato"></div>
+        <div><label>Placa / Bem Envolvido</label>
+          <input type="text" id="fd_placa" placeholder="Ex.: ABC-1234"></div>
+      </div>
+    </div>
+
+    <!-- VERSÃO DOS FATOS -->
+    <div class="comunicacao-block">
+      <div class="comunicacao-titulo">Versão dos Fatos pelo Colaborador</div>
+      <p style="font-size:12.5px;color:var(--text-light);margin-bottom:14px;line-height:1.6;">
+        Descreva com suas próprias palavras o que ocorreu, as circunstâncias do fato e todos os elementos que considerar importantes para esclarecer o ocorrido.
+      </p>
+      <textarea class="defesa-lined-area" id="fd_versaoFatos" rows="8"
+        placeholder="Escreva aqui sua versão dos fatos..."></textarea>
+    </div>
+
+    <!-- ARGUMENTOS DE DEFESA -->
+    <div class="comunicacao-block">
+      <div class="comunicacao-titulo">Argumentos de Defesa e Justificativas</div>
+      <p style="font-size:12.5px;color:var(--text-light);margin-bottom:14px;line-height:1.6;">
+        Apresente seus argumentos de defesa, justificativas, atenuantes e quaisquer elementos que entender relevantes para a apreciação do caso pela CAAA.
+      </p>
+      <textarea class="defesa-lined-area" id="fd_argumentos" rows="8"
+        placeholder="Escreva aqui seus argumentos e justificativas..."></textarea>
+    </div>
+
+    <!-- ASSINATURA PARTE A -->
+    <div class="sep"></div>
+    <div class="subsec-title">Assinatura do Colaborador</div>
+    <div class="sig-grid">
+      <div class="sig-box">
+        <div class="sig-box-header">Colaborador — Assinatura</div>
+        <div class="sig-box-body">
+          <div class="sig-line"></div>
+          <div class="sig-label">Nome completo / Matrícula / Data</div>
+        </div>
+      </div>
+      <div class="sig-box">
+        <div class="sig-box-header">Recebido pela Empresa</div>
+        <div class="sig-box-body">
+          <div class="sig-line"></div>
+          <div class="sig-label">Nome / Cargo / Data do recebimento</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:20px;">
+      <button class="btn btn-secondary btn-sm" onclick="printStandalone('formDefesa')">🖨️ Imprimir este formulário</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================== -->
+<!-- FORMULÁRIO SEPARADO: PARECERES E DECISÃO INDIVIDUAL   -->
+<!-- ===================================================== -->
+<div class="standalone-form" id="formParecer">
+  <div class="standalone-header">
+    <div class="standalone-header-left">
+      <div class="sh-label">Formulário Separado · CAAA</div>
+      <div class="sh-title">Pareceres Individuais dos Membros da CAAA</div>
+    </div>
+    <div class="standalone-header-right">
+      Proc. Nº: <span id="pf_numProc">_______________</span><br>
+      Empregado: <span id="pf_nomeEmp">_______________</span><br>
+      Data: <span id="pf_dataInst">_______________</span>
+    </div>
+  </div>
+  <div class="standalone-body">
+
+    <div class="alert info" style="margin-bottom:24px;">
+      <span class="alert-icon">ℹ️</span>
+      <div>Este formulário destina-se ao registro do <strong>parecer fundamentado e do voto individual</strong> de cada membro da CAAA. Pode ser preenchido digitalmente ou à mão. As áreas com linhas são destinadas à escrita manual.</div>
+    </div>
+
+    <!-- MEMBRO 1 -->
+    <div class="parecer-member-card">
+      <div class="parecer-member-header">
+        MEMBRO 1 — PRESIDENTE DA COMISSÃO
+        <span class="tag">Administração</span>
+      </div>
+      <div class="parecer-member-body">
+        <div class="field-row cols-2" style="margin-bottom:14px;">
+          <div><label>Nome</label><input type="text" id="p1nome" placeholder="Nome completo"></div>
+          <div><label>Cargo / Função</label><input type="text" id="p1cargo" placeholder="Cargo"></div>
+        </div>
+        <label style="margin-bottom:10px;">Voto</label>
+        <div class="parecer-voto-grid">
+          <div class="voto-opt" onclick="selectVoto(this,'p1','sem_culpa')">🏳️ Sem Culpa/Dolo</div>
+          <div class="voto-opt" onclick="selectVoto(this,'p1','culpa')">⚖️ Culpa</div>
+          <div class="voto-opt" onclick="selectVoto(this,'p1','dolo')">🔴 Dolo</div>
+        </div>
+        <input type="hidden" id="p1voto" value="">
+        <div id="p1votoTexto" style="margin:6px 0 12px;padding:8px 12px;background:rgba(13,27,42,0.05);border-left:3px solid var(--gold);border-radius:3px;font-size:12.5px;color:var(--navy);font-weight:500;display:none;"></div>
+        <label style="margin-bottom:6px;">Parecer Fundamentado <span class="hint">(escrever à mão ou digitar)</span></label>
+        <textarea class="handwrite-area" id="p1parecer" rows="5" placeholder="Registre aqui o fundamento do seu voto, analisando os fatos, provas e a defesa do empregado..."></textarea>
+        <div style="margin-top:20px;">
+          <div class="sig-box">
+            <div class="sig-box-header">Assinatura do Membro 1</div>
+            <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome / Cargo / Data</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBRO 2 -->
+    <div class="parecer-member-card">
+      <div class="parecer-member-header">
+        MEMBRO 2 — MESMA FUNÇÃO DO EMPREGADO
+        <span class="tag">Pares</span>
+      </div>
+      <div class="parecer-member-body">
+        <div class="field-row cols-2" style="margin-bottom:14px;">
+          <div><label>Nome</label><input type="text" id="p2nome" placeholder="Nome completo"></div>
+          <div><label>Cargo / Função</label><input type="text" id="p2cargo" placeholder="Cargo"></div>
+        </div>
+        <label style="margin-bottom:10px;">Voto</label>
+        <div class="parecer-voto-grid">
+          <div class="voto-opt" onclick="selectVoto(this,'p2','sem_culpa')">🏳️ Sem Culpa/Dolo</div>
+          <div class="voto-opt" onclick="selectVoto(this,'p2','culpa')">⚖️ Culpa</div>
+          <div class="voto-opt" onclick="selectVoto(this,'p2','dolo')">🔴 Dolo</div>
+        </div>
+        <input type="hidden" id="p2voto" value="">
+        <div id="p2votoTexto" style="margin:6px 0 12px;padding:8px 12px;background:rgba(13,27,42,0.05);border-left:3px solid var(--gold);border-radius:3px;font-size:12.5px;color:var(--navy);font-weight:500;display:none;"></div>
+        <label style="margin-bottom:6px;">Parecer Fundamentado</label>
+        <textarea class="handwrite-area" id="p2parecer" rows="5" placeholder="Registre aqui o fundamento do seu voto..."></textarea>
+        <div style="margin-top:20px;">
+          <div class="sig-box">
+            <div class="sig-box-header">Assinatura do Membro 2</div>
+            <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome / Cargo / Data</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBRO 3 -->
+    <div class="parecer-member-card">
+      <div class="parecer-member-header">
+        MEMBRO 3 — MESMA FUNÇÃO DO EMPREGADO
+        <span class="tag">Pares</span>
+      </div>
+      <div class="parecer-member-body">
+        <div class="field-row cols-2" style="margin-bottom:14px;">
+          <div><label>Nome</label><input type="text" id="p3nome" placeholder="Nome completo"></div>
+          <div><label>Cargo / Função</label><input type="text" id="p3cargo" placeholder="Cargo"></div>
+        </div>
+        <label style="margin-bottom:10px;">Voto</label>
+        <div class="parecer-voto-grid">
+          <div class="voto-opt" onclick="selectVoto(this,'p3','sem_culpa')">🏳️ Sem Culpa/Dolo</div>
+          <div class="voto-opt" onclick="selectVoto(this,'p3','culpa')">⚖️ Culpa</div>
+          <div class="voto-opt" onclick="selectVoto(this,'p3','dolo')">🔴 Dolo</div>
+        </div>
+        <input type="hidden" id="p3voto" value="">
+        <div id="p3votoTexto" style="margin:6px 0 12px;padding:8px 12px;background:rgba(13,27,42,0.05);border-left:3px solid var(--gold);border-radius:3px;font-size:12.5px;color:var(--navy);font-weight:500;display:none;"></div>
+        <label style="margin-bottom:6px;">Parecer Fundamentado</label>
+        <textarea class="handwrite-area" id="p3parecer" rows="5" placeholder="Registre aqui o fundamento do seu voto..."></textarea>
+        <div style="margin-top:20px;">
+          <div class="sig-box">
+            <div class="sig-box-header">Assinatura do Membro 3</div>
+            <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome / Cargo / Data</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBRO 4 -->
+    <div class="parecer-member-card">
+      <div class="parecer-member-header">
+        MEMBRO 4 — ADMINISTRAÇÃO / JURÍDICO
+        <span class="tag">Administração</span>
+      </div>
+      <div class="parecer-member-body">
+        <div class="field-row cols-2" style="margin-bottom:14px;">
+          <div><label>Nome</label><input type="text" id="p4nome" placeholder="Nome completo"></div>
+          <div><label>Cargo / Função</label><input type="text" id="p4cargo" placeholder="Cargo"></div>
+        </div>
+        <label style="margin-bottom:10px;">Voto</label>
+        <div class="parecer-voto-grid">
+          <div class="voto-opt" onclick="selectVoto(this,'p4','sem_culpa')">🏳️ Sem Culpa/Dolo</div>
+          <div class="voto-opt" onclick="selectVoto(this,'p4','culpa')">⚖️ Culpa</div>
+          <div class="voto-opt" onclick="selectVoto(this,'p4','dolo')">🔴 Dolo</div>
+        </div>
+        <input type="hidden" id="p4voto" value="">
+        <div id="p4votoTexto" style="margin:6px 0 12px;padding:8px 12px;background:rgba(13,27,42,0.05);border-left:3px solid var(--gold);border-radius:3px;font-size:12.5px;color:var(--navy);font-weight:500;display:none;"></div>
+        <label style="margin-bottom:6px;">Parecer Fundamentado</label>
+        <textarea class="handwrite-area" id="p4parecer" rows="5" placeholder="Registre aqui o fundamento do seu voto..."></textarea>
+        <div style="margin-top:20px;">
+          <div class="sig-box">
+            <div class="sig-box-header">Assinatura do Membro 4</div>
+            <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome / Cargo / Data</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:8px;">
+      <button class="btn btn-secondary btn-sm" onclick="printStandalone('formParecer')">🖨️ Imprimir este formulário</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================== -->
+<!-- FORMULÁRIO SEPARADO: DECISÃO INDIVIDUAL POR MEMBRO    -->
+<!-- ===================================================== -->
+<div class="standalone-form" id="formDecisaoIndividual">
+  <div class="standalone-header">
+    <div class="standalone-header-left">
+      <div class="sh-label">Formulário Separado · CAAA</div>
+      <div class="sh-title">Folha de Decisão Individual — Membro da CAAA</div>
+    </div>
+    <div class="standalone-header-right">
+      Proc. Nº: <span id="di_numProc">_______________</span><br>
+      Empregado: <span id="di_nomeEmp">_______________</span><br>
+      Data: <span id="di_dataInst">_______________</span>
+    </div>
+  </div>
+  <div class="standalone-body">
+
+    <div class="alert warn" style="margin-bottom:16px;">
+      <span class="alert-icon">⚠️</span>
+      <div>Esta folha deve ser preenchida <strong>individualmente por cada membro da CAAA</strong> antes da deliberação coletiva. Destina-se a registrar a posição motivada de cada membro, preservando a independência do voto. A mudança de opinião fundamentada não gera qualquer penalidade.</div>
+    </div>
+
+    <!-- NAVEGAÇÃO ENTRE MEMBROS -->
+    <div id="diNavBar" style="display:flex;align-items:center;justify-content:space-between;background:var(--navy);border-radius:3px;padding:10px 16px;margin-bottom:20px;gap:10px;">
+      <button class="btn btn-secondary btn-sm" id="diPrevBtn" onclick="diNavMembro(-1)" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff;min-width:90px;">← Anterior</button>
+      <div style="display:flex;gap:8px;">
+        <button class="di-tab-btn" data-m="0" onclick="diGoMembro(0)">Membro 1</button>
+        <button class="di-tab-btn" data-m="1" onclick="diGoMembro(1)">Membro 2</button>
+        <button class="di-tab-btn" data-m="2" onclick="diGoMembro(2)">Membro 3</button>
+        <button class="di-tab-btn" data-m="3" onclick="diGoMembro(3)">Membro 4</button>
+      </div>
+      <button class="btn btn-secondary btn-sm" id="diNextBtn" onclick="diNavMembro(1)" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2);color:#fff;min-width:90px;">Próximo →</button>
+    </div>
+
+    <!-- MEMBRO 1 -->
+    <div class="di-membro-panel" id="di_membro_0">
+      <div style="margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+        <span style="background:var(--gold);color:var(--navy);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:2px;">MEMBRO 1</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-light);">PRESIDENTE DA COMISSÃO · Administração</span>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Identificação do Membro Votante</div>
+        <div class="field-row cols-3">
+          <div><label>Nome Completo <span class="req">*</span></label><input type="text" id="di1_nome" placeholder="Nome do membro da CAAA"></div>
+          <div><label>Cargo / Função</label><input type="text" id="di1_cargo" placeholder="Cargo na empresa"></div>
+          <div><label>Posição na CAAA</label>
+            <select id="di1_pos">
+              <option value="Membro 1 — Presidente" selected>Membro 1 — Presidente</option>
+              <option>Membro 2 — Mesma Função (Pares)</option>
+              <option>Membro 3 — Mesma Função (Pares)</option>
+              <option>Membro 4 — Administração</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row cols-2">
+          <div><label>Data do Voto</label><input type="date" id="di1_data"></div>
+          <div><label>Nº do Procedimento</label><input type="text" id="di1_proc" placeholder="CAAA-0001/2025"></div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Análise dos Fatos e Provas</div>
+        <div class="field-row" style="margin-bottom:0;">
+          <div>
+            <label>Análise pessoal das provas e da defesa <span class="hint">(escreva à mão ou digite)</span></label>
+            <textarea class="handwrite-area" id="di1_analise" rows="7" placeholder="Descreva sua análise pessoal das provas apresentadas, da defesa do empregado e das circunstâncias do caso..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Voto do Membro</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:10px;">
+          <div class="decision-card" onclick="diSelectVoto(this,'di1','sem_culpa')">
+            <div class="dc-icon">🏳️</div>
+            <div class="dc-title">Sem Culpa / Dolo</div>
+            <div class="dc-sub">Arquivamento sem penalidade</div>
+          </div>
+          <div class="decision-card" onclick="diSelectVoto(this,'di1','culpa')">
+            <div class="dc-icon">⚖️</div>
+            <div class="dc-title">Culpa Comprovada</div>
+            <div class="dc-sub">Penalidade proporcional</div>
+          </div>
+          <div class="decision-card" onclick="diSelectVoto(this,'di1','dolo')">
+            <div class="dc-icon">🔴</div>
+            <div class="dc-title">Dolo Comprovado</div>
+            <div class="dc-sub">Pode ensejar justa causa</div>
+          </div>
+        </div>
+        <input type="hidden" id="di1_voto" value="">
+        <div id="di1_votoTexto" class="di-voto-registro" style="display:none;"></div>
+        <div class="field-row" style="margin-bottom:0;margin-top:12px;">
+          <div>
+            <label>Fundamentação do Voto <span class="hint">(escreva à mão ou digite)</span></label>
+            <textarea class="handwrite-area" id="di1_fund" rows="6" placeholder="Fundamente seu voto de forma clara e objetiva, indicando quais provas e argumentos embasaram sua conclusão..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Atenuantes e Agravantes Considerados</div>
+        <div class="field-row cols-2" style="margin-bottom:0;">
+          <div><label>Atenuantes</label><textarea class="handwrite-area" id="di1_aten" rows="4" placeholder="Ex.: bom histórico disciplinar, condições adversas..."></textarea></div>
+          <div><label>Agravantes</label><textarea class="handwrite-area" id="di1_agra" rows="4" placeholder="Ex.: reincidência, infração grave de trânsito..."></textarea></div>
+        </div>
+      </div>
+      <div style="margin-top:24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;">
+        <div class="sig-box" style="max-width:420px;flex:1;">
+          <div class="sig-box-header">Assinatura — Membro 1 / Presidente</div>
+          <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome completo / Cargo / Data</div></div>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="diPrintMembro(0)">🖨️ Imprimir Membro 1</button>
+      </div>
+    </div>
+
+    <!-- MEMBRO 2 -->
+    <div class="di-membro-panel" id="di_membro_1" style="display:none;">
+      <div style="margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+        <span style="background:var(--gold);color:var(--navy);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:2px;">MEMBRO 2</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-light);">MESMA FUNÇÃO DO EMPREGADO · Pares</span>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Identificação do Membro Votante</div>
+        <div class="field-row cols-3">
+          <div><label>Nome Completo <span class="req">*</span></label><input type="text" id="di2_nome" placeholder="Nome do membro da CAAA"></div>
+          <div><label>Cargo / Função</label><input type="text" id="di2_cargo" placeholder="Cargo na empresa"></div>
+          <div><label>Posição na CAAA</label>
+            <select id="di2_pos">
+              <option value="">Selecione...</option>
+              <option>Membro 1 — Presidente</option>
+              <option value="Membro 2 — Mesma Função (Pares)" selected>Membro 2 — Mesma Função (Pares)</option>
+              <option>Membro 3 — Mesma Função (Pares)</option>
+              <option>Membro 4 — Administração</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row cols-2">
+          <div><label>Data do Voto</label><input type="date" id="di2_data"></div>
+          <div><label>Nº do Procedimento</label><input type="text" id="di2_proc" placeholder="CAAA-0001/2025"></div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Análise dos Fatos e Provas</div>
+        <div class="field-row" style="margin-bottom:0;">
+          <div><label>Análise pessoal das provas e da defesa <span class="hint">(escreva à mão ou digite)</span></label>
+            <textarea class="handwrite-area" id="di2_analise" rows="7" placeholder="Descreva sua análise pessoal das provas apresentadas..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Voto do Membro</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:10px;">
+          <div class="decision-card" onclick="diSelectVoto(this,'di2','sem_culpa')">
+            <div class="dc-icon">🏳️</div><div class="dc-title">Sem Culpa / Dolo</div><div class="dc-sub">Arquivamento sem penalidade</div>
+          </div>
+          <div class="decision-card" onclick="diSelectVoto(this,'di2','culpa')">
+            <div class="dc-icon">⚖️</div><div class="dc-title">Culpa Comprovada</div><div class="dc-sub">Penalidade proporcional</div>
+          </div>
+          <div class="decision-card" onclick="diSelectVoto(this,'di2','dolo')">
+            <div class="dc-icon">🔴</div><div class="dc-title">Dolo Comprovado</div><div class="dc-sub">Pode ensejar justa causa</div>
+          </div>
+        </div>
+        <input type="hidden" id="di2_voto" value="">
+        <div id="di2_votoTexto" class="di-voto-registro" style="display:none;"></div>
+        <div class="field-row" style="margin-bottom:0;margin-top:12px;">
+          <div><label>Fundamentação do Voto <span class="hint">(escreva à mão ou digite)</span></label>
+            <textarea class="handwrite-area" id="di2_fund" rows="6" placeholder="Fundamente seu voto..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Atenuantes e Agravantes Considerados</div>
+        <div class="field-row cols-2" style="margin-bottom:0;">
+          <div><label>Atenuantes</label><textarea class="handwrite-area" id="di2_aten" rows="4" placeholder="Ex.: bom histórico disciplinar..."></textarea></div>
+          <div><label>Agravantes</label><textarea class="handwrite-area" id="di2_agra" rows="4" placeholder="Ex.: reincidência..."></textarea></div>
+        </div>
+      </div>
+      <div style="margin-top:24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;">
+        <div class="sig-box" style="max-width:420px;flex:1;">
+          <div class="sig-box-header">Assinatura — Membro 2</div>
+          <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome completo / Cargo / Data</div></div>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="diPrintMembro(1)">🖨️ Imprimir Membro 2</button>
+      </div>
+    </div>
+
+    <!-- MEMBRO 3 -->
+    <div class="di-membro-panel" id="di_membro_2" style="display:none;">
+      <div style="margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+        <span style="background:var(--gold);color:var(--navy);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:2px;">MEMBRO 3</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-light);">MESMA FUNÇÃO DO EMPREGADO · Pares</span>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Identificação do Membro Votante</div>
+        <div class="field-row cols-3">
+          <div><label>Nome Completo <span class="req">*</span></label><input type="text" id="di3_nome" placeholder="Nome do membro da CAAA"></div>
+          <div><label>Cargo / Função</label><input type="text" id="di3_cargo" placeholder="Cargo na empresa"></div>
+          <div><label>Posição na CAAA</label>
+            <select id="di3_pos">
+              <option value="">Selecione...</option>
+              <option>Membro 1 — Presidente</option>
+              <option>Membro 2 — Mesma Função (Pares)</option>
+              <option value="Membro 3 — Mesma Função (Pares)" selected>Membro 3 — Mesma Função (Pares)</option>
+              <option>Membro 4 — Administração</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row cols-2">
+          <div><label>Data do Voto</label><input type="date" id="di3_data"></div>
+          <div><label>Nº do Procedimento</label><input type="text" id="di3_proc" placeholder="CAAA-0001/2025"></div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Análise dos Fatos e Provas</div>
+        <div class="field-row" style="margin-bottom:0;">
+          <div><label>Análise pessoal das provas e da defesa <span class="hint">(escreva à mão ou digite)</span></label>
+            <textarea class="handwrite-area" id="di3_analise" rows="7" placeholder="Descreva sua análise pessoal das provas apresentadas..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Voto do Membro</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:10px;">
+          <div class="decision-card" onclick="diSelectVoto(this,'di3','sem_culpa')">
+            <div class="dc-icon">🏳️</div><div class="dc-title">Sem Culpa / Dolo</div><div class="dc-sub">Arquivamento sem penalidade</div>
+          </div>
+          <div class="decision-card" onclick="diSelectVoto(this,'di3','culpa')">
+            <div class="dc-icon">⚖️</div><div class="dc-title">Culpa Comprovada</div><div class="dc-sub">Penalidade proporcional</div>
+          </div>
+          <div class="decision-card" onclick="diSelectVoto(this,'di3','dolo')">
+            <div class="dc-icon">🔴</div><div class="dc-title">Dolo Comprovado</div><div class="dc-sub">Pode ensejar justa causa</div>
+          </div>
+        </div>
+        <input type="hidden" id="di3_voto" value="">
+        <div id="di3_votoTexto" class="di-voto-registro" style="display:none;"></div>
+        <div class="field-row" style="margin-bottom:0;margin-top:12px;">
+          <div><label>Fundamentação do Voto <span class="hint">(escreva à mão ou digite)</span></label>
+            <textarea class="handwrite-area" id="di3_fund" rows="6" placeholder="Fundamente seu voto..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Atenuantes e Agravantes Considerados</div>
+        <div class="field-row cols-2" style="margin-bottom:0;">
+          <div><label>Atenuantes</label><textarea class="handwrite-area" id="di3_aten" rows="4" placeholder="Ex.: bom histórico disciplinar..."></textarea></div>
+          <div><label>Agravantes</label><textarea class="handwrite-area" id="di3_agra" rows="4" placeholder="Ex.: reincidência..."></textarea></div>
+        </div>
+      </div>
+      <div style="margin-top:24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;">
+        <div class="sig-box" style="max-width:420px;flex:1;">
+          <div class="sig-box-header">Assinatura — Membro 3</div>
+          <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome completo / Cargo / Data</div></div>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="diPrintMembro(2)">🖨️ Imprimir Membro 3</button>
+      </div>
+    </div>
+
+    <!-- MEMBRO 4 -->
+    <div class="di-membro-panel" id="di_membro_3" style="display:none;">
+      <div style="margin-bottom:16px;display:flex;align-items:center;gap:10px;">
+        <span style="background:var(--gold);color:var(--navy);font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:2px;">MEMBRO 4</span>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text-light);">ADMINISTRAÇÃO / JURÍDICO</span>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Identificação do Membro Votante</div>
+        <div class="field-row cols-3">
+          <div><label>Nome Completo <span class="req">*</span></label><input type="text" id="di4_nome" placeholder="Nome do membro da CAAA"></div>
+          <div><label>Cargo / Função</label><input type="text" id="di4_cargo" placeholder="Cargo na empresa"></div>
+          <div><label>Posição na CAAA</label>
+            <select id="di4_pos">
+              <option value="">Selecione...</option>
+              <option>Membro 1 — Presidente</option>
+              <option>Membro 2 — Mesma Função (Pares)</option>
+              <option>Membro 3 — Mesma Função (Pares)</option>
+              <option value="Membro 4 — Administração" selected>Membro 4 — Administração</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row cols-2">
+          <div><label>Data do Voto</label><input type="date" id="di4_data"></div>
+          <div><label>Nº do Procedimento</label><input type="text" id="di4_proc" placeholder="CAAA-0001/2025"></div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Análise dos Fatos e Provas</div>
+        <div class="field-row" style="margin-bottom:0;">
+          <div><label>Análise pessoal das provas e da defesa <span class="hint">(escreva à mão ou digite)</span></label>
+            <textarea class="handwrite-area" id="di4_analise" rows="7" placeholder="Descreva sua análise pessoal das provas apresentadas..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Voto do Membro</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:10px;">
+          <div class="decision-card" onclick="diSelectVoto(this,'di4','sem_culpa')">
+            <div class="dc-icon">🏳️</div><div class="dc-title">Sem Culpa / Dolo</div><div class="dc-sub">Arquivamento sem penalidade</div>
+          </div>
+          <div class="decision-card" onclick="diSelectVoto(this,'di4','culpa')">
+            <div class="dc-icon">⚖️</div><div class="dc-title">Culpa Comprovada</div><div class="dc-sub">Penalidade proporcional</div>
+          </div>
+          <div class="decision-card" onclick="diSelectVoto(this,'di4','dolo')">
+            <div class="dc-icon">🔴</div><div class="dc-title">Dolo Comprovado</div><div class="dc-sub">Pode ensejar justa causa</div>
+          </div>
+        </div>
+        <input type="hidden" id="di4_voto" value="">
+        <div id="di4_votoTexto" class="di-voto-registro" style="display:none;"></div>
+        <div class="field-row" style="margin-bottom:0;margin-top:12px;">
+          <div><label>Fundamentação do Voto <span class="hint">(escreva à mão ou digite)</span></label>
+            <textarea class="handwrite-area" id="di4_fund" rows="6" placeholder="Fundamente seu voto..."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="comunicacao-block">
+        <div class="comunicacao-titulo">Atenuantes e Agravantes Considerados</div>
+        <div class="field-row cols-2" style="margin-bottom:0;">
+          <div><label>Atenuantes</label><textarea class="handwrite-area" id="di4_aten" rows="4" placeholder="Ex.: bom histórico disciplinar..."></textarea></div>
+          <div><label>Agravantes</label><textarea class="handwrite-area" id="di4_agra" rows="4" placeholder="Ex.: reincidência..."></textarea></div>
+        </div>
+      </div>
+      <div style="margin-top:24px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px;">
+        <div class="sig-box" style="max-width:420px;flex:1;">
+          <div class="sig-box-header">Assinatura — Membro 4 / Administração</div>
+          <div class="sig-box-body"><div class="sig-line"></div><div class="sig-label">Nome completo / Cargo / Data</div></div>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="diPrintMembro(3)">🖨️ Imprimir Membro 4</button>
+      </div>
+    </div>
+
+    <!-- BOTÃO IMPRIMIR TODOS -->
+    <div style="display:flex;justify-content:flex-end;margin-top:20px;gap:8px;flex-wrap:wrap;">
+      <button class="btn btn-secondary btn-sm" onclick="diPrintTodos()">🖨️ Imprimir todos os 4 membros</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ===================================================== -->
+<!-- FORMULÁRIO SEPARADO: COMUNICAÇÃO DA DECISÃO           -->
+<!-- ===================================================== -->
+<div class="standalone-form" id="formComunicacao">
+  <div class="standalone-header">
+    <div class="standalone-header-left">
+      <div class="sh-label">Formulário Separado · CAAA</div>
+      <div class="sh-title">Comunicação da Decisão ao Empregado</div>
+    </div>
+    <div class="standalone-header-right">
+      Proc. Nº: <span id="fc_numProc">_______________</span><br>
+      Data: <span id="fc_dataInst">_______________</span>
+    </div>
+  </div>
+  <div class="standalone-body">
+
+    <div class="comunicacao-block">
+      <div class="comunicacao-titulo">Identificação — Dados do Procedimento</div>
+      <div class="field-row cols-2">
+        <div><label>Nº do Procedimento</label><input type="text" id="fc_proc" placeholder="CAAA-0001/2025"></div>
+        <div><label>Data de Emissão desta Comunicação</label><input type="date" id="fc_data"></div>
+      </div>
+      <div class="field-row cols-2">
+        <div><label>Nome do Empregado</label><input type="text" id="fc_empregado" placeholder="Nome completo"></div>
+        <div><label>Matrícula</label><input type="text" id="fc_matricula" placeholder="Nº de registro"></div>
+      </div>
+      <div class="field-row cols-2">
+        <div><label>Cargo / Função</label><input type="text" id="fc_cargo" placeholder="Cargo do empregado"></div>
+        <div><label>Setor / Unidade</label><input type="text" id="fc_setor" placeholder="Setor ou Filial"></div>
+      </div>
+    </div>
+
+    <div class="comunicacao-block">
+      <div class="comunicacao-titulo">Decisão da CAAA</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:18px;">
+        <div class="decision-card" onclick="fcSelectDecisao(this,'sem_culpa')">
+          <div class="dc-icon">🏳️</div>
+          <div class="dc-title">Sem Culpa / Dolo</div>
+          <div class="dc-sub">Processo arquivado. Sem penalidade ou desconto.</div>
+        </div>
+        <div class="decision-card" onclick="fcSelectDecisao(this,'culpa')">
+          <div class="dc-icon">⚖️</div>
+          <div class="dc-title">Culpa Comprovada</div>
+          <div class="dc-sub">Penalidade disciplinar aplicada.</div>
+        </div>
+        <div class="decision-card" onclick="fcSelectDecisao(this,'dolo')">
+          <div class="dc-icon">🔴</div>
+          <div class="dc-title">Dolo Comprovado</div>
+          <div class="dc-sub">Penalidade grave / justa causa.</div>
+        </div>
+      </div>
+      <input type="hidden" id="fc_decisao" value="">
+      <div id="fc_decisaoTexto" style="display:none;margin:-10px 0 16px;padding:10px 16px;background:rgba(13,27,42,0.06);border-left:4px solid var(--gold);border-radius:3px;font-size:13px;color:var(--navy);font-weight:600;line-height:1.5;"></div>
+
+      <div class="field-row cols-3">
+        <div>
+          <label>Penalidade Aplicada</label>
+          <select id="fc_penalidade">
+            <option value="">Selecione...</option>
+            <option>Nenhuma — Arquivamento</option>
+            <option>Advertência</option>
+            <option>Suspensão</option>
+            <option>Justa Causa</option>
+            <option>Apenas Desconto Salarial</option>
+          </select>
+        </div>
+        <div>
+          <label>Valor do Desconto Apurado (R$)</label>
+          <input type="number" id="fc_valor" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div>
+          <label>Nº de Parcelas do Desconto</label>
+          <input type="number" id="fc_parcelas" placeholder="1" min="1">
+        </div>
+      </div>
+
+      <div class="field-row" style="margin-bottom:0;">
+        <div>
+          <label>Resumo da Decisão e Fundamentação <span class="hint">(escreva à mão ou digite)</span></label>
+          <textarea class="handwrite-area" rows="6" placeholder="Descreva de forma clara o resultado da apuração, os fatos comprovados e a fundamentação legal da decisão. Este resumo será entregue ao empregado."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="comunicacao-block">
+      <div class="comunicacao-titulo">Direito ao Recurso e Informações ao Empregado</div>
+      <div class="alert info" style="margin-bottom:16px;">
+        <span class="alert-icon">⚖️</span>
+        <div>Fica assegurado ao empregado o direito de interpor <strong>recurso administrativo escrito</strong> no prazo de <strong>2 (dois) dias úteis</strong> a contar do recebimento desta comunicação, mediante protocolo na administração da empresa. O presente procedimento administrativo <strong>não impede</strong> a busca da tutela judicial na Justiça do Trabalho.</div>
+      </div>
+      <div class="field-row cols-2">
+        <div><label>Prazo para Recurso (data limite)</label><input type="date" id="fc_prazoRecurso"></div>
+        <div><label>Local para Protocolo do Recurso</label><input type="text" id="fc_localProtocolo" placeholder="Ex.: Dpto. RH – Filial São Paulo"></div>
+      </div>
+      <div class="field-row" style="margin-bottom:0;">
+        <div>
+          <label>Observações Adicionais ao Empregado</label>
+          <textarea rows="3" placeholder="Informações complementares, esclarecimentos, orientações específicas..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="sep"></div>
+    <div class="subsec-title">Recebimento da Comunicação</div>
+
+    <div class="sig-grid">
+      <div class="sig-box">
+        <div class="sig-box-header">Empregado — Recebimento</div>
+        <div class="sig-box-body">
+          <div class="sig-line"></div>
+          <div class="sig-label">Nome / Matrícula / Data do Recebimento</div>
+        </div>
+      </div>
+      <div class="sig-box">
+        <div class="sig-box-header">Representante da Empresa</div>
+        <div class="sig-box-body">
+          <div class="sig-line"></div>
+          <div class="sig-label">Nome / Cargo / Data</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <div class="alert warn">
+        <span class="alert-icon">⚠️</span>
+        <div>Em caso de <strong>recusa do empregado</strong> em assinar o recebimento, registrar abaixo com a presença de duas testemunhas.</div>
+      </div>
+    </div>
+
+    <div class="field-row cols-2">
+      <div>
+        <label>Testemunha 1 (em caso de recusa)</label>
+        <input type="text" placeholder="Nome completo da testemunha">
+        <div class="sig-line" style="margin-top:24px;"></div>
+        <div class="sig-label">Assinatura / Data</div>
+      </div>
+      <div>
+        <label>Testemunha 2 (em caso de recusa)</label>
+        <input type="text" placeholder="Nome completo da testemunha">
+        <div class="sig-line" style="margin-top:24px;"></div>
+        <div class="sig-label">Assinatura / Data</div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:20px;">
+      <button class="btn btn-secondary btn-sm" onclick="printStandalone('formComunicacao')">🖨️ Imprimir este formulário</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ===================================================== -->
+<!-- FORMULÁRIO SEPARADO: DEFESA PARTE B — PROVAS/PEDIDOS  -->
+<!-- ===================================================== -->
+<div class="standalone-form" id="formDefesaB">
+  <div class="standalone-header">
+    <div class="standalone-header-left">
+      <div class="sh-label">Formulário Separado · CAAA — Continuação</div>
+      <div class="sh-title">Defesa do Colaborador — Provas, Pedidos e Declaração</div>
+    </div>
+    <div class="standalone-header-right">
+      Proc. Nº: <span id="fdb_numProc">_______________</span><br>
+      Colaborador: <span id="fdb_nomeEmp">_______________</span>
+    </div>
+  </div>
+  <div class="standalone-body">
+
+    <!-- PROVAS E DOCUMENTOS -->
+    <div class="comunicacao-block">
+      <div class="comunicacao-titulo">Provas e Documentos Apresentados pelo Colaborador</div>
+      <div class="field-group">
+        <label>Tipo de prova/documento que está sendo apresentado <span class="hint">(marque os aplicáveis)</span></label>
+        <div class="options-grid cols-3" style="margin-top:8px;">
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">📷 Fotografias</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">🎥 Vídeos</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">💰 Orçamento Alternativo</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">👥 Testemunhas</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">📄 Documentos escritos</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">🔧 Laudo técnico</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">📋 Boletim de Ocorrência</div></label>
+          <label class="opt-item" onclick="toggleOpt(this)"><input type="checkbox"> <div class="opt-label">🗂️ Outros</div></label>
+        </div>
+      </div>
+      <div style="margin-top:12px;">
+        <label>Descrição das provas apresentadas / Indicação de testemunhas</label>
+        <textarea class="defesa-lined-area" id="fd_provas" rows="5"
+          placeholder="Liste e descreva as provas que está apresentando. No caso de testemunhas, informe nome completo e como podem ser localizadas..."></textarea>
+      </div>
+    </div>
+
+    <!-- CONTESTAÇÃO DE VALORES -->
+    <div class="comunicacao-block">
+      <div class="comunicacao-titulo">Contestação de Valores / Orçamentos <span style="font-weight:300;font-size:12px;">(se aplicável)</span></div>
+      <div class="field-row cols-2">
+        <div>
+          <label>Valor apresentado pela empresa (R$)</label>
+          <input type="number" id="fd_valorEmpresa" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div>
+          <label>Valor que o colaborador contesta / propõe (R$)</label>
+          <input type="number" id="fd_valorContest" placeholder="0.00" step="0.01" min="0">
+        </div>
+      </div>
+      <div style="margin-top:8px;">
+        <label>Fundamentação da contestação de valores</label>
+        <textarea class="defesa-lined-area" id="fd_contestValor" rows="4"
+          placeholder="Justifique a contestação do valor apurado, indicando as provas ou orçamentos que embasam sua posição..."></textarea>
+      </div>
+    </div>
+
+    <!-- PEDIDOS -->
+    <div class="comunicacao-block">
+      <div class="comunicacao-titulo">Pedidos e Requerimentos</div>
+      <p style="font-size:12.5px;color:var(--text-light);margin-bottom:14px;line-height:1.6;">
+        Indique o que requer da CAAA: arquivamento do processo, redução de valores, prazo para apresentação de contraprovas, oitiva de testemunhas, etc.
+      </p>
+      <textarea class="defesa-lined-area" id="fd_pedidos" rows="6"
+        placeholder="Escreva aqui seus pedidos à Comissão de Apuração..."></textarea>
+    </div>
+
+    <!-- DECLARAÇÃO -->
+    <div class="comunicacao-block">
+      <div class="comunicacao-titulo">Declaração Final</div>
+      <div style="background:var(--cream-dark);border:1px solid var(--border);border-radius:3px;padding:16px;font-size:13px;line-height:1.7;color:var(--text-mid);margin-bottom:20px;">
+        Declaro, para os devidos fins, que as informações e argumentos apresentados neste formulário são verdadeiros e consistem na minha defesa formal no âmbito do Procedimento Administrativo de Apuração de Sinistro acima identificado, conforme direito assegurado pelo item 2.4 do procedimento vigente. Estou ciente de que possuo direito ao recurso administrativo no prazo de <strong>2 (dois) dias úteis</strong> a contar da decisão da CAAA, e que este procedimento não impede o acesso à Justiça do Trabalho.
+      </div>
+      <div class="field-row cols-2">
+        <div>
+          <label>Local</label>
+          <input type="text" id="fd_local" placeholder="Cidade – UF">
+        </div>
+        <div>
+          <label>Data desta Declaração</label>
+          <input type="date" id="fd_dataDecl">
+        </div>
+      </div>
+    </div>
+
+    <!-- ASSINATURA PARTE B -->
+    <div class="sep"></div>
+    <div class="subsec-title">Assinatura do Colaborador</div>
+    <div class="sig-grid">
+      <div class="sig-box">
+        <div class="sig-box-header">Colaborador — Assinatura</div>
+        <div class="sig-box-body">
+          <div class="sig-line"></div>
+          <div class="sig-label">Nome completo / Matrícula / Data</div>
+        </div>
+      </div>
+      <div class="sig-box">
+        <div class="sig-box-header">Recebido pela Empresa</div>
+        <div class="sig-box-body">
+          <div class="sig-line"></div>
+          <div class="sig-label">Nome / Cargo / Data do recebimento</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:20px;">
+      <button class="btn btn-secondary btn-sm" onclick="printStandalone('formDefesaB')">🖨️ Imprimir este formulário</button>
+    </div>
+  </div>
+</div>
+
+
+
+<script>
+  // ============================================================
+  // INDEXEDDB — PERSISTENCE ENGINE
+  // ============================================================
+  const DB_NAME = 'CAAA_DB';
+  const DB_VERSION = 1;
+  const STORE = 'processos';
+  let db = null;
+  let currentId = null;
+  let autoSaveTimer = null;
+
+  function openDB() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onupgradeneeded = e => {
+        const d = e.target.result;
+        if (!d.objectStoreNames.contains(STORE)) {
+          const store = d.createObjectStore(STORE, { keyPath: 'id', autoIncrement: true });
+          store.createIndex('numProc', 'numProc', { unique: false });
+          store.createIndex('nomeEmp', 'nomeEmp', { unique: false });
+          store.createIndex('placaBem', 'placaBem', { unique: false });
+          store.createIndex('updatedAt', 'updatedAt', { unique: false });
+        }
+      };
+      req.onsuccess = e => { db = e.target.result; resolve(db); };
+      req.onerror = e => reject(e);
+    });
+  }
+
+  // ---- Collect all form data into a flat object ----
+  function collectFormData() {
+    const data = {};
+    // All inputs, selects, textareas with IDs
+    document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el => {
+      data[el.id] = el.value;
+    });
+    // Radio buttons (by name)
+    const radioNames = ['comunicou','instaurar','formaNotif','compareceu','modalDefesa',
+      'falhaManu','solicitouPrazo','gravada','penalidade','haDesconto',
+      'rescisorio','recurso','haTerceiro'];
+    radioNames.forEach(name => {
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      data['radio_' + name] = checked ? checked.value : '';
+    });
+    // Checkboxes by name
+    const checkNames = ['provas'];
+    checkNames.forEach(name => {
+      const checked = [...document.querySelectorAll(`input[name="${name}"]:checked`)];
+      data['check_' + name] = checked.map(c => c.parentElement.textContent.trim()).join('|');
+    });
+    // Unnamed checkboxes in opt-items (provas da empresa / do empregado / descontos)
+    document.querySelectorAll('.opt-item input[type="checkbox"]:not([name])').forEach((cb, i) => {
+      data['anonCb_' + i] = cb.checked ? '1' : '0';
+    });
+    // Decision card
+    const dc = document.querySelector('#sec4 .decision-card.selected-card .dc-title');
+    data['decisaoLabel'] = dc ? dc.textContent : '';
+    // Voto opts in parecer form
+    ['p1','p2','p3','p4'].forEach(p => {
+      const v = document.querySelector(`#${p}parecer`);
+      data[`${p}parecer`] = v ? v.value : '';
+      const vt = document.getElementById(`${p}voto`);
+      data[`${p}voto`] = vt ? vt.value : '';
+    });
+    // Status
+    data.status = data.decisaoLabel ? 'finalizado' : 'em-andamento';
+    data.updatedAt = new Date().toISOString();
+    data.numProc = document.getElementById('numProc').value || '';
+    data.nomeEmp = document.getElementById('nomeEmp').value || '';
+    data.placaBem = document.getElementById('placaBem').value || '';
+    data.placaTerceiro = document.getElementById('placaTerceiro') ? document.getElementById('placaTerceiro').value || '' : '';
+    data.nomeTerceiro = document.getElementById('nomeTerceiro') ? document.getElementById('nomeTerceiro').value || '' : '';
+    return data;
+  }
+
+  // ---- Restore form data ----
+  function restoreFormData(data) {
+    document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el => {
+      if (data[el.id] !== undefined) el.value = data[el.id];
+    });
+    // Radios
+    const radioNames = ['comunicou','instaurar','formaNotif','compareceu','modalDefesa',
+      'falhaManu','solicitouPrazo','gravada','penalidade','haDesconto',
+      'rescisorio','recurso','haTerceiro'];
+    radioNames.forEach(name => {
+      const val = data['radio_' + name];
+      if (val) {
+        const rb = document.querySelector(`input[name="${name}"][value="${val}"]`);
+        if (rb) {
+          rb.checked = true;
+          rb.closest('.opt-item').classList.add('selected');
+          // Side effects
+          if (name === 'haTerceiro') toggleTerceiro(val === 'sim');
+        }
+      }
+    });
+    // Anon checkboxes
+    document.querySelectorAll('.opt-item input[type="checkbox"]:not([name])').forEach((cb, i) => {
+      if (data['anonCb_' + i] === '1') {
+        cb.checked = true;
+        cb.closest('.opt-item').classList.add('selected');
+      }
+    });
+    // Named checkboxes (provas)
+    const provasVal = data['check_provas'] || '';
+    document.querySelectorAll('input[name="provas"]').forEach(cb => {
+      const label = cb.parentElement.textContent.trim();
+      if (provasVal.includes(label)) {
+        cb.checked = true;
+        cb.closest('.opt-item').classList.add('selected');
+      }
+    });
+    // Decision card
+    if (data.decisaoLabel) {
+      document.querySelectorAll('.decision-card').forEach(dc => {
+        if (dc.querySelector('.dc-title') && dc.querySelector('.dc-title').textContent === data.decisaoLabel) {
+          dc.classList.add('selected-card');
+        }
+      });
+    }
+    // Sync Comunicação da Decisão form
+    if (data.decisaoTipo) {
+      setTimeout(function(){ syncFcDecisao(data.decisaoTipo); }, 300);
+    }
+    // Voto opts
+    ['p1','p2','p3','p4'].forEach(p => {
+      if (data[`${p}voto`]) {
+        const vt = document.getElementById(`${p}voto`);
+        if (vt) vt.value = data[`${p}voto`];
+        const opts = document.querySelectorAll(`#p${p.slice(1)}parecer`)?.closest?.('.parecer-member-body')?.querySelectorAll('.voto-opt');
+        // fallback: find by value
+        document.querySelectorAll('.voto-opt').forEach(opt => {
+          const body = opt.closest('.parecer-member-body');
+          if (body) {
+            const hidden = body.querySelector(`input[id="${p}voto"]`);
+            if (hidden && data[`${p}voto`]) {
+              const map = {'sem_culpa':'Sem Culpa','culpa':'Culpa','dolo':'Dolo'};
+              if (opt.textContent.includes(map[data[`${p}voto`]])) opt.classList.add('voto-selected');
+            }
+          }
+        });
+      }
+    });
+    // Badge + synced spans
+    updateBadge();
+    const rem = parseFloat(data['remuneracao']) || 0;
+    if (rem) document.getElementById('limiteDesc').value = (rem * 0.4).toFixed(2);
+    // Re-sync all standalone forms after restore
+    setTimeout(() => syncAllFromSection1(), 200);
+  }
+
+  // ---- Save to DB ----
+  async function salvarNoDB(showMsg = true) {
+    if (!db) return;
+    const data = collectFormData();
+    if (!data.numProc && !data.nomeEmp) return; // nothing meaningful
+    if (currentId) data.id = currentId;
+    return new Promise((resolve) => {
+      const tx = db.transaction(STORE, 'readwrite');
+      const req = currentId ? tx.objectStore(STORE).put(data) : tx.objectStore(STORE).add(data);
+      req.onsuccess = e => {
+        if (!currentId) currentId = e.target.result;
+        updateDbStatus();
+        if (showMsg) showSaveIndicator('✓ Salvo automaticamente');
+        resolve(currentId);
+      };
+    });
+  }
+
+  function showSaveIndicator(msg) {
+    const ind = document.getElementById('saveIndicator');
+    ind.textContent = msg;
+    ind.classList.add('show');
+    setTimeout(() => ind.classList.remove('show'), 2500);
+  }
+
+  function updateDbStatus() {
+    const el = document.getElementById('dbStatus');
+    if (currentId) {
+      const now = new Date().toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'});
+      el.textContent = `Proc. #${currentId} · salvo às ${now}`;
+    }
+  }
+
+  function salvarRascunho() {
+    salvarNoDB(false).then(() => showSaveIndicator('💾 Rascunho salvo!'));
+  }
+
+  // ---- Auto-save on input (debounced 2s) ----
+  document.addEventListener('input', () => {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => salvarNoDB(true), 2000);
+  });
+  document.addEventListener('change', () => {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => salvarNoDB(true), 1000);
+  });
+
+  // ---- New process ----
+  function novoProcesso() {
+    if (currentId) {
+      salvarNoDB(false);
+    }
+    if (!confirm('Iniciar um novo processo? O processo atual já está salvo e pode ser consultado na tela de busca.')) return;
+    currentId = null;
+    // Clear all inputs
+    document.querySelectorAll('input[id], select[id], textarea[id]').forEach(el => {
+      if (el.type !== 'hidden') el.value = '';
+    });
+    document.querySelectorAll('.opt-item').forEach(el => el.classList.remove('selected'));
+    document.querySelectorAll('.decision-card').forEach(el => el.classList.remove('selected-card'));
+    document.querySelectorAll('.voto-opt').forEach(el => el.classList.remove('voto-selected'));
+    document.getElementById('blocoTerceiro').style.display = 'none';
+    document.getElementById('headerBadge').textContent = 'CAAA-FORM v1.0';
+    document.getElementById('dbStatus').textContent = '';
+    goTo(0);
+    showSaveIndicator('➕ Novo processo iniciado');
+  }
+
+  // ---- Search / Consulta ----
+  function abrirConsulta() {
+    document.getElementById('modalConsulta').classList.add('open');
+    document.getElementById('searchInput').value = '';
+    buscarRegistros();
+  }
+  function fecharConsulta() {
+    document.getElementById('modalConsulta').classList.remove('open');
+  }
+
+  function buscarRegistros() {
+    const q = document.getElementById('searchInput').value.trim().toLowerCase();
+    const tx = db.transaction(STORE, 'readonly');
+    const store = tx.objectStore(STORE);
+    const req = store.getAll();
+    req.onsuccess = e => {
+      let all = e.target.result || [];
+      // Sort newest first
+      all.sort((a,b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      if (q) {
+        all = all.filter(r =>
+          (r.numProc||'').toLowerCase().includes(q) ||
+          (r.nomeEmp||'').toLowerCase().includes(q) ||
+          (r.placaBem||'').toLowerCase().includes(q) ||
+          (r.placaTerceiro||'').toLowerCase().includes(q) ||
+          (r.nomeTerceiro||'').toLowerCase().includes(q)
+        );
+      }
+      renderRecords(all);
+    };
+  }
+
+  function renderRecords(records) {
+    const container = document.getElementById('recordsContainer');
+    const countEl = document.getElementById('recCount');
+    countEl.textContent = `${records.length} processo(s) encontrado(s)`;
+
+    if (!records.length) {
+      container.innerHTML = `<div class="empty-state"><div class="empty-icon">🗂️</div><div>Nenhum processo encontrado.</div></div>`;
+      return;
+    }
+
+    const decisaoMap = {
+      'sem_culpa': ['rec-badge sem-culpa','Sem Culpa'],
+      'culpa':     ['rec-badge culpa','Culpa'],
+      'dolo':      ['rec-badge dolo','Dolo'],
+      '':          ['rec-badge em-andamento','Em andamento'],
+    };
+
+    let rows = records.map(r => {
+      const dt = r.updatedAt ? new Date(r.updatedAt).toLocaleString('pt-BR') : '—';
+      const dec = r.decisaoTipo || '';
+      const [badgeClass, badgeLabel] = decisaoMap[dec] || ['rec-badge em-andamento','Em andamento'];
+      const statusClass = dec ? 'rec-badge finalizado' : 'rec-badge em-andamento';
+      const statusLabel = dec ? 'Finalizado' : 'Em andamento';
+      return `<tr onclick="carregarProcesso(${r.id})">
+        <td><strong style="font-family:'IBM Plex Mono',monospace;font-size:12px;">${r.numProc||'—'}</strong></td>
+        <td>${r.nomeEmp||'—'}</td>
+        <td style="font-family:'IBM Plex Mono',monospace;font-size:12px;">${r.placaBem||r.placaTerceiro||'—'}</td>
+        <td><span class="${statusClass}">${statusLabel}</span></td>
+        <td><span class="${badgeClass}">${badgeLabel}</span></td>
+        <td style="color:var(--text-light);font-size:12px;">${dt}</td>
+        <td>
+          <div class="rec-actions" onclick="event.stopPropagation()">
+            <button class="rec-btn" onclick="carregarProcesso(${r.id})">📂 Abrir</button>
+            <button class="rec-btn danger" onclick="excluirProcesso(${r.id})">🗑️</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+
+    container.innerHTML = `<table class="records-table">
+      <thead><tr>
+        <th>Nº Proc.</th><th>Empregado</th><th>Placa/Bem</th>
+        <th>Status</th><th>Decisão</th><th>Última Atualização</th><th></th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  function carregarProcesso(id) {
+    const tx = db.transaction(STORE, 'readonly');
+    const req = tx.objectStore(STORE).get(id);
+    req.onsuccess = e => {
+      const data = e.target.result;
+      if (!data) return;
+      // Save current first
+      if (currentId && currentId !== id) salvarNoDB(false);
+      currentId = id;
+      restoreFormData(data);
+      fecharConsulta();
+      goTo(0);
+      showSaveIndicator(`📂 Processo ${data.numProc || '#'+id} carregado`);
+      updateDbStatus();
+    };
+  }
+
+  function excluirProcesso(id) {
+    if (!confirm('Excluir este processo permanentemente? Esta ação não pode ser desfeita.')) return;
+    const tx = db.transaction(STORE, 'readwrite');
+    tx.objectStore(STORE).delete(id);
+    tx.oncomplete = () => {
+      if (currentId === id) { currentId = null; document.getElementById('dbStatus').textContent = ''; }
+      buscarRegistros();
+    };
+  }
+
+  // ---- Close modal on overlay click ----
+  document.getElementById('modalConsulta').addEventListener('click', function(e) {
+    if (e.target === this) fecharConsulta();
+  });
+
+  // ============================================================
+  // ORIGINAL FUNCTIONS
+  // ============================================================
+  let currentSection = 0;
+
+  function goTo(idx) {
+    // If leaving section 1 (index 0), sync all fields to standalone forms
+    if (currentSection === 0 && idx !== 0) {
+      syncAllFromSection1();
+    }
+    document.querySelectorAll('.section').forEach((s,i) => s.classList.toggle('visible', i === idx));
+    document.querySelectorAll('.prog-step').forEach((s,i) => {
+      s.classList.remove('active','done');
+      if (i === idx) s.classList.add('active');
+      else if (i < idx) s.classList.add('done');
+    });
+    currentSection = idx;
+    window.scrollTo({top: 0, behavior: 'smooth'});
+    // Auto-save on section change
+    if (currentId || (document.getElementById('numProc').value || document.getElementById('nomeEmp').value)) {
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => salvarNoDB(true), 800);
+    }
+  }
+
+  function toggleOpt(el) {
+    const input = el.querySelector('input');
+    if (input.type === 'radio') {
+      const name = input.name;
+      document.querySelectorAll(`input[name="${name}"]`).forEach(r => r.closest('.opt-item').classList.remove('selected'));
+      el.classList.add('selected');
+    } else {
+      el.classList.toggle('selected', input.checked);
+    }
+  }
+
+  const DECISAO_LABELS = {
+    'sem_culpa': '🏳️ Decisão registrada: SEM CULPA / DOLO — Processo arquivado. Nenhuma penalidade ou desconto será aplicado.',
+    'culpa':     '⚖️ Decisão registrada: CULPA COMPROVADA — Empregado agiu com negligência, imprudência ou imperícia. Penalidade disciplinar proporcional aplicável.',
+    'dolo':      '🔴 Decisão registrada: DOLO COMPROVADO — Ato intencional. Pode ensejar demissão por justa causa e desconto integral do dano.'
+  };
+
+  // Mapa: valor -> penalidade padrão sugerida no select
+  const DECISAO_PENALIDADE = {
+    'sem_culpa': 'Nenhuma — Arquivamento',
+    'culpa':     'Advertência',
+    'dolo':      'Justa Causa'
+  };
+
+  // Atualiza o texto e card no formComunicacao a partir de um valor
+  function syncFcDecisao(val) {
+    // Selecionar card correspondente no formComunicacao
+    var fcCards = document.querySelectorAll('#formComunicacao .decision-card');
+    var map = ['sem_culpa','culpa','dolo'];
+    fcCards.forEach(function(c, i) {
+      c.classList.toggle('selected-card', map[i] === val);
+    });
+    // Atualizar hidden e texto
+    var fcHidden = document.getElementById('fc_decisao');
+    if (fcHidden) fcHidden.value = val || '';
+    var fcTexto = document.getElementById('fc_decisaoTexto');
+    if (fcTexto) {
+      fcTexto.textContent = DECISAO_LABELS[val] || '';
+      fcTexto.style.display = val ? 'block' : 'none';
+    }
+    // Sugerir penalidade no select se ainda não preenchido
+    var fcPen = document.getElementById('fc_penalidade');
+    if (fcPen && (!fcPen.value || fcPen.value === '')) {
+      fcPen.value = DECISAO_PENALIDADE[val] || '';
+    }
+    // Sincronizar valor do dano se disponível
+    var fcValor = document.getElementById('fc_valor');
+    var valorDano = document.getElementById('valorDano');
+    if (fcValor && valorDano && valorDano.value && (!fcValor.value || fcValor.value === '')) {
+      fcValor.value = valorDano.value;
+    }
+    var fcParcelas = document.getElementById('fc_parcelas');
+    var numParcelas = document.getElementById('numParcelas');
+    if (fcParcelas && numParcelas && numParcelas.value && (!fcParcelas.value || fcParcelas.value === '')) {
+      fcParcelas.value = numParcelas.value;
+    }
+  }
+
+  function selectDecision(el, val) {
+    document.querySelectorAll('#sec4 .decision-card').forEach(c => c.classList.remove('selected-card'));
+    el.classList.add('selected-card');
+    document.getElementById('decisaoTipo').value = val;
+    const textoEl = document.getElementById('decisaoTexto');
+    if (textoEl) {
+      textoEl.textContent = DECISAO_LABELS[val] || '';
+      textoEl.style.display = val ? 'block' : 'none';
+    }
+    // Sincronizar automaticamente com Comunicação da Decisão
+    syncFcDecisao(val);
+  }
+
+  // Chamado ao clicar nos cards do próprio formComunicacao
+  function fcSelectDecisao(el, val) {
+    el.closest('.comunicacao-block').querySelectorAll('.decision-card').forEach(function(c){ c.classList.remove('selected-card'); });
+    el.classList.add('selected-card');
+    var fcHidden = document.getElementById('fc_decisao');
+    if (fcHidden) fcHidden.value = val;
+    var fcTexto = document.getElementById('fc_decisaoTexto');
+    if (fcTexto) {
+      fcTexto.textContent = DECISAO_LABELS[val] || '';
+      fcTexto.style.display = val ? 'block' : 'none';
+    }
+    // Sugerir penalidade
+    var fcPen = document.getElementById('fc_penalidade');
+    if (fcPen && (!fcPen.value || fcPen.value === '')) {
+      fcPen.value = DECISAO_PENALIDADE[val] || '';
+    }
+  }
+
+  const VOTO_LABELS = {
+    'sem_culpa': '🏳️ Voto registrado: SEM CULPA / DOLO — Arquivamento sem penalidade ou desconto.',
+    'culpa':     '⚖️ Voto registrado: CULPA COMPROVADA — Negligência, imprudência ou imperícia. Penalidade proporcional aplicável.',
+    'dolo':      '🔴 Voto registrado: DOLO COMPROVADO — Ato intencional. Pode ensejar justa causa e desconto integral.'
+  };
+
+  function selectVoto(el, prefix, val) {
+    el.closest('.parecer-member-body').querySelectorAll('.voto-opt').forEach(v => v.classList.remove('voto-selected'));
+    el.classList.add('voto-selected');
+    document.getElementById(prefix + 'voto').value = val;
+    // Show text label below voto grid
+    const textoEl = document.getElementById(prefix + 'votoTexto');
+    if (textoEl) {
+      textoEl.textContent = VOTO_LABELS[val] || '';
+      textoEl.style.display = val ? 'block' : 'none';
+    }
+  }
+
+  function toggleTerceiro(show) {
+    document.getElementById('blocoTerceiro').style.display = show ? 'block' : 'none';
+  }
+
+  function updateBadge() {
+    const v = document.getElementById('numProc').value;
+    const badge = document.getElementById('headerBadge');
+    if (v) badge.textContent = v;
+    ['pf_numProc','di_numProc','fc_numProc','fd_numProc'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.textContent = v || '_______________';
+    });
+  }
+
+  // ============================================================
+  // AUTOCOMPLETE — sync Section 1 fields to all standalone forms
+  // ============================================================
+  // Map: sourceId -> [{targetId, type:'val'|'text'}]
+  const SYNC_MAP = {
+    'numProc':      [{id:'fd_proc',    t:'val'}, {id:'fc_proc',   t:'val'}, {id:'fdb_numProc', t:'text'}],
+    'nomeEmp':      [{id:'fd_nomeEmp', t:'val'}, {id:'fc_empregado',t:'val'},
+                     {id:'pf_nomeEmp', t:'text'},{id:'di_nomeEmp', t:'text'},{id:'fdb_nomeEmp',t:'text'}],
+    'matricula':    [{id:'fd_matricula',t:'val'},{id:'fc_matricula',t:'val'}],
+    'funcaoEmp':    [{id:'fd_cargo',   t:'val'}, {id:'fc_cargo',   t:'val'}],
+    'setor':        [{id:'fd_setor',   t:'val'}, {id:'fc_setor',   t:'val'}],
+    'dataAdmissao': [{id:'fd_dataAdmissao',t:'val'}],
+    'placaBem':     [{id:'fd_placa',   t:'val'}],
+    'dataOcorrencia':[{id:'fd_dataFato',t:'val'}],
+    'dataInst':     [],  // handled separately for text display
+    'supervisor':   [],
+    'local':        [{id:'fd_local',   t:'val'}],
+    'valorOrcamento':[{id:'fd_valorEmpresa',t:'val'}],
+  };
+
+  let syncDebounce = null;
+  let syncedFields = new Set();
+
+  function flashField(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.remove('sync-flash');
+      void el.offsetWidth; // reflow
+      el.classList.add('sync-flash');
+    }
+  }
+
+  function showAutocompleteToast() {
+    const t = document.getElementById('autocompleteToast');
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function syncField(sourceId, value) {
+    const targets = SYNC_MAP[sourceId];
+    if (!targets || !targets.length) return;
+    let synced = false;
+    targets.forEach(({id, t}) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (t === 'val' && el.value !== value) { el.value = value; flashField(id); synced = true; }
+      else if (t === 'text' && el.textContent !== value) { el.textContent = value || '_______________'; synced = true; }
+    });
+    if (synced) syncedFields.add(sourceId);
+  }
+
+  function syncAllFromSection1() {
+    syncedFields.clear();
+    Object.keys(SYNC_MAP).forEach(srcId => {
+      const el = document.getElementById(srcId);
+      if (el) syncField(srcId, el.value);
+    });
+    // dataInst special handling for text spans
+    const diVal = document.getElementById('dataInst') ? document.getElementById('dataInst').value : '';
+    const diText = diVal ? new Date(diVal + 'T00:00:00').toLocaleDateString('pt-BR') : '_______________';
+    ['pf_dataInst','di_dataInst','fc_dataInst','fd_dataInst'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.textContent = diText;
+    });
+    if (syncedFields.size > 0) showAutocompleteToast();
+  }
+
+  document.addEventListener('input', function(e) {
+    if (e.target.id === 'remuneracao') {
+      const rem = parseFloat(e.target.value) || 0;
+      document.getElementById('limiteDesc').value = (rem * 0.4).toFixed(2);
+    }
+    // Live sync for mapped fields
+    if (SYNC_MAP[e.target.id] !== undefined) {
+      clearTimeout(syncDebounce);
+      syncDebounce = setTimeout(() => syncField(e.target.id, e.target.value), 600);
+    }
+    if (e.target.id === 'nomeEmp') {
+      ['pf_nomeEmp','di_nomeEmp'].forEach(id => {
+        const el = document.getElementById(id); if(el) el.textContent = e.target.value || '_______________';
+      });
+    }
+    if (e.target.id === 'dataInst') {
+      const v = e.target.value ? new Date(e.target.value + 'T00:00:00').toLocaleDateString('pt-BR') : '_______________';
+      ['pf_dataInst','di_dataInst','fc_dataInst','fd_dataInst'].forEach(id => {
+        const el = document.getElementById(id); if(el) el.textContent = v;
+      });
+    }
+  });
+
+  // Sync when navigating away from section 1 (handled inside goTo)
+
+  const ALL_STANDALONE = ['formDefesa','formParecer','formDecisaoIndividual','formComunicacao','formDefesaB'];
+
+  // ── Open a clean new window with content and print it ──────────────────────
+  function openPrintWindow(contentHTML, title) {
+    const w = window.open('', '_blank', 'width=960,height=750');
+    if (!w) { alert('Permita pop-ups para este site para imprimir.'); return; }
+
+    // Collect ALL <style> tags (skip the empty override tag)
+    let css = '';
+    document.querySelectorAll('style').forEach(s => {
+      if (s.id !== 'printOverrideStyle') css += s.textContent + '\n';
+    });
+
+    const gfonts = 'https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap';
+
+    w.document.write('<!DOCTYPE html><html lang="pt-BR"><head>'
+      + '<meta charset="UTF-8">'
+      + '<title>' + title + '</title>'
+      + '<link href="' + gfonts + '" rel="stylesheet">'
+      + '<style>' + css + '</style>'
+      + '<style>'
+      + 'body{background:#fff!important;padding:16px!important;margin:0}'
+      + '.paper{display:block!important;box-shadow:none!important;border:none!important;max-width:100%!important;margin:0!important}'
+      + '.standalone-form{display:block!important;box-shadow:none!important;border:none!important;max-width:100%!important;margin:0!important}'
+      + '.section{display:block!important;height:auto!important;overflow:visible!important}'
+      + '#logoWrapper,.section-print-bar,.btn-row,.progress-bar,.print-menu,.db-bar,.modal-overlay,.save-indicator,.autocomplete-toast{display:none!important}'
+      + '.opt-item.selected{border-color:var(--navy)!important;background:rgba(13,27,42,0.07)!important}'
+      + '.decision-card.selected-card{border-color:var(--navy)!important;background:rgba(13,27,42,0.07)!important}'
+      + '.voto-opt.voto-selected{border-color:var(--navy)!important;background:rgba(13,27,42,0.08)!important;font-weight:600!important}'
+      + '@media print{body{padding:0!important}}'
+      + '</style>'
+      + '</head><body>'
+      + contentHTML
+      + '<script>document.fonts?document.fonts.ready.then(function(){window.focus();window.print()}):setTimeout(function(){window.focus();window.print()},900)<\/script>'
+      + '</body></html>');
+    w.document.close();
+  }
+
+
+
+  // ── Get the header HTML (logo hidden, just title text) ──────────────────────
+  function getHeaderHTML() {
+    const hdr = document.querySelector('.doc-header');
+    if (!hdr) return '';
+    const clone = hdr.cloneNode(true);
+    // Remove logo wrapper
+    const logo = clone.querySelector('#logoWrapper');
+    if (logo) logo.remove();
+    return `<div class="paper"><div class="doc-header">${clone.innerHTML}</div></div>`;
+  }
+
+  // ── Print a single section by index ────────────────────────────────────────
+  function printSection(idx) {
+    stampValuesToDOM();
+    const secs = document.querySelectorAll('.section');
+    const sec  = secs[idx];
+    if (!sec) return;
+
+    // Temporarily inject override CSS to make this section visible for cloneNode
+    const ov = document.getElementById('printOverrideStyle');
+    ov.textContent = '#' + sec.id + '{display:block!important;height:auto!important;overflow:visible!important}';
+    void sec.offsetHeight; // force reflow
+
+    const clone = sec.cloneNode(true);
+    ov.textContent = ''; // restore
+
+    clone.style.cssText = 'display:block!important;';
+    clone.querySelectorAll('.section-print-bar,.btn-row').forEach(el => el.remove());
+
+    const titles = ['Identificação','Comunicação','Constituição CAAA','Instrução','Decisão','Penalidade e Desconto','Recurso e Assinaturas'];
+    const content = '<div class="paper">'
+      + '<div class="doc-header" style="padding:20px 32px;">'
+      + '<span class="header-label">Formulário Oficial · CAAA</span>'
+      + '<h1 class="header-title">Procedimento Administrativo de Apuração de Sinistro</h1>'
+      + '<p class="header-sub">Seção ' + (idx+1) + ' — ' + (titles[idx]||'') + '</p>'
+      + '</div><div class="doc-content">' + clone.outerHTML + '</div></div>';
+    openPrintWindow(content, 'CAAA · Seção ' + (idx+1));
+  }
+
+  // ── Print a standalone form ─────────────────────────────────────────────────
+  function printStandalone(formId) {
+    const el = document.getElementById(formId);
+    if (!el) return;
+    const clone = el.cloneNode(true);
+    // Remove print button inside the form
+    clone.querySelectorAll('.btn-secondary.btn-sm').forEach(b => b.remove());
+    openPrintWindow(`<div class="standalone-form" style="display:block;">${clone.innerHTML}</div>`, formId);
+  }
+
+  // ── Print everything ────────────────────────────────────────────────────────
+  function printAll() {
+    stampValuesToDOM();
+    const secs = document.querySelectorAll('.section');
+    const titles = ['Identificação','Comunicação','Constituição CAAA','Instrução','Decisão','Penalidade e Desconto','Recurso e Assinaturas'];
+    const ov = document.getElementById('printOverrideStyle');
+
+    let content = '<div class="paper" style="box-shadow:none;border:none;">'
+      + '<div class="doc-header" style="padding:20px 32px;">'
+      + '<span class="header-label">Formulário Oficial · CAAA</span>'
+      + '<h1 class="header-title">Procedimento Administrativo de Apuração de Sinistro</h1>'
+      + '<p class="header-sub">Comissão de Apuração de Acidentes e Avarias</p>'
+      + '</div><div class="doc-content">';
+
+    secs.forEach((sec, i) => {
+      ov.textContent = '#' + sec.id + '{display:block!important;height:auto!important;overflow:visible!important}';
+      void sec.offsetHeight;
+      const clone = sec.cloneNode(true);
+      ov.textContent = '';
+      clone.style.cssText = 'display:block!important;';
+      clone.querySelectorAll('.section-print-bar,.btn-row').forEach(el => el.remove());
+      if (i > 0) content += '<div style="page-break-before:always;break-before:page;"></div>';
+      content += clone.outerHTML;
+    });
+
+    content += '</div></div>';
+
+    ALL_STANDALONE.forEach(formId => {
+      const el = document.getElementById(formId);
+      if (!el) return;
+      const clone = el.cloneNode(true);
+      clone.querySelectorAll('.btn-secondary.btn-sm').forEach(b => b.remove());
+      content += '<div style="page-break-before:always;break-before:page;"></div>'
+        + '<div class="standalone-form" style="display:block;box-shadow:none;border:none;">'
+        + clone.innerHTML + '</div>';
+    });
+
+    openPrintWindow(content, 'CAAA · Documento Completo');
+  }
+
+
+
+  // ── Stamp current form values into DOM for cloneNode capture ───────────────
+  function stampValuesToDOM() {
+    document.querySelectorAll('input, select, textarea').forEach(function(el) {
+      try {
+        if (el.type === 'checkbox' || el.type === 'radio') {
+          if (el.checked) el.setAttribute('checked','checked');
+          else el.removeAttribute('checked');
+        } else {
+          el.setAttribute('value', el.value);
+          if (el.tagName === 'TEXTAREA') el.textContent = el.value;
+          if (el.tagName === 'SELECT') {
+            Array.from(el.options).forEach(function(o) {
+              if (o.value === el.value) o.setAttribute('selected','selected');
+              else o.removeAttribute('selected');
+            });
+          }
+        }
+      } catch(e){}
+    });
+  }
+
+  // ── Parcelas calculator ─────────────────────────────────────────────────────
+  function calcParcelas() {
+    var n     = parseInt((document.getElementById('numParcelas')||{}).value)||0;
+    var total = parseFloat((document.getElementById('valorDano')||{}).value)||0;
+    var lim   = parseFloat((document.getElementById('limiteDesc')||{}).value)||0;
+    var startM= ((document.getElementById('dataPrimParcela')||{}).value)||'';
+    var tbody = document.getElementById('parcelasBody');
+    var tabDiv= document.getElementById('tabelaParcelas');
+    if (!tbody||!tabDiv) return;
+    if (!n||!total) { tabDiv.style.display='none'; return; }
+    var base = lim>0 ? Math.min(parseFloat((total/n).toFixed(2)),lim) : parseFloat((total/n).toFixed(2));
+    tbody.innerHTML='';
+    var acum=0;
+    for (var i=1;i<=n;i++) {
+      var last=i===n;
+      var val=last ? parseFloat((total-acum).toFixed(2)) : base;
+      acum+=val;
+      var mes='—';
+      if (startM) {
+        var pts=startM.split('-');
+        var d=new Date(parseInt(pts[0]),parseInt(pts[1])-1+(i-1),1);
+        mes=d.toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
+        mes=mes.charAt(0).toUpperCase()+mes.slice(1);
+      }
+      var bg=(last&&val!==base)?'background:rgba(201,168,76,0.06);':'';
+      var tr=document.createElement('tr');
+      tr.style.cssText='border-bottom:1px solid #c4bdb0;'+bg;
+      tr.innerHTML='<td style="padding:8px 12px;font-family:IBM Plex Mono,monospace;font-weight:600;">'+i+'ª</td>'
+        +'<td style="padding:8px 12px;">'+mes+'</td>'
+        +'<td style="padding:8px 12px;font-family:IBM Plex Mono,monospace;">R$ '+val.toFixed(2).replace('.',',')+'</td>'
+        +'<td style="padding:8px 12px;font-family:IBM Plex Mono,monospace;">R$ '+acum.toFixed(2).replace('.',',')+'</td>'
+        +'<td style="padding:8px 12px;"><select style="padding:4px 8px;border:1px solid #c4bdb0;border-radius:3px;font-size:12px;background:#fff;">'
+        +'<option>—</option><option>⏳ Pendente</option><option>✅ Pago</option><option>⚠️ Em atraso</option></select></td>';
+      tbody.appendChild(tr);
+    }
+    var tot=document.createElement('tr');
+    tot.style.cssText='background:#0d1b2a;color:#fff;font-weight:600;';
+    tot.innerHTML='<td colspan="2" style="padding:8px 12px;font-family:IBM Plex Mono,monospace;font-size:11px;letter-spacing:1px;">TOTAL</td>'
+      +'<td style="padding:8px 12px;font-family:IBM Plex Mono,monospace;">R$ '+total.toFixed(2).replace('.',',')+'</td>'
+      +'<td style="padding:8px 12px;font-family:IBM Plex Mono,monospace;">R$ '+acum.toFixed(2).replace('.',',')+'</td>'
+      +'<td style="padding:8px 12px;"></td>';
+    tbody.appendChild(tot);
+    tabDiv.style.display='block';
+  }
+
+  document.addEventListener('input', function(e) {
+    if (e.target && ['valorDano','numParcelas','remuneracao'].indexOf(e.target.id)>=0)
+      setTimeout(calcParcelas,200);
+  });
+  document.addEventListener('change', function(e) {
+    if (e.target && e.target.id==='dataPrimParcela') setTimeout(calcParcelas,100);
+  });
+
+  // ---- INIT ----
+  openDB().then(function() {
+    var s = document.getElementById('dbStatus');
+    if (s) { s.textContent='✓ Banco de dados pronto'; setTimeout(function(){ if(s.textContent==='✓ Banco de dados pronto') s.textContent=''; },3000); }
+  }).catch(function(err) {
+    var s = document.getElementById('dbStatus');
+    if (s) s.textContent='⚠ Erro ao abrir banco de dados';
+    console.error('IndexedDB error:',err);
+  });
+
+  // ============================================================
+  // FOLHA DE DECISÃO INDIVIDUAL — navegação por membro
+  // ============================================================
+  let diCurrentMembro = 0;
+  const DI_TOTAL = 4;
+  const DI_TITLES = [
+    'Membro 1 — Presidente da Comissão · Administração',
+    'Membro 2 — Mesma Função do Empregado · Pares',
+    'Membro 3 — Mesma Função do Empregado · Pares',
+    'Membro 4 — Administração / Jurídico'
+  ];
+
+  function diGoMembro(idx) {
+    diCurrentMembro = idx;
+    for (var i = 0; i < DI_TOTAL; i++) {
+      var panel = document.getElementById('di_membro_' + i);
+      if (panel) panel.style.display = (i === idx) ? 'block' : 'none';
+    }
+    document.querySelectorAll('.di-tab-btn').forEach(function(btn, i) {
+      btn.classList.toggle('active', i === idx);
+    });
+    var prevBtn = document.getElementById('diPrevBtn');
+    var nextBtn = document.getElementById('diNextBtn');
+    if (prevBtn) prevBtn.style.opacity = idx === 0 ? '0.4' : '1';
+    if (nextBtn) nextBtn.style.opacity = idx === DI_TOTAL - 1 ? '0.4' : '1';
+    var form = document.getElementById('formDecisaoIndividual');
+    if (form) form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function diNavMembro(dir) {
+    var next = diCurrentMembro + dir;
+    if (next < 0 || next >= DI_TOTAL) return;
+    diGoMembro(next);
+  }
+
+  // Init: activate tab 0
+  document.addEventListener('DOMContentLoaded', function() {
+    diGoMembro(0);
+  });
+  // Also run immediately in case DOM is already ready
+  (function(){ try { diGoMembro(0); } catch(e){} })();
+
+  const DI_VOTO_LABELS = {
+    'sem_culpa': '🏳️ Voto registrado: SEM CULPA / DOLO — Arquivamento sem penalidade ou desconto salarial.',
+    'culpa':     '⚖️ Voto registrado: CULPA COMPROVADA — Empregado agiu com negligência, imprudência ou imperícia. Penalidade disciplinar proporcional aplicável.',
+    'dolo':      '🔴 Voto registrado: DOLO COMPROVADO — Ato intencional. Pode ensejar demissão por justa causa e desconto integral do dano causado.'
+  };
+
+  function diSelectVoto(el, prefix, val) {
+    // Deselect siblings in same panel
+    el.closest('.comunicacao-block').querySelectorAll('.decision-card').forEach(function(c) {
+      c.classList.remove('selected-card');
+    });
+    el.classList.add('selected-card');
+    var hidden = document.getElementById(prefix + '_voto');
+    if (hidden) hidden.value = val;
+    var textoEl = document.getElementById(prefix + '_votoTexto');
+    if (textoEl) {
+      textoEl.textContent = DI_VOTO_LABELS[val] || '';
+      textoEl.style.display = val ? 'block' : 'none';
+    }
+  }
+
+  // ---- Print single member sheet ----
+  function diPrintMembro(idx) {
+    stampValuesToDOM();
+    var panel = document.getElementById('di_membro_' + idx);
+    if (!panel) return;
+
+    // Temporarily show the panel for cloneNode
+    var wasHidden = panel.style.display === 'none';
+    panel.style.display = 'block';
+    void panel.offsetHeight;
+    var clone = panel.cloneNode(true);
+    if (wasHidden) panel.style.display = 'none';
+
+    // Remove print buttons from clone
+    clone.querySelectorAll('button').forEach(function(b){ b.remove(); });
+    // Make decision cards and voto labels visible in print
+    clone.querySelectorAll('.di-voto-registro').forEach(function(el){ el.style.display = el.textContent.trim() ? 'block' : 'none'; });
+
+    var numProc = document.getElementById('di_numProc') ? document.getElementById('di_numProc').textContent : '___';
+    var nomeEmp = document.getElementById('di_nomeEmp') ? document.getElementById('di_nomeEmp').textContent : '___';
+    var dataInst = document.getElementById('di_dataInst') ? document.getElementById('di_dataInst').textContent : '___';
+
+    var content = '<div class="standalone-form" style="display:block;box-shadow:none;border:none;">'
+      + '<div class="standalone-header" style="background:var(--navy);padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--gold);">'
+      + '<div><div style="font-family:IBM Plex Mono,monospace;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-bottom:4px;">Formulário Separado · CAAA</div>'
+      + '<div style="font-family:EB Garamond,serif;font-size:20px;font-weight:600;color:#fff;">Folha de Decisão Individual — ' + DI_TITLES[idx] + '</div></div>'
+      + '<div style="text-align:right;font-family:IBM Plex Mono,monospace;font-size:11px;color:rgba(255,255,255,0.65);">'
+      + 'Proc. Nº: ' + numProc + '<br>Empregado: ' + nomeEmp + '<br>Data: ' + dataInst + '</div>'
+      + '</div>'
+      + '<div class="standalone-body">' + clone.outerHTML + '</div></div>';
+
+    openPrintWindow(content, 'CAAA · Decisão Individual — ' + DI_TITLES[idx]);
+  }
+
+  // ---- Print all 4 members ----
+  function diPrintTodos() {
+    stampValuesToDOM();
+    var numProc = document.getElementById('di_numProc') ? document.getElementById('di_numProc').textContent : '___';
+    var nomeEmp = document.getElementById('di_nomeEmp') ? document.getElementById('di_nomeEmp').textContent : '___';
+    var dataInst = document.getElementById('di_dataInst') ? document.getElementById('di_dataInst').textContent : '___';
+
+    var content = '';
+    for (var i = 0; i < DI_TOTAL; i++) {
+      var panel = document.getElementById('di_membro_' + i);
+      if (!panel) continue;
+      var wasHidden = panel.style.display === 'none';
+      panel.style.display = 'block';
+      void panel.offsetHeight;
+      var clone = panel.cloneNode(true);
+      if (wasHidden) panel.style.display = 'none';
+      clone.querySelectorAll('button').forEach(function(b){ b.remove(); });
+      clone.querySelectorAll('.di-voto-registro').forEach(function(el){ el.style.display = el.textContent.trim() ? 'block' : 'none'; });
+
+      if (i > 0) content += '<div style="page-break-before:always;break-before:page;"></div>';
+      content += '<div class="standalone-form" style="display:block;box-shadow:none;border:none;">'
+        + '<div class="standalone-header" style="background:var(--navy);padding:20px 40px;display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid var(--gold);">'
+        + '<div><div style="font-family:IBM Plex Mono,monospace;font-size:9px;letter-spacing:2px;color:rgba(255,255,255,0.5);text-transform:uppercase;margin-bottom:4px;">Formulário Separado · CAAA</div>'
+        + '<div style="font-family:EB Garamond,serif;font-size:20px;font-weight:600;color:#fff;">Folha de Decisão Individual — ' + DI_TITLES[i] + '</div></div>'
+        + '<div style="text-align:right;font-family:IBM Plex Mono,monospace;font-size:11px;color:rgba(255,255,255,0.65);">'
+        + 'Proc. Nº: ' + numProc + '<br>Empregado: ' + nomeEmp + '<br>Data: ' + dataInst + '</div>'
+        + '</div>'
+        + '<div class="standalone-body">' + clone.outerHTML + '</div></div>';
+    }
+    openPrintWindow(content, 'CAAA · Decisão Individual — Todos os Membros');
+  }
+
+
+  // Checkbox toggle
+  document.querySelectorAll('.opt-item input').forEach(function(input) {
+    input.addEventListener('change', function() {
+      if (input.type === 'checkbox') input.closest('.opt-item').classList.toggle('selected', input.checked);
+    });
+  });
+
+</script>
+
+</body>
+</html>
