@@ -35,6 +35,28 @@ header{background:linear-gradient(135deg,var(--blue-dark) 0%,#0a3060 60%,#081a3a
 .btn-import{background:linear-gradient(135deg,var(--accent),#e8940a);color:#1a1000;border:none;border-radius:8px;padding:9px 16px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(245,166,35,.3);}
 .btn-import:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(245,166,35,.5);}
 
+/* BTN SYNC */
+.btn-sync{background:linear-gradient(135deg,#1a8a4a,#0f5c30);color:white;border:none;border-radius:8px;padding:9px 16px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(26,138,74,.3);display:flex;align-items:center;gap:6px;}
+.btn-sync:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(26,138,74,.5);}
+.btn-sync:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-sync.syncing span:first-child{display:inline-block;animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.sync-status{font-size:10px;padding:4px 10px;border-radius:12px;font-weight:700;letter-spacing:.5px;white-space:nowrap;}
+.sync-status.ok{background:rgba(39,174,96,.2);border:1px solid rgba(39,174,96,.4);color:#5de88a;}
+.sync-status.err{background:rgba(231,76,60,.2);border:1px solid rgba(231,76,60,.4);color:#ff9090;}
+.sync-status.loading{background:rgba(26,111,196,.2);border:1px solid rgba(26,111,196,.4);color:#5db0ff;}
+
+/* SHEETS CONFIG PANEL */
+.sheets-panel{background:var(--bg3);border:1.5px solid #1a8a4a55;border-radius:12px;padding:18px;margin-bottom:18px;}
+.sheets-panel .sp-head{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.sheets-panel .sp-head span{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:#5de88a;letter-spacing:1px;}
+.sheets-url-row{display:flex;gap:8px;align-items:flex-start;}
+.sheets-url-row input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:9px 12px;color:var(--text);font-size:12px;font-family:'Barlow',sans-serif;outline:none;transition:border-color .2s;}
+.sheets-url-row input:focus{border-color:#1a8a4a;}
+.sheets-interval{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:11px;color:var(--text2);}
+.sheets-interval select{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;color:var(--text);font-size:11px;font-family:'Barlow',sans-serif;outline:none;}
+#sheets-last-sync{font-size:10px;color:var(--text3);margin-top:8px;}
+
 /* DATE SELECTOR BAR */
 #date-bar{background:var(--card);border-bottom:1px solid var(--border);padding:10px 28px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:sticky;top:68px;z-index:150;box-shadow:0 2px 12px rgba(0,0,0,.3);}
 #date-bar label{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);}
@@ -215,6 +237,10 @@ footer span{color:var(--blue-light);}
   </div>
   <div class="hdr-right">
     <button class="btn-import" onclick="openModal()">⬆️ Importar CSV</button>
+    <button class="btn-sync" id="btn-sync" onclick="syncSheets()" title="Buscar dados do Google Sheets agora">
+      <span id="sync-icon">☁️</span> <span id="sync-label">Sincronizar</span>
+    </button>
+    <div id="sync-status" class="sync-status" style="display:none"></div>
     <div class="live-badge">● AO VIVO</div>
     <div class="hdr-clock">
       <strong id="hdr-date">—</strong>
@@ -251,6 +277,7 @@ footer span{color:var(--blue-light);}
       <button class="mtab active" onclick="switchTab('paste')">📋 Colar do Excel</button>
       <button class="mtab" onclick="switchTab('upload')">📂 Upload CSV</button>
       <button class="mtab" onclick="switchTab('manual')">✏️ Manual</button>
+      <button class="mtab" onclick="switchTab('sheets')" style="color:#5de88a;">☁️ Google Sheets</button>
     </div>
 
     <!-- COLAR -->
@@ -308,6 +335,45 @@ footer span{color:var(--blue-light);}
       <div id="manual-count" style="font-size:11px;color:var(--text2);margin-top:8px;"></div>
       <div id="manual-prev"></div>
     </div>
+
+    <!-- GOOGLE SHEETS -->
+    <div id="tab-sheets" class="tab-c">
+      <div class="tip">
+        💡 <strong>Como conectar sua planilha do Google Sheets:</strong><br>
+        1. Abra a planilha no Google Sheets<br>
+        2. Vá em <em>Arquivo → Compartilhar → Publicar na Web</em><br>
+        3. Em "Página", selecione a aba com os dados da escala<br>
+        4. Em "Formato", escolha <em>Valores separados por vírgula (.csv)</em><br>
+        5. Clique em <em>Publicar</em> e copie o link gerado<br>
+        6. Cole o link abaixo, configure o intervalo e clique em <em>Salvar e Sincronizar</em> ✅
+      </div>
+      <div class="sheets-panel">
+        <div class="sp-head">
+          <span style="font-size:20px;">☁️</span>
+          <span>Configuração Google Sheets</span>
+        </div>
+        <label style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:.5px;font-weight:600;display:block;margin-bottom:6px;">URL de Publicação CSV</label>
+        <div class="sheets-url-row">
+          <input type="url" id="sheets-url" placeholder="https://docs.google.com/spreadsheets/d/e/...pub?output=csv" style="font-size:11px;">
+          <button class="btn-s" onclick="testSheetsUrl()" title="Abre o link no navegador para verificar se está acessível">🔗 Testar</button>
+          <button class="btn-p" onclick="saveAndSyncSheets()">✅ Salvar e Sincronizar</button>
+        </div>
+        <div class="sheets-interval">
+          <span>🔄 Atualização automática a cada:</span>
+          <select id="sheets-interval" onchange="saveInterval()">
+            <option value="0">Manual (só ao clicar ☁️)</option>
+            <option value="5">5 minutos</option>
+            <option value="10" selected>10 minutos</option>
+            <option value="15">15 minutos</option>
+            <option value="30">30 minutos</option>
+            <option value="60">1 hora</option>
+          </select>
+        </div>
+        <div id="sheets-last-sync">Nunca sincronizado.</div>
+      </div>
+      <div id="fb-sheets" class="fb"></div>
+    </div>
+
   </div>
 </div>
 
@@ -422,7 +488,7 @@ let fileRaw = '';
 document.addEventListener('DOMContentLoaded', () => {
   tick(); setInterval(tick, 1000);
 
-  // Carrega dados salvos
+  // Carrega dados salvos localmente
   try {
     const saved = localStorage.getItem(RKEY);
     if (saved) {
@@ -437,6 +503,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
   applyStatus(loadStatus());
   updateChartSituacao();
+
+  // Google Sheets: sincroniza automaticamente se URL salva
+  const sheetsUrl = localStorage.getItem(GKEY_URL);
+  if (sheetsUrl) {
+    const statusEl = document.getElementById('sync-status');
+    if (statusEl) { statusEl.style.display='inline-block'; statusEl.className='sync-status loading'; statusEl.textContent='⏳ Conectando Sheets...'; }
+    setTimeout(() => syncSheets(), 3000);
+    setupSheetsTimer();
+  }
 });
 
 function tick() {
@@ -901,9 +976,10 @@ function closeModal() { document.getElementById('modal-overlay').classList.remov
 document.getElementById('modal-overlay').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeModal(); });
 
 function switchTab(t) {
-  document.querySelectorAll('.mtab').forEach((el,i)=>el.classList.toggle('active',['paste','upload','manual'][i]===t));
+  document.querySelectorAll('.mtab').forEach((el,i)=>el.classList.toggle('active',['paste','upload','manual','sheets'][i]===t));
   document.querySelectorAll('.tab-c').forEach(el=>el.classList.remove('active'));
   document.getElementById('tab-'+t).classList.add('active');
+  if (t === 'sheets') initSheetsTab();
 }
 
 // COLAR
@@ -1068,9 +1144,131 @@ function updateResumo(st){
 }
 
 // ==================== HELPERS ====================
-function showFb(id,type,msg){const el=document.getElementById(id);el.className='fb '+type;el.textContent=msg;}
-function hideFb(id){document.getElementById(id).className='fb';}
+function showFb(id,type,msg){const el=document.getElementById(id);if(!el)return;el.className='fb '+type;el.textContent=msg;}
+function hideFb(id){const el=document.getElementById(id);if(el)el.className='fb';}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+// ==================== GOOGLE SHEETS SYNC ====================
+const GKEY_URL      = 'juanil_sheets_url';
+const GKEY_INTERVAL = 'juanil_sheets_interval';
+const GKEY_LASTSYNC = 'juanil_sheets_lastsync';
+let   sheetsTimer   = null;
+
+// Preenche campos ao abrir a aba
+function initSheetsTab() {
+  const url = localStorage.getItem(GKEY_URL) || '';
+  const iv  = localStorage.getItem(GKEY_INTERVAL) || '10';
+  document.getElementById('sheets-url').value = url;
+  const sel = document.getElementById('sheets-interval');
+  if (sel) { [...sel.options].forEach(o=>o.selected = o.value===iv); }
+  updateLastSyncLabel();
+}
+
+function updateLastSyncLabel() {
+  const ts = localStorage.getItem(GKEY_LASTSYNC);
+  const el = document.getElementById('sheets-last-sync');
+  if (!el) return;
+  if (!ts) { el.textContent = 'Nunca sincronizado.'; return; }
+  const d = new Date(parseInt(ts));
+  el.textContent = '✅ Última sincronização: ' + d.toLocaleString('pt-BR');
+}
+
+function saveInterval() {
+  const sel = document.getElementById('sheets-interval');
+  if (sel) localStorage.setItem(GKEY_INTERVAL, sel.value);
+  setupSheetsTimer();
+}
+
+function testSheetsUrl() {
+  const url = (document.getElementById('sheets-url').value||'').trim();
+  if (!url) { showFb('fb-sheets','err','⚠️ Cole a URL primeiro.'); return; }
+  window.open(url, '_blank');
+  showFb('fb-sheets','ok','🔗 Link aberto em nova aba. Se aparecer um CSV com dados, a URL está correta.');
+}
+
+function saveAndSyncSheets() {
+  const url = (document.getElementById('sheets-url').value||'').trim();
+  if (!url) { showFb('fb-sheets','err','⚠️ Informe a URL do Google Sheets.'); return; }
+  if (!url.includes('docs.google.com') && !url.includes('spreadsheets')) {
+    showFb('fb-sheets','err','❌ URL inválida. Use o link de publicação do Google Sheets (pub?output=csv).'); return;
+  }
+  localStorage.setItem(GKEY_URL, url);
+  saveInterval();
+  syncSheets();
+}
+
+async function syncSheets() {
+  const url = localStorage.getItem(GKEY_URL);
+  const btn = document.getElementById('btn-sync');
+  const icon  = document.getElementById('sync-icon');
+  const label = document.getElementById('sync-label');
+  const statusEl = document.getElementById('sync-status');
+
+  if (!url) {
+    // Abre modal na aba Sheets
+    openModal();
+    switchTab('sheets');
+    return;
+  }
+
+  // Estado: carregando
+  if (btn)    { btn.disabled = true; btn.classList.add('syncing'); }
+  if (icon)   icon.textContent = '🔄';
+  if (label)  label.textContent = 'Sincronizando...';
+  if (statusEl) { statusEl.style.display='inline-block'; statusEl.className='sync-status loading'; statusEl.textContent='⏳ Buscando dados...'; }
+
+  try {
+    // Tenta múltiplos proxies CORS em sequência até um funcionar
+    const proxies = [
+      url => url, // tentativa direta primeiro
+      url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
+      url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+      url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
+    ];
+
+    let csv = null;
+
+    for (const makeProxy of proxies) {
+      try {
+        const proxyUrl = makeProxy(url);
+        const res = await fetch(proxyUrl, { cache: 'no-store', mode: makeProxy(url)===url ? 'cors' : 'cors' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const text = await res.text();
+        if (text && text.length > 50 && !text.trim().startsWith('<')) { csv = text; break; }
+      } catch(e) { /* tenta próximo */ }
+    }
+
+    if (!csv) throw new Error('Não foi possível buscar os dados. Tente clicar em Sincronizar novamente em alguns segundos.');
+
+    const parsed = parseCSV(csv);
+    if (!parsed.length) throw new Error('Nenhuma rota encontrada. Verifique o formato do CSV.');
+
+    loadAllRoutes(parsed);
+    localStorage.setItem(GKEY_LASTSYNC, Date.now().toString());
+    updateLastSyncLabel();
+
+    if (statusEl) { statusEl.className='sync-status ok'; statusEl.textContent='✅ ' + parsed.length + ' registros · ' + availDates.length + ' dias'; }
+    showFb('fb-sheets','ok','✅ '+parsed.length+' registros carregados em '+availDates.length+' dias.');
+
+  } catch(err) {
+    console.error('Sync error:', err);
+    if (statusEl) { statusEl.className='sync-status err'; statusEl.textContent='❌ Erro: ' + err.message; }
+    showFb('fb-sheets','err','❌ Erro ao buscar: ' + err.message + ' — Verifique se a planilha está publicada como CSV público.');
+    toast('❌ Falha na sincronização: ' + err.message);
+  } finally {
+    if (btn)   { btn.disabled = false; btn.classList.remove('syncing'); }
+    if (icon)  icon.textContent = '☁️';
+    if (label) label.textContent = 'Sincronizar';
+  }
+}
+
+function setupSheetsTimer() {
+  if (sheetsTimer) clearInterval(sheetsTimer);
+  const iv = parseInt(localStorage.getItem(GKEY_INTERVAL)||'10');
+  if (iv > 0 && localStorage.getItem(GKEY_URL)) {
+    sheetsTimer = setInterval(() => syncSheets(), iv * 60 * 1000);
+  }
+}
 </script>
 </body>
 </html>
