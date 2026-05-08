@@ -451,11 +451,11 @@ footer span{color:var(--blue-light);}
     <table class="fleet-table">
       <thead>
         <tr>
-          <th>OP</th><th>Veículo</th><th>Motorista</th><th>Destino</th><th>Saída Veíc. CD</th>
+          <th>OP</th><th>Veículo</th><th>Motorista</th><th>Ponto ON</th><th>Prev. Refeição</th><th>Ponto OFF</th><th>Próx. Hora Disp.</th><th>Destino</th><th>Saída Veíc. CD</th>
         </tr>
       </thead>
       <tbody id="route-tbody">
-        <tr><td colspan="10"><div class="empty-state"><div class="ei">📅</div><p>Selecione uma data após importar o CSV.</p></div></td></tr>
+        <tr><td colspan="9"><div class="empty-state"><div class="ei">📅</div><p>Selecione uma data após importar o CSV.</p></div></td></tr>
       </tbody>
     </table>
   </div>
@@ -495,9 +495,25 @@ document.addEventListener('DOMContentLoaded', () => {
       allRoutes = JSON.parse(saved);
       buildDateMap();
       populateDateSelect();
+      // Tenta ir para hoje; se não existir, vai para o mais recente <= hoje
+      const now = new Date();
+      const dd = String(now.getDate()).padStart(2,'0');
+      const mm = String(now.getMonth()+1).padStart(2,'0');
+      const aa = String(now.getFullYear()).slice(-2);
+      const hoje = `${dd}/${mm}/${aa}`;
       const lastDate = localStorage.getItem(DKEY);
-      if (lastDate && dateMap[lastDate]) setDate(lastDate);
-      else if (availDates.length) setDate(availDates[availDates.length - 1]);
+      if (lastDate && dateMap[lastDate]) {
+        setDate(lastDate); // respeita última seleção manual do usuário
+      } else if (dateMap[hoje]) {
+        setDate(hoje);
+      } else if (availDates.length) {
+        const passadas = availDates.filter(d => {
+          const p = d.split('/');
+          const dt = new Date(2000+parseInt(p[2]), parseInt(p[1])-1, parseInt(p[0]));
+          return dt <= now;
+        });
+        setDate(passadas.length ? passadas[passadas.length-1] : availDates[0]);
+      }
     }
   } catch(e) { console.warn('Erro ao carregar dados:', e); }
 
@@ -669,7 +685,7 @@ function renderDrivers(rows) {
 function renderTable(rows) {
   const tbody = document.getElementById('route-tbody');
   if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="ei">📅</div><p>Selecione uma data para ver as rotas.</p></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9"><div class="empty-state"><div class="ei">📅</div><p>Selecione uma data para ver as rotas.</p></div></td></tr>';
     return;
   }
   const opMap = {CV:'op-cv',LS:'op-ls',TL:'op-tl',HT:'op-ht',NL:'op-nl'};
@@ -679,6 +695,10 @@ function renderTable(rows) {
       <td><span class="op-badge ${cls}">${r.op}</span></td>
       <td>${r.veiculo}</td>
       <td><strong>${r.motorista}</strong></td>
+      <td>${r.saida||'—'}</td>
+      <td>${r.prev||'—'}</td>
+      <td>${r.off||'—'}</td>
+      <td>${r.prox||'—'}</td>
       <td style="max-width:280px;white-space:normal;font-size:11px;">${r.destino||'—'}</td>
       <td>${r.saida_v||'—'}</td>
     </tr>`;
@@ -961,12 +981,31 @@ function loadAllRoutes(parsed) {
   localStorage.setItem(RKEY, JSON.stringify(allRoutes));
   buildDateMap();
   populateDateSelect();
-  // Vai para o último dia disponível
+
+  // Tenta ir para o dia de HOJE primeiro
+  const now = new Date();
+  const dd = String(now.getDate()).padStart(2,'0');
+  const mm = String(now.getMonth()+1).padStart(2,'0');
+  const aa = String(now.getFullYear()).slice(-2);
+  const hoje = `${dd}/${mm}/${aa}`;
+
   if (availDates.length) {
-    const goTo = availDates[availDates.length-1];
-    setDate(goTo);
+    if (dateMap[hoje]) {
+      // Hoje existe na planilha → vai para hoje
+      setDate(hoje);
+    } else {
+      // Hoje não existe → pega a data mais recente que seja <= hoje
+      const passadas = availDates.filter(d => {
+        const p = d.split('/');
+        const dt = new Date(2000+parseInt(p[2]), parseInt(p[1])-1, parseInt(p[0]));
+        return dt <= now;
+      });
+      const goTo = passadas.length ? passadas[passadas.length-1] : availDates[0];
+      setDate(goTo);
+    }
   }
-  toast('✅ ' + allRoutes.length + ' registros carregados · ' + availDates.length + ' dias disponíveis');
+
+  toast('✅ ' + allRoutes.length + ' registros · ' + availDates.length + ' dias · Exibindo: ' + (dateMap[hoje] ? 'Hoje (' + hoje + ')' : 'Último dia disponível'));
   return true;
 }
 
