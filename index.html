@@ -326,7 +326,7 @@ footer span{color:var(--blue-light);}
   <!-- CHARTS -->
   <div class="sec">📈 Gráficos e Análises</div>
   <div class="charts-grid">
-    <div class="chart-card"><div class="ct">🔢 Distribuição por OP <span class="badge">veículos válidos</span></div><div id="op-panel" style="overflow-y:auto;max-height:340px;"></div></div>
+    <div class="chart-card" id="op-card"><div class="ct" style="justify-content:space-between;"><span>🔢 Distribuição por OP <span class="badge">veículos válidos</span></span><button onclick="printOpPanel()" title="Imprimir / Salvar como imagem" style="background:var(--blue);border:none;border-radius:7px;padding:5px 11px;color:white;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .2s;" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='var(--blue)'">🖨️ PRINT</button></div><div id="op-panel" style="overflow-y:auto;max-height:340px;"></div></div>
     <div class="chart-card"><div class="ct">👥 Motoristas por OP</div><div class="cw" style="height:340px;"><canvas id="cMot"></canvas></div></div>
     <div class="chart-card"><div class="ct">📊 Situação Efetivo</div><div class="cw" style="height:340px;"><canvas id="cSit"></canvas></div></div>
     <div class="chart-card wide"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw"><canvas id="cHor"></canvas></div></div>
@@ -931,6 +931,49 @@ function saveManual() {
   loadAllRoutes(merged);
   manualRows=[];renderManualPrev();
   setTimeout(closeModal,900);
+}
+
+
+// ==================== PRINT OP PANEL ====================
+function printOpPanel() {
+  const panel = document.getElementById('op-panel');
+  const dateStr = currentDate || 'sem data';
+  const printWin = window.open('', '_blank', 'width=620,height=750');
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Distribuicao por OP - ${dateStr}</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0b1220; color: #e8eef8; font-family: 'Barlow', sans-serif; padding: 26px; }
+.ph { display:flex; align-items:center; justify-content:space-between; margin-bottom:20px; padding-bottom:14px; border-bottom:2px solid #1a6fc4; }
+.pt { font-family:'Barlow Condensed',sans-serif; font-size:20px; font-weight:900; color:#3a8fe4; letter-spacing:2px; text-transform:uppercase; }
+.ps { font-size:12px; color:#8ca0c0; margin-top:3px; }
+.pd { font-family:'Barlow Condensed',sans-serif; font-size:15px; color:#f5a623; font-weight:700; text-align:right; }
+.pc { font-size:10px; color:#4a6080; text-align:right; margin-top:2px; }
+.pf { margin-top:20px; text-align:center; font-size:10px; color:#4a6080; border-top:1px solid #2a3d5e; padding-top:12px; }
+@media print { body { -webkit-print-color-adjust:exact; print-color-adjust:exact; } }
+</style>
+</head>
+<body>
+<div class="ph">
+  <div>
+    <div class="pt">🔢 Distribuição por OP</div>
+    <div class="ps">Veículos válidos da escala</div>
+  </div>
+  <div>
+    <div class="pd">📅 ${dateStr}</div>
+    <div class="pc">Juanil Transportes e Locações</div>
+  </div>
+</div>
+${panel.innerHTML}
+<div class="pf">FleetControl Pro · Gerado em ${new Date().toLocaleString('pt-BR')}</div>
+</body></html>`;
+  printWin.document.write(html);
+  printWin.document.close();
+  printWin.onload = () => { printWin.focus(); printWin.print(); };
 }
 
 // ==================== STATUS EFETIVO ====================
