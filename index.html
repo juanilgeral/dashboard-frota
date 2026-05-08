@@ -63,7 +63,8 @@ main{padding:22px 28px;max-width:1600px;margin:0 auto;}
 
 /* CHARTS */
 .charts-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:22px;}
-.chart-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:18px;}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:18px;transition:border-color .2s,transform .2s;}
+.chart-card:hover{border-color:var(--blue);transform:translateY(-1px);}
 .chart-card.wide{grid-column:span 2;}
 .chart-card.full{grid-column:span 3;}
 .ct{font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:14px;display:flex;align-items:center;gap:8px;}
@@ -384,9 +385,7 @@ footer span{color:var(--blue-light);}
     <table class="fleet-table">
       <thead>
         <tr>
-          <th>Data</th><th>Dia</th><th>OP</th><th>Veículo</th><th>Motorista</th>
-          <th>Ponto ON</th><th>Prev. Refeição</th><th>Ponto OFF</th>
-          <th>Próx. Hora Disp.</th><th>Destino</th><th>Saída Veíc. CD</th>
+          <th>OP</th><th>Veículo</th><th>Motorista</th><th>Destino</th><th>Saída Veíc. CD</th>
         </tr>
       </thead>
       <tbody id="route-tbody">
@@ -408,7 +407,7 @@ const RKEY = 'juanil_all_routes_v2';
 const SKEY = 'juanil_status_v2';
 const DKEY = 'juanil_last_date';
 const OP_COLORS = {CV:'#f5d800',LS:'#e84040',TL:'#2ed573',HT:'#27ae60',NL:'#ff2020'};
-const CHART_BASE = {responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8ca0c0',font:{family:'Barlow',size:11}}}}};
+const CHART_BASE = {responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8ca0c0',font:{family:'Barlow',size:11}}}},onHover:(e,el)=>{e.native.target.style.cursor=el.length?'pointer':'default'}};
 
 // ==================== STATE ====================
 let allRoutes = [];   // todos os registros de todos os dias
@@ -595,23 +594,17 @@ function renderDrivers(rows) {
 function renderTable(rows) {
   const tbody = document.getElementById('route-tbody');
   if (!rows.length) {
-    tbody.innerHTML = '<tr><td colspan="11"><div class="empty-state"><div class="ei">📅</div><p>Selecione uma data para ver as rotas.</p></div></td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><div class="ei">📅</div><p>Selecione uma data para ver as rotas.</p></div></td></tr>';
     return;
   }
   const opMap = {CV:'op-cv',LS:'op-ls',TL:'op-tl',HT:'op-ht',NL:'op-nl'};
   tbody.innerHTML = rows.map(r => {
     const cls = opMap[r.op] || 'op-cv';
     return `<tr>
-      <td>${r.data}</td>
-      <td>${r.dia}</td>
       <td><span class="op-badge ${cls}">${r.op}</span></td>
       <td>${r.veiculo}</td>
       <td><strong>${r.motorista}</strong></td>
-      <td>${r.saida||'—'}</td>
-      <td>${r.prev||'—'}</td>
-      <td>${r.off||'—'}</td>
-      <td>${r.prox||'—'}</td>
-      <td style="max-width:260px;white-space:normal;font-size:11px;">${r.destino||'—'}</td>
+      <td style="max-width:280px;white-space:normal;font-size:11px;">${r.destino||'—'}</td>
       <td>${r.saida_v||'—'}</td>
     </tr>`;
   }).join('');
@@ -697,20 +690,70 @@ function updateCharts(rows) {
   // Bar KM por veículo
   const topVeics = Object.entries(kmVeic).sort((a,b)=>b[1]-a[1]).slice(0,8);
   destroyChart('cKm');
-  charts['cKm'] = new Chart(document.getElementById('cKm'), {
-    type:'bar',
-    data:{labels:topVeics.map(v=>v[0]),datasets:[{label:'KM',data:topVeics.map(v=>v[1]),backgroundColor:'rgba(155,89,182,.7)',borderColor:'#9b59b6',borderWidth:2,borderRadius:6}]},
-    options:{...CHART_BASE,indexAxis:'y',scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',font:{size:10}},grid:{color:'#2a3d5e'}}}}
-  });
+  if (topVeics.length > 0) {
+    charts['cKm'] = new Chart(document.getElementById('cKm'), {
+      type:'bar',
+      data:{labels:topVeics.map(v=>v[0]),datasets:[{label:'KM',data:topVeics.map(v=>v[1]),backgroundColor:'rgba(155,89,182,.7)',borderColor:'#9b59b6',borderWidth:2,borderRadius:6}]},
+      options:{...CHART_BASE,indexAxis:'y',scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',font:{size:10}},grid:{color:'#2a3d5e'}}}}
+    });
+  } else {
+    // Sem dados de KM: mostra contagem de rotas por veículo como alternativa
+    const veicCount = {};
+    rows.forEach(r => { if(r.veiculo) veicCount[r.veiculo] = (veicCount[r.veiculo]||0)+1; });
+    const topV = Object.entries(veicCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
+    const el = document.getElementById('cKm');
+    if (topV.length > 0) {
+      charts['cKm'] = new Chart(el, {
+        type:'bar',
+        data:{labels:topV.map(v=>v[0]),datasets:[{label:'Rotas',data:topV.map(v=>v[1]),backgroundColor:'rgba(155,89,182,.7)',borderColor:'#9b59b6',borderWidth:2,borderRadius:6}]},
+        options:{...CHART_BASE,indexAxis:'y',
+          plugins:{...CHART_BASE.plugins, title:{display:true,text:'Rotas por Veículo (KM não disponível no CSV)',color:'#8ca0c0',font:{size:10}}},
+          scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',font:{size:10}},grid:{color:'#2a3d5e'}}}}
+      });
+    } else {
+      el.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text3);font-size:12px;text-align:center;padding:20px;">Sem dados de KM no CSV.<br>Adicione colunas KM_SAIDA e KM_CHEGADA.</div>';
+    }
+  }
 }
 
 function updateChartSituacao() {
   const st = loadStatus();
+  const allLabels   = ['Ativos','Férias','Lic.Med.','Afastados','Trein.','Suspensão','Outros'];
+  const allData     = [st.ativo,st.ferias,st.licenca,st.afastado,st.treinamento,st.suspensao,st.outros];
+  const allColors   = ['#27ae60','#3a8fe4','#f39c12','#e74c3c','#9b59b6','#e67e22','#95a5a6'];
+
+  // Inclui todos os itens, mesmo com valor 0, para mostrar a legenda completa
+  // Mas se TODOS forem 0 exceto ativos, mostra um placeholder pequeno para os zeros
+  const labels   = allLabels;
+  const data     = allData.map(v => v === 0 ? 0.001 : v); // 0.001 torna visível na legenda mas invisível no gráfico
+  const realData = allData; // dados reais para tooltip
+
   destroyChart('cSit');
   charts['cSit'] = new Chart(document.getElementById('cSit'), {
     type:'pie',
-    data:{labels:['Ativos','Férias','Lic.Med.','Afastados','Trein.','Suspensão','Outros'],datasets:[{data:[st.ativo,st.ferias,st.licenca,st.afastado,st.treinamento,st.suspensao,st.outros],backgroundColor:['#27ae60','#3a8fe4','#f39c12','#e74c3c','#9b59b6','#e67e22','#95a5a6'],borderColor:'#1a2540',borderWidth:3}]},
-    options:{...CHART_BASE}
+    data:{
+      labels,
+      datasets:[{
+        data,
+        backgroundColor:allColors,
+        borderColor:'#1a2540',
+        borderWidth:3
+      }]
+    },
+    options:{
+      ...CHART_BASE,
+      plugins:{
+        legend:{labels:{color:'#8ca0c0',font:{family:'Barlow',size:11}}},
+        tooltip:{
+          callbacks:{
+            label: function(ctx) {
+              const real = realData[ctx.dataIndex];
+              return ' ' + ctx.label + ': ' + real;
+            }
+          }
+        }
+      }
+    }
   });
 }
 
