@@ -475,6 +475,10 @@ const DKEY = 'juanil_last_date';
 const OP_COLORS = {CV:'#f5d800',LS:'#e84040',TL:'#2ed573',HT:'#27ae60',NL:'#ff2020'};
 const CHART_BASE = {responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8ca0c0',font:{family:'Barlow',size:11}}}},onHover:(e,el)=>{e.native.target.style.cursor=el.length?'pointer':'default'}};
 
+// ✅ URL DO GOOGLE SHEETS — embutida no sistema para todos os usuários
+// Para atualizar: troque a URL abaixo e suba o HTML no GitHub novamente
+const SHEETS_URL_DEFAULT = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTd77MkT5hd6gzTkMfzX2BVWY5Hqqfo3NluQY58mnOkIN8--hPVloe2CfzkbttnucJKbnJFiaPEWSrnR/pub?gid=1559964021&single=true&output=csv';
+
 // ==================== STATE ====================
 let allRoutes = [];   // todos os registros de todos os dias
 let dateMap = {};     // { 'dd/mm/aa': [rows] }
@@ -495,23 +499,12 @@ document.addEventListener('DOMContentLoaded', () => {
       allRoutes = JSON.parse(saved);
       buildDateMap();
       populateDateSelect();
-      // Tenta ir para hoje; se não existir, vai para o mais recente <= hoje
-      const now = new Date();
-      const dd = String(now.getDate()).padStart(2,'0');
-      const mm = String(now.getMonth()+1).padStart(2,'0');
-      const aa = String(now.getFullYear()).slice(-2);
-      const hoje = `${dd}/${mm}/${aa}`;
       const lastDate = localStorage.getItem(DKEY);
       if (lastDate && dateMap[lastDate]) {
         setDate(lastDate); // respeita última seleção manual do usuário
-      } else if (dateMap[hoje]) {
-        setDate(hoje);
       } else if (availDates.length) {
-        const passadas = availDates.filter(d => {
-          const p = d.split('/');
-          const dt = new Date(2000+parseInt(p[2]), parseInt(p[1])-1, parseInt(p[0]));
-          return dt <= now;
-        });
+        const hoje = todayMidnight();
+        const passadas = availDates.filter(d => parseDateStr(d) <= hoje);
         setDate(passadas.length ? passadas[passadas.length-1] : availDates[0]);
       }
     }
@@ -520,14 +513,11 @@ document.addEventListener('DOMContentLoaded', () => {
   applyStatus(loadStatus());
   updateChartSituacao();
 
-  // Google Sheets: sincroniza automaticamente se URL salva
-  const sheetsUrl = localStorage.getItem(GKEY_URL);
-  if (sheetsUrl) {
-    const statusEl = document.getElementById('sync-status');
-    if (statusEl) { statusEl.style.display='inline-block'; statusEl.className='sync-status loading'; statusEl.textContent='⏳ Conectando Sheets...'; }
-    setTimeout(() => syncSheets(), 3000);
-    setupSheetsTimer();
-  }
+  // Google Sheets: sincroniza automaticamente sempre (URL padrão embutida no sistema)
+  const statusEl = document.getElementById('sync-status');
+  if (statusEl) { statusEl.style.display='inline-block'; statusEl.className='sync-status loading'; statusEl.textContent='⏳ Conectando Sheets...'; }
+  setTimeout(() => syncSheets(), 2000);
+  setupSheetsTimer();
 });
 
 function tick() {
@@ -545,12 +535,7 @@ function buildDateMap() {
     dateMap[r.data].push(r);
   });
   // Ordena datas cronologicamente (dd/mm/aa)
-  availDates = Object.keys(dateMap).filter(d => /^\d{2}\/\d{2}\/\d{2}$/.test(d)).sort((a,b) => {
-    const pa = a.split('/'), pb = b.split('/');
-    const da = new Date(2000+parseInt(pa[2]), parseInt(pa[1])-1, parseInt(pa[0]));
-    const db = new Date(2000+parseInt(pb[2]), parseInt(pb[1])-1, parseInt(pb[0]));
-    return da - db;
-  });
+  availDates = Object.keys(dateMap).filter(d => /^\d{2}\/\d{2}\/\d{2,4}$/.test(d)).sort((a,b) => parseDateStr(a) - parseDateStr(b));
 }
 
 // ==================== DATE SELECT ====================
@@ -975,6 +960,20 @@ function splitLine(line, sep) {
 }
 
 // ==================== LOAD ROUTES ====================
+
+// Converte dd/mm/aa ou dd/mm/aaaa para objeto Date
+function parseDateStr(d) {
+  const p = d.split('/');
+  const year = p[2].length === 4 ? parseInt(p[2]) : 2000 + parseInt(p[2]);
+  return new Date(year, parseInt(p[1])-1, parseInt(p[0]));
+}
+
+// Data de hoje zerada (sem horas) para comparação justa
+function todayMidnight() {
+  const n = new Date();
+  return new Date(n.getFullYear(), n.getMonth(), n.getDate());
+}
+
 function loadAllRoutes(parsed) {
   if (!parsed.length) return false;
   allRoutes = parsed;
@@ -982,30 +981,20 @@ function loadAllRoutes(parsed) {
   buildDateMap();
   populateDateSelect();
 
-  // Tenta ir para o dia de HOJE primeiro
-  const now = new Date();
-  const dd = String(now.getDate()).padStart(2,'0');
-  const mm = String(now.getMonth()+1).padStart(2,'0');
-  const aa = String(now.getFullYear()).slice(-2);
-  const hoje = `${dd}/${mm}/${aa}`;
+  const hoje = todayMidnight();
 
   if (availDates.length) {
-    if (dateMap[hoje]) {
-      // Hoje existe na planilha → vai para hoje
-      setDate(hoje);
+    // Filtra datas <= hoje e pega a mais recente
+    const passadas = availDates.filter(d => parseDateStr(d) <= hoje);
+    if (passadas.length) {
+      setDate(passadas[passadas.length - 1]); // última data <= hoje
     } else {
-      // Hoje não existe → pega a data mais recente que seja <= hoje
-      const passadas = availDates.filter(d => {
-        const p = d.split('/');
-        const dt = new Date(2000+parseInt(p[2]), parseInt(p[1])-1, parseInt(p[0]));
-        return dt <= now;
-      });
-      const goTo = passadas.length ? passadas[passadas.length-1] : availDates[0];
-      setDate(goTo);
+      setDate(availDates[0]); // tudo no futuro, pega o primeiro
     }
   }
 
-  toast('✅ ' + allRoutes.length + ' registros · ' + availDates.length + ' dias · Exibindo: ' + (dateMap[hoje] ? 'Hoje (' + hoje + ')' : 'Último dia disponível'));
+  const dataEscolhida = currentDate || '—';
+  toast('✅ ' + allRoutes.length + ' registros · ' + availDates.length + ' dias · Exibindo: ' + dataEscolhida);
   return true;
 }
 
@@ -1195,7 +1184,7 @@ let   sheetsTimer   = null;
 
 // Preenche campos ao abrir a aba
 function initSheetsTab() {
-  const url = localStorage.getItem(GKEY_URL) || '';
+  const url = localStorage.getItem(GKEY_URL) || SHEETS_URL_DEFAULT;
   const iv  = localStorage.getItem(GKEY_INTERVAL) || '10';
   document.getElementById('sheets-url').value = url;
   const sel = document.getElementById('sheets-interval');
@@ -1237,18 +1226,12 @@ function saveAndSyncSheets() {
 }
 
 async function syncSheets() {
-  const url = localStorage.getItem(GKEY_URL);
+  // Usa URL salva pelo usuário; se não tiver, usa a URL padrão embutida no sistema
+  const url = localStorage.getItem(GKEY_URL) || SHEETS_URL_DEFAULT;
   const btn = document.getElementById('btn-sync');
   const icon  = document.getElementById('sync-icon');
   const label = document.getElementById('sync-label');
   const statusEl = document.getElementById('sync-status');
-
-  if (!url) {
-    // Abre modal na aba Sheets
-    openModal();
-    switchTab('sheets');
-    return;
-  }
 
   // Estado: carregando
   if (btn)    { btn.disabled = true; btn.classList.add('syncing'); }
