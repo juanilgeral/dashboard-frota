@@ -517,7 +517,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const statusEl = document.getElementById('sync-status');
   if (statusEl) { statusEl.style.display='inline-block'; statusEl.className='sync-status loading'; statusEl.textContent='⏳ Conectando Sheets...'; }
   setTimeout(() => syncSheets(), 2000);
+  setTimeout(() => syncEfetivo(), 3000);   // Efetivo 1s depois
   setupSheetsTimer();
+  setInterval(() => syncEfetivo(), 10 * 60 * 1000); // Efetivo a cada 10 min
 });
 
 function tick() {
@@ -1125,6 +1127,52 @@ ${panel.innerHTML}
 
 // ==================== STATUS EFETIVO ====================
 function loadStatus(){try{const r=localStorage.getItem(SKEY);if(r)return JSON.parse(r);}catch(e){}return{totalEmpresa:30,totalEscala:23,ativo:23,ferias:0,licenca:0,afastado:0,treinamento:0,suspensao:0,outros:0};}
+
+// ==================== SYNC EFETIVO ====================
+const SHEETS_URL_EFETIVO = 'https://script.google.com/macros/s/AKfycbyXFnFnYSIv3nbcDvgZHa1iMI5nYWYFOAdnLhSMqAF_eFjIgxlEIfI7D-anH_7UvnYJaQ/exec?tipo=efetivo';
+
+async function syncEfetivo() {
+  try {
+    const res = await fetch(SHEETS_URL_EFETIVO, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const csv = await res.text();
+    if (!csv || csv.length < 10) throw new Error('Resposta vazia');
+
+    // Parseia CSV: linha 0 = cabeçalhos, linha 1 = valores
+    const lines = csv.split(/\r?\n/).filter(l => l.trim());
+    const sep = lines[0].includes('\t') ? '\t' : ',';
+    const headers = lines[0].split(sep).map(h => h.trim().toUpperCase().replace(/[^A-Z0-9_]/g,'_'));
+    const values  = lines[1].split(sep).map(v => parseInt(v.trim()) || 0);
+
+    const get = (nome) => {
+      const idx = headers.findIndex(h => h.includes(nome));
+      return idx >= 0 ? values[idx] : 0;
+    };
+
+    const st = {
+      totalEmpresa : get('VE_CULO') || get('VEICULOS') || get('TOTAL'),
+      totalEscala  : get('CARROS')  || get('ATIVA'),
+      ativo        : get('MOT_NA')  || get('MOT__NA'),
+      ferias       : get('F_RIAS')  || get('FERIAS'),
+      licenca      : get('LICEN')   || get('LIC'),
+      afastado     : 0,
+      treinamento  : get('TREIN'),
+      suspensao    : 0,
+      outros       : 0,
+    };
+
+    // Salva e aplica
+    localStorage.setItem(SKEY, JSON.stringify(st));
+    applyStatus(st);
+    updateChartSituacao();
+    const afas = (st.ferias||0)+(st.licenca||0)+(st.afastado||0)+(st.suspensao||0)+(st.outros||0);
+    document.getElementById('k-afas').textContent = afas;
+
+    console.log('✅ Efetivo sincronizado:', st);
+  } catch(e) {
+    console.warn('⚠️ Efetivo sync falhou:', e.message);
+  }
+}
 function applyStatus(st){
   document.getElementById('te').value=st.totalEmpresa??30;
   document.getElementById('tesc').value=st.totalEscala??23;
