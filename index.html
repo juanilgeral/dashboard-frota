@@ -403,15 +403,14 @@ footer span{color:var(--blue-light);}
   <div class="bottom-grid">
     <div class="sp">
       <div class="ct">📡 Indicadores Operacionais</div>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:12px;">
-        <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text2)"><span style="width:9px;height:9px;border-radius:2px;background:#27ae60;display:inline-block"></span>Ótimo (≥85%)</span>
-        <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text2)"><span style="width:9px;height:9px;border-radius:2px;background:#f5a623;display:inline-block"></span>Regular (70–84%)</span>
-        <span style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text2)"><span style="width:9px;height:9px;border-radius:2px;background:#e84040;display:inline-block"></span>Atenção (&lt;70%)</span>
-      </div>
-      <div style="position:relative;width:100%;height:280px;">
-        <canvas id="cIndicadores" role="img" aria-label="Gráfico de barras horizontais dos indicadores operacionais">Pontualidade 87%, Utilização 92%, CV 79%, LS 68%, TL 82%, HT 95%, Risco 13%.</canvas>
-      </div>
-      <div style="margin-top:14px;background:var(--bg3);border-radius:9px;padding:12px;border:1px solid var(--border);">
+      <div class="prob-item"><span class="prob-lbl">Pontualidade saídas</span><div class="prob-bw"><div class="prob-b" id="pb1" style="width:87%;background:var(--green)"></div></div><span class="prob-pct" id="pp1" style="color:var(--green)">87%</span></div>
+      <div class="prob-item"><span class="prob-lbl">Utilização da frota</span><div class="prob-bw"><div class="prob-b" id="pb2" style="width:92%;background:var(--blue-light)"></div></div><span class="prob-pct" id="pp2" style="color:var(--blue-light)">92%</span></div>
+      <div class="prob-item"><span class="prob-lbl">Eficiência CV</span><div class="prob-bw"><div class="prob-b" style="width:79%;background:var(--accent)"></div></div><span class="prob-pct" style="color:var(--accent)">79%</span></div>
+      <div class="prob-item"><span class="prob-lbl">Eficiência LS</span><div class="prob-bw"><div class="prob-b" style="width:68%;background:#e84040"></div></div><span class="prob-pct" style="color:#e84040">68%</span></div>
+      <div class="prob-item"><span class="prob-lbl">Eficiência TL</span><div class="prob-bw"><div class="prob-b" style="width:82%;background:#2ed573"></div></div><span class="prob-pct" style="color:#2ed573">82%</span></div>
+      <div class="prob-item"><span class="prob-lbl">Eficiência HT</span><div class="prob-bw"><div class="prob-b" style="width:95%;background:#27ae60"></div></div><span class="prob-pct" style="color:#27ae60">95%</span></div>
+      <div class="prob-item"><span class="prob-lbl">Risco de atraso</span><div class="prob-bw"><div class="prob-b" style="width:13%;background:var(--red)"></div></div><span class="prob-pct" style="color:var(--red)">13%</span></div>
+      <div style="margin-top:16px;background:var(--bg3);border-radius:9px;padding:12px;border:1px solid var(--border);">
         <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:9px;font-weight:700;">📌 Estatísticas Rápidas</div>
         <div class="resumo-grid" id="stats-rap"><div class="r-item" style="color:var(--text3)">Importe um CSV...</div></div>
       </div>
@@ -1323,78 +1322,6 @@ function setupSheetsTimer() {
     sheetsTimer = setInterval(() => syncSheets(), iv * 60 * 1000);
   }
 }
-// ==================== INDICADORES CHART ====================
-(function(){
-  var vals = [87, 92, 79, 68, 82, 95, 13];
-  var labels = ['Pontualidade saídas','Utilização da frota','Eficiência CV','Eficiência LS','Eficiência TL','Eficiência HT','Risco de atraso'];
-  var colors = vals.map(function(v,i){
-    if(i===6) return '#e84040';
-    if(v>=85) return '#27ae60';
-    if(v>=70) return '#f5a623';
-    return '#e84040';
-  });
-  var ctx = document.getElementById('cIndicadores');
-  if(!ctx) return;
-  new Chart(ctx, {
-    type:'bar',
-    data:{
-      labels:labels,
-      datasets:[{
-        data:vals,
-        backgroundColor:colors,
-        borderRadius:6,
-        borderSkipped:false,
-        barThickness:26
-      }]
-    },
-    options:{
-      indexAxis:'y',
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          callbacks:{label:function(c){return ' '+c.raw+'%';}},
-          backgroundColor:'#0b1220',
-          borderColor:'#2a3d5e',
-          borderWidth:1,
-          titleColor:'#e8eef8',
-          bodyColor:'#e8eef8'
-        }
-      },
-      scales:{
-        x:{
-          min:0,max:100,
-          grid:{color:'#2a3d5e'},
-          ticks:{color:'#8ca0c0',font:{size:11},callback:function(v){return v+'%';}},
-          border:{color:'#2a3d5e'}
-        },
-        y:{
-          grid:{display:false},
-          ticks:{color:'#c8d8f0',font:{size:11}},
-          border:{color:'#2a3d5e'}
-        }
-      },
-      animation:{duration:900,easing:'easeOutQuart'}
-    },
-    plugins:[{
-      id:'indValLabels',
-      afterDatasetDraw:function(chart){
-        var ctx2=chart.ctx, data=chart.data;
-        chart.getDatasetMeta(0).data.forEach(function(bar,i){
-          var val=data.datasets[0].data[i];
-          ctx2.save();
-          ctx2.fillStyle='#e8eef8';
-          ctx2.font='bold 12px monospace';
-          ctx2.textBaseline='middle';
-          ctx2.fillText(val+'%', bar.x+8, bar.y);
-          ctx2.restore();
-        });
-      }
-    }]
-  });
-})();
-
 </script>
 </body>
 </html>
