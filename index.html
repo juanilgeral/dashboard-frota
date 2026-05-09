@@ -477,7 +477,7 @@ const CHART_BASE = {responsive:true,maintainAspectRatio:false,plugins:{legend:{l
 
 // ✅ URL DO GOOGLE SHEETS — embutida no sistema para todos os usuários
 // Para atualizar: troque a URL abaixo e suba o HTML no GitHub novamente
-const SHEETS_URL_DEFAULT = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTd77MkT5hd6gzTkMfzX2BVWY5Hqqfo3NluQY58mnOklN8--hPVIoe2CfzkbttnucJKbnJFiaPEWSmR/pub?gid=1559964021&single=true&output=csv';
+const SHEETS_URL_DEFAULT = 'https://script.google.com/macros/s/AKfycbxKk2hA4R_qfESpEvLXBE6cmI01wFS9qoj8BR7OWSB_T-0LGKPDgyWHQ51eFT4rhQYqWg/exec';
 
 // ==================== STATE ====================
 let allRoutes = [];   // todos os registros de todos os dias
@@ -1240,27 +1240,11 @@ async function syncSheets() {
   if (statusEl) { statusEl.style.display='inline-block'; statusEl.className='sync-status loading'; statusEl.textContent='⏳ Buscando dados...'; }
 
   try {
-    // Tenta múltiplos proxies CORS em sequência até um funcionar
-    const proxies = [
-      url => url, // tentativa direta primeiro
-      url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
-      url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-      url => `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(url)}`,
-    ];
-
-    let csv = null;
-
-    for (const makeProxy of proxies) {
-      try {
-        const proxyUrl = makeProxy(url);
-        const res = await fetch(proxyUrl, { cache: 'no-store', mode: makeProxy(url)===url ? 'cors' : 'cors' });
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        const text = await res.text();
-        if (text && text.length > 50 && !text.trim().startsWith('<')) { csv = text; break; }
-      } catch(e) { /* tenta próximo */ }
-    }
-
-    if (!csv) throw new Error('Não foi possível buscar os dados. Tente clicar em Sincronizar novamente em alguns segundos.');
+    // Apps Script próprio — sem proxy, sem bloqueio CORS
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const csv = await res.text();
+    if (!csv || csv.length < 50) throw new Error('Resposta vazia ou inválida.');
 
     const parsed = parseCSV(csv);
     if (!parsed.length) throw new Error('Nenhuma rota encontrada. Verifique o formato do CSV.');
