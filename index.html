@@ -390,6 +390,12 @@ footer span{color:var(--blue-light);}
     <div class="kpi-card" style="--kc:#f39c12"><div class="kpi-icon">📅</div><div class="kpi-val" id="k-datas">—</div><div class="kpi-lbl">Dias no CSV</div><div class="kpi-sub">Total importado</div></div>
   </div>
 
+  <!-- DRIVERS -->
+  <div class="sec">👨‍✈️ Motoristas — Dia Selecionado</div>
+  <div class="driver-grid" id="driver-grid">
+    <div class="empty-state" style="grid-column:span 5"><div class="ei">📂</div><p>Importe um CSV e selecione uma data para ver os motoristas.</p><button class="btn-p" onclick="openModal()">⬆️ Importar Dados</button></div>
+  </div>
+
   <!-- CHARTS -->
   <div class="sec">📈 Gráficos e Análises</div>
   <div class="charts-grid">
@@ -437,12 +443,6 @@ footer span{color:var(--blue-light);}
         <div class="resumo-grid" id="resumo-ef"></div>
       </div>
     </div>
-  </div>
-
-  <!-- DRIVERS -->
-  <div class="sec">👨‍✈️ Motoristas — Dia Selecionado</div>
-  <div class="driver-grid" id="driver-grid">
-    <div class="empty-state" style="grid-column:span 5"><div class="ei">📂</div><p>Importe um CSV e selecione uma data para ver os motoristas.</p><button class="btn-p" onclick="openModal()">⬆️ Importar Dados</button></div>
   </div>
 
   <!-- TABLE -->
@@ -657,11 +657,14 @@ function renderDrivers(rows) {
     const ini = name.split(' ').map(w=>w[0]||'').join('').substring(0,2);
     const ops = [...(driverOps[name]||[])].join(' · ');
     const nrotas = rows.filter(r=>r.motorista===name).length;
+    const driverRows = rows.filter(r=>r.motorista===name);
+    const placa = driverRows.length && driverRows[0].veiculo ? driverRows[0].veiculo : '—';
     return `<div class="dr-card">
       <div class="dr-av">${ini}</div>
       <div class="dr-info">
         <div class="dr-name">${name}</div>
         <div class="dr-ops">${ops} · ${nrotas} rota${nrotas!==1?'s':''}</div>
+        <div style="font-size:10px;color:var(--accent);margin-top:2px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.5px;">🚌 ${placa}</div>
       </div>
       <div class="dr-dot"></div>
     </div>`;
