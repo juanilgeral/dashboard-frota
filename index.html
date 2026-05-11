@@ -213,6 +213,17 @@ kbd{background:var(--border);color:var(--text);padding:1px 5px;border-radius:3px
 ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 ::-webkit-scrollbar-thumb:hover{background:var(--blue);}
 
+/* OP STRIP */
+.op-strip{display:flex;align-items:stretch;gap:0;margin-bottom:18px;background:var(--card);border:1px solid var(--border);border-radius:11px;overflow:hidden;}
+.op-strip-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 8px;gap:3px;border-right:1px solid var(--border);transition:background .2s;}
+.op-strip-item:last-child{border-right:none;}
+.op-strip-item:hover{background:var(--card2);}
+.op-strip-sig{font-family:'Barlow Condensed',sans-serif;font-size:18px;font-weight:900;letter-spacing:2px;line-height:1;}
+.op-strip-num{font-family:'Barlow Condensed',sans-serif;font-size:28px;font-weight:900;line-height:1;}
+.op-strip-lbl{font-size:9px;color:var(--text3);letter-spacing:.5px;text-transform:uppercase;}
+.op-strip-bar{width:100%;height:3px;border-radius:2px;margin-top:4px;}
+.op-strip-empty{flex:1;display:flex;align-items:center;justify-content:center;padding:14px;color:var(--text3);font-size:12px;}
+
 /* FOOTER */
 footer{border-top:1px solid var(--border);padding:14px 28px;text-align:center;font-size:10px;color:var(--text3);letter-spacing:.5px;}
 footer span{color:var(--blue-light);}
@@ -380,6 +391,12 @@ footer span{color:var(--blue-light);}
 <main>
   <!-- KPIs -->
   <div class="sec">📊 Visão Geral do Dia</div>
+
+  <!-- DISTRIBUIÇÃO POR OP -->
+  <div class="op-strip" id="op-strip">
+    <div class="op-strip-empty">Importe um CSV para ver a distribuição do dia.</div>
+  </div>
+
   <div class="kpi-grid">
     <div class="kpi-card" style="--kc:#3a8fe4"><div class="kpi-icon">🚌</div><div class="kpi-val" id="k-veic">—</div><div class="kpi-lbl">Veículos</div><div class="kpi-sub">No dia</div></div>
     <div class="kpi-card" style="--kc:#27ae60"><div class="kpi-icon">👨‍✈️</div><div class="kpi-val" id="k-mot">—</div><div class="kpi-lbl">Motoristas</div><div class="kpi-sub">Ativos no dia</div></div>
@@ -618,6 +635,35 @@ function updateKpis(rows, d) {
   document.getElementById('k-ops-sub').textContent = ops.join(' · ');
   document.getElementById('k-km').textContent = kmTotal > 0 ? kmTotal.toLocaleString('pt-BR') : '—';
   document.getElementById('k-datas').textContent = availDates.length;
+
+  // OP STRIP — distribuição por OP lado a lado
+  const opStripEl = document.getElementById('op-strip');
+  if (opStripEl) {
+    const opCount = {};
+    rows.forEach(r => { if(r.op) opCount[r.op] = (opCount[r.op]||0)+1; });
+    const opColors = {CV:'#f5d800',LS:'#e84040',TL:'#2ed573',HT:'#27ae60',NL:'#ff2020',GR:'#9e9e9e'};
+    const OP_ORDER = ['CV','LS','TL','HT','NL','GR'];
+    const opKeys = Object.keys(opCount).sort((a,b) => {
+      const ia = OP_ORDER.indexOf(a); const ib = OP_ORDER.indexOf(b);
+      return (ia===-1?99:ia) - (ib===-1?99:ib);
+    });
+    if (!opKeys.length) {
+      opStripEl.innerHTML = '<div class="op-strip-empty">Importe um CSV para ver a distribuição do dia.</div>';
+    } else {
+      const total = Object.values(opCount).reduce((a,b)=>a+b,0);
+      opStripEl.innerHTML = opKeys.map(op => {
+        const n = opCount[op];
+        const color = opColors[op] || '#aaa';
+        const pct = Math.round(n/total*100);
+        return `<div class="op-strip-item">
+          <div class="op-strip-sig" style="color:${color}">${op}</div>
+          <div class="op-strip-num" style="color:${color}">${n}</div>
+          <div class="op-strip-lbl">rotas · ${pct}%</div>
+          <div class="op-strip-bar" style="background:${color}55;"><div style="height:100%;width:${pct}%;background:${color};border-radius:2px;transition:width .6s ease;"></div></div>
+        </div>`;
+      }).join('');
+    }
+  }
 
   // Formata data para exibição
   if (d) {
