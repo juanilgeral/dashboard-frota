@@ -375,7 +375,8 @@ footer span{color:var(--blue-light);}
           <span>🔄 Atualização automática a cada:</span>
           <select id="sheets-interval" onchange="saveInterval()">
             <option value="0">Manual (só ao clicar ☁️)</option>
-            <option value="5" selected>5 minutos</option>
+            <option value="3" selected>3 minutos</option>
+            <option value="5">5 minutos</option>
             <option value="10">10 minutos</option>
             <option value="15">15 minutos</option>
             <option value="30">30 minutos</option>
@@ -547,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => syncSheets(), 2000);
   setTimeout(() => syncEfetivo(), 3000);   // Efetivo 1s depois
   setupSheetsTimer();
-  setInterval(() => syncEfetivo(), 5 * 60 * 1000); // Efetivo a cada 5 min
+  setInterval(() => syncEfetivo(), 3 * 60 * 1000); // Efetivo a cada 3 min
 });
 
 function tick() {
@@ -1471,7 +1472,7 @@ async function syncSheets() {
 
 function setupSheetsTimer() {
   if (sheetsTimer) clearInterval(sheetsTimer);
-  const iv = parseInt(localStorage.getItem(GKEY_INTERVAL)||'5');
+  const iv = parseInt(localStorage.getItem(GKEY_INTERVAL)||'3');
   if (iv > 0) {
     sheetsTimer = setInterval(() => syncSheets(), iv * 60 * 1000);
   }
