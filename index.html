@@ -39,8 +39,10 @@ header{background:linear-gradient(135deg,var(--blue-dark) 0%,#0a3060 60%,#081a3a
 .btn-sync{background:linear-gradient(135deg,#1a8a4a,#0f5c30);color:white;border:none;border-radius:8px;padding:9px 16px;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;box-shadow:0 2px 12px rgba(26,138,74,.3);display:flex;align-items:center;gap:6px;}
 .btn-sync:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(26,138,74,.5);}
 .btn-sync:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+.btn-sync.syncing{animation:pulse-sync-red 0.8s infinite!important;background:linear-gradient(135deg,#c0152a,#8a0f1e)!important;color:white!important;box-shadow:0 0 16px rgba(220,30,50,.7)!important;}
 .btn-sync.syncing span:first-child{display:inline-block;animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
+@keyframes pulse-sync-red{0%,100%{background:linear-gradient(135deg,#c0152a,#8a0f1e);box-shadow:0 0 12px rgba(220,30,50,.6);}50%{background:linear-gradient(135deg,#e8192f,#b01020);box-shadow:0 0 28px rgba(232,25,47,.95);}}
 .sync-status{font-size:10px;padding:4px 10px;border-radius:12px;font-weight:700;letter-spacing:.5px;white-space:nowrap;}
 .sync-status.ok{background:rgba(39,174,96,.2);border:1px solid rgba(39,174,96,.4);color:#5de88a;}
 .sync-status.err{background:rgba(231,76,60,.2);border:1px solid rgba(231,76,60,.4);color:#ff9090;}
@@ -435,6 +437,12 @@ footer span{color:var(--blue-light);}
       <div class="prob-item"><span class="prob-lbl">Eficiência HT</span><div class="prob-bw"><div class="prob-b" style="width:95%;background:#27ae60"></div></div><span class="prob-pct" style="color:#27ae60">95%</span></div>
       <div class="prob-item"><span class="prob-lbl">Risco de atraso</span><div class="prob-bw"><div class="prob-b" style="width:13%;background:var(--red)"></div></div><span class="prob-pct" style="color:var(--red)">13%</span></div>
       <div style="margin-top:16px;background:var(--bg3);border-radius:9px;padding:12px;border:1px solid var(--border);">
+        <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:9px;font-weight:700;">🚛 Relação Caminhões × Motoristas</div>
+        <div id="bloco-cxm">
+          <div class="r-item" style="color:var(--text3)">Sincronize o efetivo para ver.</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;background:var(--bg3);border-radius:9px;padding:12px;border:1px solid var(--border);">
         <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:9px;font-weight:700;">📌 Estatísticas Rápidas</div>
         <div class="resumo-grid" id="stats-rap"><div class="r-item" style="color:var(--text3)">Importe um CSV...</div></div>
       </div>
@@ -443,17 +451,19 @@ footer span{color:var(--blue-light);}
     <div class="sp">
       <div class="sp-title">⚙️ Gestão de <span>Efetivo</span></div>
       <div style="font-size:11px;color:var(--text2);margin-bottom:13px;">Dados salvos automaticamente no navegador.</div>
-      <div class="sp-2">
-        <div class="fg"><label>Total na Empresa</label><input type="number" id="te" min="0" value="30"></div>
-        <div class="fg"><label>Total na Escala Hoje</label><input type="number" id="tesc" min="0" value="23"></div>
+      <div class="sp-2" style="grid-template-columns:1fr 1fr;gap:8px;">
+        <div class="fg"><label>Veículos no Total (frota)</label><input type="number" id="te-cam-total" min="0" value="44" readonly style="cursor:default;opacity:.85;"></div>
+        <div class="fg"><label>Carros na Ativa (escalados)</label><input type="number" id="te-cam-ativa" min="0" value="33" readonly style="cursor:default;opacity:.85;"></div>
+        <div class="fg"><label>Total Motoristas na Empresa</label><input type="number" id="te" min="0" value="32" readonly style="cursor:default;opacity:.85;"></div>
+        <div class="fg"><label>Mot. na Ativa (escalados hoje)</label><input type="number" id="tesc" min="0" value="29" readonly style="cursor:default;opacity:.85;"></div>
       </div>
-      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#27ae60"></div>✅ Ativos</div><div class="st-val"><input type="number" id="st-a" min="0" value="23"></div></div>
-      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#3a8fe4"></div>🌴 Férias</div><div class="st-val"><input type="number" id="st-f" min="0" value="0"></div></div>
-      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#f39c12"></div>🏥 Lic. Médica</div><div class="st-val"><input type="number" id="st-l" min="0" value="0"></div></div>
-      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#e74c3c"></div>🚫 Afastado INSS</div><div class="st-val"><input type="number" id="st-af" min="0" value="0"></div></div>
-      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#9b59b6"></div>📚 Treinamento</div><div class="st-val"><input type="number" id="st-t" min="0" value="0"></div></div>
-      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#e67e22"></div>⚠️ Suspensão</div><div class="st-val"><input type="number" id="st-s" min="0" value="0"></div></div>
-      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#95a5a6"></div>📋 Outros</div><div class="st-val"><input type="number" id="st-o" min="0" value="0"></div></div>
+      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#27ae60"></div>✅ Motoristas Ativos</div><div class="st-val"><input type="number" id="st-a" min="0" value="23" readonly style="cursor:default;opacity:.85;"></div></div>
+      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#3a8fe4"></div>🌴 Motoristas em Férias</div><div class="st-val"><input type="number" id="st-f" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
+      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#f39c12"></div>🏥 Lic. Médica</div><div class="st-val"><input type="number" id="st-l" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
+      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#e74c3c"></div>🚫 Afastado INSS</div><div class="st-val"><input type="number" id="st-af" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
+      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#9b59b6"></div>📚 Treinamento</div><div class="st-val"><input type="number" id="st-t" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
+      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#e67e22"></div>⚠️ Suspensão</div><div class="st-val"><input type="number" id="st-s" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
+      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#95a5a6"></div>📋 Outros</div><div class="st-val"><input type="number" id="st-o" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
       
       <div style="margin-top:14px;background:var(--bg3);border-radius:9px;padding:12px;border:1px solid var(--border);">
         <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:700;">📌 Resumo</div>
@@ -501,6 +511,7 @@ let allRoutes = [];   // todos os registros de todos os dias
 let dateMap = {};     // { 'dd/mm/aa': [rows] }
 let availDates = [];  // datas ordenadas cronologicamente
 let currentDate = '';
+let currentRoutes = []; // rotas do dia selecionado
 let charts = {};
 let manualRows = [];
 let fileRaw = '';
@@ -615,11 +626,13 @@ function navDate(dir) {
 
 // ==================== DASHBOARD UPDATE ====================
 function updateDashboard(rows, d) {
+  currentRoutes = rows;
   updateKpis(rows, d);
   renderDrivers(rows);
   renderTable(rows);
   updateCharts(rows);
   updateStatsRap(rows);
+  updateBlocoCxM();
 }
 
 function updateKpis(rows, d) {
@@ -1175,7 +1188,7 @@ ${panel.innerHTML}
 }
 
 // ==================== STATUS EFETIVO ====================
-function loadStatus(){try{const r=localStorage.getItem(SKEY);if(r)return JSON.parse(r);}catch(e){}return{totalEmpresa:30,totalEscala:23,ativo:23,ferias:0,licenca:0,afastado:0,treinamento:0,suspensao:0,outros:0};}
+function loadStatus(){try{const r=localStorage.getItem(SKEY);if(r)return JSON.parse(r);}catch(e){}return{totalCaminhoes:44,carrosNaAtiva:33,totalEmpresa:32,totalEscala:29,ativo:29,ferias:3,licenca:4,afastado:0,treinamento:2,suspensao:0,outros:0};}
 
 // ==================== SYNC EFETIVO ====================
 const SHEETS_URL_EFETIVO = 'https://script.google.com/macros/s/AKfycbyXFnFnYSIv3nbcDvgZHa1iMI5nYWYFOAdnLhSMqAF_eFjIgxlEIfI7D-anH_7UvnYJaQ/exec?tipo=efetivo';
@@ -1192,6 +1205,8 @@ async function syncEfetivo() {
     const sep = lines[0].includes('\t') ? '\t' : ',';
     const headers = lines[0].split(sep).map(h => h.trim().toUpperCase().replace(/[^A-Z0-9_]/g,'_'));
     const values  = lines[1].split(sep).map(v => parseInt(v.trim()) || 0);
+    console.log('📋 Headers efetivo:', headers);
+    console.log('📊 Values efetivo:', values);
 
     const get = (nome) => {
       const idx = headers.findIndex(h => h.includes(nome));
@@ -1199,15 +1214,25 @@ async function syncEfetivo() {
     };
 
     const st = {
-      totalEmpresa : get('VE_CULO') || get('VEICULOS') || get('TOTAL'),
-      totalEscala  : get('CARROS')  || get('ATIVA'),
-      ativo        : get('MOT_NA')  || get('MOT__NA'),
-      ferias       : get('F_RIAS')  || get('FERIAS'),
-      licenca      : get('LICEN')   || get('LIC'),
-      afastado     : 0,
-      treinamento  : get('TREIN'),
-      suspensao    : 0,
-      outros       : 0,
+      // VEÍCULOS NO TOTAL → total de caminhões da empresa
+      totalCaminhoes : get('VE_CULOS_NO_TOTAL') || get('VE_CULO') || get('VEICULOS_NO_TOTAL') || get('TOTAL'),
+      // CARROS NA ATIVA → caminhões atualmente ativos/escalados
+      carrosNaAtiva  : get('CARROS_NA_ATIVA') || get('CARROS'),
+      // MOT. NA ATIVA → motoristas ativos na escala
+      totalEscala    : get('MOT__NA_ATIVA') || get('MOT_NA_ATIVA') || get('MOT__NA') || get('MOT_NA'),
+      // MOTORISTAS → total de motoristas na empresa
+      totalEmpresa   : get('MOTORISTAS'),
+      // TREINAMENTO
+      treinamento    : get('TREINAMENTO') || get('TREIN'),
+      // LICENÇA
+      licenca        : get('LICEN_A') || get('LICENCA') || get('LICEN') || get('LIC'),
+      // FÉRIAS
+      ferias         : get('F_RIAS') || get('FERIAS'),
+      // Demais (não presentes na planilha atual)
+      ativo          : get('MOT__NA_ATIVA') || get('MOT_NA_ATIVA') || get('MOT__NA') || get('MOT_NA'),
+      afastado       : 0,
+      suspensao      : 0,
+      outros         : 0,
     };
 
     // Salva e aplica
@@ -1223,28 +1248,35 @@ async function syncEfetivo() {
   }
 }
 function applyStatus(st){
-  document.getElementById('te').value=st.totalEmpresa??30;
-  document.getElementById('tesc').value=st.totalEscala??23;
-  document.getElementById('st-a').value=st.ativo??23;
-  document.getElementById('st-f').value=st.ferias??0;
-  document.getElementById('st-l').value=st.licenca??0;
-  document.getElementById('st-af').value=st.afastado??0;
-  document.getElementById('st-t').value=st.treinamento??0;
-  document.getElementById('st-s').value=st.suspensao??0;
-  document.getElementById('st-o').value=st.outros??0;
+  const setVal = (id, v) => { const el=document.getElementById(id); if(el) el.value=v??0; };
+  setVal('te-cam-total', st.totalCaminhoes ?? 44);
+  setVal('te-cam-ativa', st.carrosNaAtiva  ?? 33);
+  setVal('te',           st.totalEmpresa   ?? 32);
+  setVal('tesc',         st.totalEscala    ?? 29);
+  setVal('st-a',  st.ativo       ?? 29);
+  setVal('st-f',  st.ferias      ?? 3);
+  setVal('st-l',  st.licenca     ?? 4);
+  setVal('st-af', st.afastado    ?? 0);
+  setVal('st-t',  st.treinamento ?? 2);
+  setVal('st-s',  st.suspensao   ?? 0);
+  setVal('st-o',  st.outros      ?? 0);
   updateResumo(st);
+  updateBlocoCxM();
 }
 function saveStatus(){
+  const getN = id => { const el=document.getElementById(id); return el ? +el.value : 0; };
   const st={
-    totalEmpresa:+document.getElementById('te').value,
-    totalEscala:+document.getElementById('tesc').value,
-    ativo:+document.getElementById('st-a').value,
-    ferias:+document.getElementById('st-f').value,
-    licenca:+document.getElementById('st-l').value,
-    afastado:+document.getElementById('st-af').value,
-    treinamento:+document.getElementById('st-t').value,
-    suspensao:+document.getElementById('st-s').value,
-    outros:+document.getElementById('st-o').value,
+    totalCaminhoes: getN('te-cam-total'),
+    carrosNaAtiva:  getN('te-cam-ativa'),
+    totalEmpresa:   getN('te'),
+    totalEscala:    getN('tesc'),
+    ativo:          getN('st-a'),
+    ferias:         getN('st-f'),
+    licenca:        getN('st-l'),
+    afastado:       getN('st-af'),
+    treinamento:    getN('st-t'),
+    suspensao:      getN('st-s'),
+    outros:         getN('st-o'),
   };
   localStorage.setItem(SKEY,JSON.stringify(st));
   updateResumo(st);
@@ -1254,21 +1286,93 @@ function saveStatus(){
   toast('💾 Quadro de efetivo salvo!');
 }
 function updateResumo(st){
+  // Total situações dos motoristas (deveria bater com totalEmpresa)
+  const totalSitMot = (st.ativo||0)+(st.ferias||0)+(st.licenca||0)+(st.afastado||0)+(st.treinamento||0)+(st.suspensao||0)+(st.outros||0);
+  const bateMot = totalSitMot === (st.totalEmpresa||0);
   const items=[
-    {l:'Total empresa',v:st.totalEmpresa,c:'var(--text)'},
-    {l:'Na escala',v:st.totalEscala,c:'var(--blue-light)'},
-    {l:'Ativos',v:st.ativo,c:'var(--green)'},
-    {l:'Férias',v:st.ferias,c:'#3a8fe4'},
-    {l:'Lic. médica',v:st.licenca,c:'var(--yellow)'},
-    {l:'Afastados',v:st.afastado,c:'var(--red)'},
-    {l:'Treinamento',v:st.treinamento,c:'#9b59b6'},
-    {l:'Suspensão',v:st.suspensao,c:'#e67e22'},
-    {l:'Outros',v:st.outros,c:'#95a5a6'},
+    {l:'🚛 Veículos no total (frota)',  v:st.totalCaminhoes, c:'var(--blue-light)'},
+    {l:'🟢 Carros na ativa',            v:st.carrosNaAtiva,  c:'var(--green)'},
+    {l:'👥 Total motoristas empresa',   v:st.totalEmpresa,   c:'var(--text)'},
+    {l:'✅ Mot. na ativa (escalados)',   v:st.totalEscala,    c:'var(--green)'},
+    {l:'🌴 Férias',                     v:st.ferias,         c:'#3a8fe4'},
+    {l:'🏥 Licença',                    v:st.licenca,        c:'var(--yellow)'},
+    {l:'📚 Treinamento',                v:st.treinamento,    c:'#9b59b6'},
+    {l:'🚫 Afastados',                  v:st.afastado,       c:'var(--red)'},
+    {l:'⚠️ Suspensão',                  v:st.suspensao,      c:'#e67e22'},
+    {l:'📋 Outros',                     v:st.outros,         c:'#95a5a6'},
+    {l:'∑ Total situações mot.',        v:totalSitMot,       c: bateMot ? 'var(--green)' : 'var(--red)'},
   ];
-  document.getElementById('resumo-ef').innerHTML=items.map(i=>`<div class="r-item">${i.l}: <strong style="color:${i.c}">${i.v}</strong></div>`).join('');
+  document.getElementById('resumo-ef').innerHTML=items.map(i=>`<div class="r-item">${i.l}: <strong style="color:${i.c}">${i.v??0}</strong></div>`).join('');
 }
 
-// ==================== HELPERS ====================
+// ==================== CAMINHÕES x MOTORISTAS ====================
+function updateBlocoCxM() {
+  const el = document.getElementById('bloco-cxm');
+  if (!el) return;
+
+  let st;
+  try { st = JSON.parse(localStorage.getItem(SKEY)); } catch(e) { st = null; }
+  if (!st) { el.innerHTML = '<div class="r-item" style="color:var(--text3)">Sincronize o efetivo para ver.</div>'; return; }
+
+  // Carros na Ativa = caminhões escalados hoje (da planilha)
+  const cam      = st.carrosNaAtiva  || 0;
+  // Mot. na Ativa = motoristas escalados hoje (da planilha)
+  const motEscala = st.totalEscala   || 0;
+  // Totais gerais
+  const totalCam = st.totalCaminhoes || 0;
+  const totalMot = st.totalEmpresa   || 0;
+
+  if (cam === 0 && motEscala === 0) {
+    el.innerHTML = '<div class="r-item" style="color:var(--text3)">Sincronize e selecione uma data.</div>';
+    return;
+  }
+
+  const diff = motEscala - cam;
+  let alerta = '';
+  let alertaColor = 'var(--green)';
+
+  if (diff < 0) {
+    const necessidade = Math.abs(diff);
+    alertaColor = 'var(--red)';
+    alerta = `<div style="margin-top:8px;background:rgba(231,76,60,.13);border:1px solid rgba(231,76,60,.4);border-radius:7px;padding:8px 10px;">
+      <div style="font-size:10px;font-weight:700;color:#ff7070;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;">⚠️ Déficit de Motoristas</div>
+      <div style="font-size:12px;color:#ff9090;">Faltam <strong style="color:#ff5555;font-size:15px;">${necessidade}</strong> motorista${necessidade>1?'s':''} para cobrir os carros na ativa.</div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px;">Considere contratação ou remanejamento urgente.</div>
+    </div>`;
+  } else if (diff > 0) {
+    alertaColor = 'var(--green)';
+    alerta = `<div style="margin-top:8px;background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);border-radius:7px;padding:8px 10px;">
+      <div style="font-size:10px;font-weight:700;color:#5de88a;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;">✅ Motoristas em Folga / Reserva</div>
+      <div style="font-size:12px;color:#7fe8a0;">Sobram <strong style="color:#5de88a;font-size:15px;">${diff}</strong> motorista${diff>1?'s':''} em relação aos carros na ativa.</div>
+    </div>`;
+  } else {
+    alerta = `<div style="margin-top:8px;background:rgba(26,111,196,.1);border:1px solid rgba(26,111,196,.3);border-radius:7px;padding:8px 10px;">
+      <div style="font-size:10px;font-weight:700;color:#5db0ff;letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px;">🎯 Proporção Exata</div>
+      <div style="font-size:12px;color:#88c8ff;">Motoristas e carros na ativa em proporção 1:1 perfeita.</div>
+    </div>`;
+  }
+
+  el.innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:6px;">
+      <div style="text-align:center;background:var(--card);border-radius:7px;padding:8px 4px;border:1px solid var(--border);">
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">🚛 Carros na Ativa</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--blue-light);">${cam}</div>
+        <div style="font-size:9px;color:var(--text3);">de ${totalCam} no total</div>
+      </div>
+      <div style="text-align:center;background:var(--card);border-radius:7px;padding:8px 4px;border:1px solid var(--border);">
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">👨‍✈️ Mot. na Ativa</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:var(--green);">${motEscala}</div>
+        <div style="font-size:9px;color:var(--text3);">de ${totalMot} na empresa</div>
+      </div>
+      <div style="text-align:center;background:var(--card);border-radius:7px;padding:8px 4px;border:1px solid ${alertaColor}55;">
+        <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;">⚖️ Saldo</div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:${alertaColor};">${diff > 0 ? '+' : ''}${diff}</div>
+        <div style="font-size:9px;color:var(--text3);">mot. vs carros</div>
+      </div>
+    </div>
+    ${alerta}
+  `;
+}
 function showFb(id,type,msg){const el=document.getElementById(id);if(!el)return;el.className='fb '+type;el.textContent=msg;}
 function hideFb(id){const el=document.getElementById(id);if(el)el.className='fb';}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
