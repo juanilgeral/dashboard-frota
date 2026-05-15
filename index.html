@@ -410,20 +410,24 @@ footer span{color:var(--blue-light);}
     <div class="kpi-card" style="--kc:#f39c12"><div class="kpi-icon">📅</div><div class="kpi-val" id="k-datas">—</div><div class="kpi-lbl">Dias no CSV</div><div class="kpi-sub">Total importado</div></div>
   </div>
 
+  <!-- MOTORISTAS POR OP + SITUAÇÃO EFETIVO (abaixo dos KPIs) -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px;">
+    <div class="chart-card"><div class="ct">👥 Motoristas por OP</div><div class="cw" style="height:300px;"><canvas id="cMot"></canvas></div></div>
+    <div class="chart-card"><div class="ct">📊 Situação Efetivo</div><div class="cw" style="height:300px;"><canvas id="cSit"></canvas></div></div>
+  </div>
+
+  <!-- CHARTS — sozinho, horizontal, uma operação abaixo da outra -->
+  <div class="sec">📈 Gráficos e Análises</div>
+  <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:22px;">
+    <div class="chart-card" id="op-card"><div class="ct" style="justify-content:space-between;"><span>🔢 Distribuição por OP <span class="badge">veículos válidos</span></span><button onclick="printOpPanel()" title="Imprimir / Salvar como imagem" style="background:var(--blue);border:none;border-radius:7px;padding:5px 11px;color:white;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .2s;" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='var(--blue)'">🖨️ PRINT</button></div><div id="op-panel" style="overflow-y:auto;max-height:340px;"></div></div>
+    <div class="chart-card"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw"><canvas id="cHor"></canvas></div></div>
+    <div class="chart-card"><div class="ct">🚐 KM por Veículo</div><div class="cw"><canvas id="cKm"></canvas></div></div>
+  </div>
+
   <!-- DRIVERS -->
   <div class="sec">👨‍✈️ Motoristas — Dia Selecionado</div>
   <div class="driver-grid" id="driver-grid">
     <div class="empty-state" style="grid-column:span 5"><div class="ei">📂</div><p>Importe um CSV e selecione uma data para ver os motoristas.</p><button class="btn-p" onclick="openModal()">⬆️ Importar Dados</button></div>
-  </div>
-
-  <!-- CHARTS -->
-  <div class="sec">📈 Gráficos e Análises</div>
-  <div class="charts-grid">
-    <div class="chart-card" id="op-card"><div class="ct" style="justify-content:space-between;"><span>🔢 Distribuição por OP <span class="badge">veículos válidos</span></span><button onclick="printOpPanel()" title="Imprimir / Salvar como imagem" style="background:var(--blue);border:none;border-radius:7px;padding:5px 11px;color:white;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .2s;" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='var(--blue)'">🖨️ PRINT</button></div><div id="op-panel" style="overflow-y:auto;max-height:340px;"></div></div>
-    <div class="chart-card"><div class="ct">👥 Motoristas por OP</div><div class="cw" style="height:340px;"><canvas id="cMot"></canvas></div></div>
-    <div class="chart-card"><div class="ct">📊 Situação Efetivo</div><div class="cw" style="height:340px;"><canvas id="cSit"></canvas></div></div>
-    <div class="chart-card wide"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw"><canvas id="cHor"></canvas></div></div>
-    <div class="chart-card"><div class="ct">🚐 KM por Veículo</div><div class="cw"><canvas id="cKm"></canvas></div></div>
   </div>
 
   <!-- PROB + STATUS -->
