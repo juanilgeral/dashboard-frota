@@ -964,6 +964,8 @@ function updateCharts(rows) {
   // Bar KM por veículo
   const topVeics = Object.entries(kmVeic).sort((a,b)=>b[1]-a[1]).slice(0,8);
   destroyChart('cKm');
+  // Limpa mensagem de "sem dados" caso existia de renderização anterior
+  (function(){ const w = document.getElementById('cKm')?.parentElement; if(w){ const p=w.querySelector('.km-empty-msg'); if(p) p.remove(); } })();
   if (topVeics.length > 0) {
     charts['cKm'] = new Chart(document.getElementById('cKm'), {
       type:'bar',
@@ -985,7 +987,19 @@ function updateCharts(rows) {
           scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',font:{size:10}},grid:{color:'#2a3d5e'}}}}
       });
     } else {
-      el.parentElement.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:var(--text3);font-size:12px;text-align:center;padding:20px;">Sem dados de KM no CSV.<br>Adicione colunas KM_SAIDA e KM_CHEGADA.</div>';
+      // Não destruir o canvas (pois impossibilita recarregar dados depois).
+      // Em vez disso, exibe mensagem como overlay dentro do wrapper.
+      const wrapper = el && el.parentElement;
+      if (wrapper) {
+        // Remove mensagem anterior se existir
+        const prev = wrapper.querySelector('.km-empty-msg');
+        if (prev) prev.remove();
+        const msg = document.createElement('div');
+        msg.className = 'km-empty-msg';
+        msg.style.cssText = 'display:flex;align-items:center;justify-content:center;height:100%;color:var(--text3, #4a6080);font-size:12px;text-align:center;padding:20px;';
+        msg.innerHTML = 'Sem dados de KM no CSV.<br>Adicione colunas KM_SAIDA e KM_CHEGADA.';
+        wrapper.appendChild(msg);
+      }
     }
   }
 }
