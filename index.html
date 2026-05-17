@@ -199,6 +199,57 @@ kbd{background:var(--border);color:var(--text);padding:1px 5px;border-radius:3px
 .toast{position:fixed;bottom:24px;right:24px;background:var(--green);color:white;padding:11px 20px;border-radius:9px;font-weight:600;font-size:12px;opacity:0;transform:translateY(10px);transition:all .3s;z-index:9999;pointer-events:none;}
 .toast.show{opacity:1;transform:translateY(0);}
 
+/* SISTEMA FECHADO */
+#closed-overlay{display:none;position:relative;z-index:10;margin:0 0 22px 0;}
+#closed-overlay.show{display:block;}
+.closed-banner{
+  background:linear-gradient(135deg,rgba(13,74,138,.55) 0%,rgba(11,18,32,.85) 100%);
+  border:1.5px solid var(--blue);
+  border-radius:16px;
+  padding:42px 36px 38px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,.45);
+}
+.closed-banner::before{
+  content:'';
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 0%,rgba(26,111,196,.18) 0%,transparent 70%),
+    radial-gradient(ellipse 40% 30% at 80% 80%,rgba(245,166,35,.07) 0%,transparent 60%);
+  pointer-events:none;
+}
+.closed-icon{font-size:54px;display:block;margin-bottom:10px;filter:drop-shadow(0 0 18px rgba(26,111,196,.6));}
+.closed-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(26,111,196,.18);border:1.5px solid rgba(26,111,196,.45);
+  border-radius:24px;padding:5px 18px;margin-bottom:18px;
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;color:#5db0ff;
+}
+.closed-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:#5db0ff;animation:pulse-dot 2s infinite;}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.7);}}
+.closed-title{
+  font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;
+  letter-spacing:3px;text-transform:uppercase;color:var(--text);line-height:1.1;
+  margin-bottom:8px;
+}
+.closed-title span{color:var(--accent);}
+.closed-sub{font-size:14px;color:var(--text2);margin-bottom:28px;line-height:1.6;max-width:520px;margin-left:auto;margin-right:auto;}
+.closed-hint{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(245,166,35,.1);border:1.5px solid rgba(245,166,35,.3);
+  border-radius:12px;padding:13px 22px;
+  font-size:12px;color:var(--text2);line-height:1.5;
+}
+.closed-hint strong{color:var(--accent);font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:.5px;}
+.closed-hint .arrow{font-size:18px;animation:bounce-up 1.5s ease-in-out infinite;}
+@keyframes bounce-up{0%,100%{transform:translateY(0);}50%{transform:translateY(-5px);}}
+.closed-divider{width:60px;height:3px;background:linear-gradient(90deg,transparent,var(--blue),transparent);border-radius:2px;margin:22px auto;}
+.closed-next-hint{font-size:11px;color:var(--text3);}
+.closed-next-hint strong{color:var(--text2);}
+
 /* RESUMO INLINE */
 .resumo-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;}
 .r-item{font-size:11px;color:var(--text2);}
@@ -392,6 +443,29 @@ footer span{color:var(--blue-light);}
 </div>
 
 <main>
+
+  <!-- PAINEL SISTEMA FECHADO (aparece quando data atual não tem rotas) -->
+  <div id="closed-overlay">
+    <div class="closed-banner">
+      <span class="closed-icon">🔒</span>
+      <div class="closed-badge">⚙️ Status Operacional</div>
+      <div class="closed-title">Sem Operação <span>Hoje</span></div>
+      <p class="closed-sub">
+        Não há programação de rotas lançada para a data de hoje.<br>
+        Pode ser <strong style="color:var(--text)">domingo</strong>, um <strong style="color:var(--text)">feriado</strong> ou os lançamentos ainda não foram enviados para o sistema.
+      </p>
+      <div class="closed-hint">
+        <span class="arrow">☝️</span>
+        <div>
+          Quer consultar outro dia? Use o seletor de data <strong>no topo da página</strong> para escolher<br>
+          a próxima data disponível — inclusive o dia seguinte, se já tiver sido lançado.
+        </div>
+      </div>
+      <div class="closed-divider"></div>
+      <div class="closed-next-hint" id="closed-next-hint"></div>
+    </div>
+  </div>
+
   <!-- KPIs -->
   <div class="sec">📊 Visão Geral do Dia</div>
 
@@ -533,12 +607,29 @@ document.addEventListener('DOMContentLoaded', () => {
       buildDateMap();
       populateDateSelect();
       const lastDate = localStorage.getItem(DKEY);
-      if (lastDate && dateMap[lastDate]) {
+      if (lastDate && availDates.includes(lastDate)) {
         setDate(lastDate); // respeita última seleção manual do usuário
       } else if (availDates.length) {
+        // Mesma lógica do loadAllRoutes: tenta selecionar hoje
         const hoje = todayMidnight();
-        const passadas = availDates.filter(d => parseDateStr(d) <= hoje);
-        setDate(passadas.length ? passadas[passadas.length-1] : availDates[0]);
+        const hojeFmt = String(hoje.getDate()).padStart(2,'0') + '/' +
+                        String(hoje.getMonth()+1).padStart(2,'0') + '/' +
+                        String(hoje.getFullYear()).slice(2);
+        const primeiraData = parseDateStr(availDates[0]);
+        const ultimaData   = parseDateStr(availDates[availDates.length - 1]);
+        if (hoje >= primeiraData && hoje <= ultimaData) {
+          if (!dateMap[hojeFmt]) {
+            dateMap[hojeFmt] = [];
+            availDates.push(hojeFmt);
+            availDates.sort((a,b) => parseDateStr(a) - parseDateStr(b));
+            populateDateSelect();
+          }
+          setDate(hojeFmt);
+        } else if (hoje > ultimaData) {
+          setDate(availDates[availDates.length - 1]);
+        } else {
+          setDate(availDates[0]);
+        }
       }
     }
   } catch(e) { console.warn('Erro ao carregar dados:', e); }
@@ -600,7 +691,7 @@ function populateDateSelect() {
     const dt = new Date(2000+parseInt(parts[2]), parseInt(parts[1])-1, parseInt(parts[0]));
     const dias = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
     const nrotas = dateMap[d] ? dateMap[d].length : 0;
-    opt.textContent = `${d} (${dias[dt.getDay()]}) — ${nrotas} rota${nrotas!==1?'s':''}`;
+    opt.textContent = nrotas === 0 ? `${d} (${dias[dt.getDay()]}) — 🔒 Sem operação` : `${d} (${dias[dt.getDay()]}) — ${nrotas} rota${nrotas!==1?'s':''}`;
     sel.appendChild(opt);
   });
   // Atualiza contador
@@ -632,12 +723,46 @@ function navDate(dir) {
 // ==================== DASHBOARD UPDATE ====================
 function updateDashboard(rows, d) {
   currentRoutes = rows;
+  checkClosedSystem(rows, d);
   updateKpis(rows, d);
   renderDrivers(rows);
   renderTable(rows);
   updateCharts(rows);
   updateStatsRap(rows);
   updateBlocoCxM();
+}
+
+// ==================== SISTEMA FECHADO ====================
+function checkClosedSystem(rows, d) {
+  const overlay = document.getElementById('closed-overlay');
+  const hintEl  = document.getElementById('closed-next-hint');
+  if (!overlay) return;
+
+  // Só mostra o painel se: há dados importados E a data selecionada é hoje E não tem rotas
+  const hoje = todayMidnight();
+  if (!d || !allRoutes.length) { overlay.classList.remove('show'); return; }
+
+  const selDate = parseDateStr(d);
+  const isToday = selDate.getTime() === hoje.getTime();
+  const semRotas = rows.length === 0;
+
+  if (isToday && semRotas) {
+    overlay.classList.add('show');
+    // Descobre próxima data disponível
+    const futuras = availDates.filter(dt => parseDateStr(dt) > hoje);
+    if (futuras.length) {
+      const prox = futuras[0];
+      const parts = prox.split('/');
+      const dtProx = parseDateStr(prox);
+      const dias = ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+      const nRotas = dateMap[prox] ? dateMap[prox].length : 0;
+      hintEl.innerHTML = `📅 Próxima data com programação disponível: <strong>${prox} — ${dias[dtProx.getDay()]} (${nRotas} rota${nRotas!==1?'s':''})</strong>`;
+    } else {
+      hintEl.innerHTML = `⏳ Nenhuma data futura disponível no CSV atual. Aguarde o lançamento ou sincronize novamente.`;
+    }
+  } else {
+    overlay.classList.remove('show');
+  }
 }
 
 function updateKpis(rows, d) {
@@ -1053,12 +1178,29 @@ function loadAllRoutes(parsed) {
   const hoje = todayMidnight();
 
   if (availDates.length) {
-    // Filtra datas <= hoje e pega a mais recente
-    const passadas = availDates.filter(d => parseDateStr(d) <= hoje);
-    if (passadas.length) {
-      setDate(passadas[passadas.length - 1]); // última data <= hoje
+    // Formata hoje como dd/mm/aa para comparar com as chaves do dateMap
+    const hojeFmt = String(hoje.getDate()).padStart(2,'0') + '/' +
+                    String(hoje.getMonth()+1).padStart(2,'0') + '/' +
+                    String(hoje.getFullYear()).slice(2);
+
+    const primeiraData = parseDateStr(availDates[0]);
+    const ultimaData   = parseDateStr(availDates[availDates.length - 1]);
+
+    if (hoje >= primeiraData && hoje <= ultimaData) {
+      // Hoje está dentro do intervalo do CSV: força hoje (mesmo sem rotas)
+      if (!dateMap[hojeFmt]) {
+        dateMap[hojeFmt] = []; // sem rotas — o painel "fechado" vai aparecer
+        availDates.push(hojeFmt);
+        availDates.sort((a,b) => parseDateStr(a) - parseDateStr(b));
+        populateDateSelect();
+      }
+      setDate(hojeFmt);
+    } else if (hoje > ultimaData) {
+      // Hoje é depois de todas as datas do CSV
+      setDate(availDates[availDates.length - 1]);
     } else {
-      setDate(availDates[0]); // tudo no futuro, pega o primeiro
+      // CSV totalmente no futuro
+      setDate(availDates[0]);
     }
   }
 
