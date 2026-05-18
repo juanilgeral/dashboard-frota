@@ -108,6 +108,8 @@ main{padding:22px 28px;max-width:1600px;margin:0 auto;}
 .fleet-table tr:hover td{background:var(--card2);}
 .fleet-table tr.em-transito td{background:rgba(26,111,196,.07);}
 .fleet-table tr.em-transito:hover td{background:rgba(26,111,196,.13);}
+.fleet-table tr.viagem-finalizada td{background:rgba(39,174,96,.05);}
+.fleet-table tr.viagem-finalizada:hover td{background:rgba(39,174,96,.1);}
 .op-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;}
 .op-cv{background:rgba(230,200,0,.18);color:#f5d800;border:1px solid rgba(230,200,0,.45);}
 .op-ls{background:rgba(232,64,64,.15);color:#ff7070;border:1px solid rgba(232,64,64,.3);}
@@ -447,9 +449,17 @@ const SHEETS_URL_EFETIVO='https://script.google.com/macros/s/AKfycbyXFnFnYSIv3nb
 let allRoutes=[],dateMap={},availDates=[],currentDate='',currentRoutes=[],charts={},manualRows=[],fileRaw='';
 
 // ===================== VALIDACAO EM TRANSITO =====================
-// Regra: rota em transito = destino preenchido E saida_v (Saida Veiculo CD) preenchida
+// Rota EM TRANSITO = destino preenchido + saida veic. CD preenchida + KM chegada NAO fechado
+// Se kmChegada > 0 = viagem finalizada, NAO conta como em transito
 function isEmTransito(r){
-  return !!(r.destino&&r.destino.trim()&&r.saida_v&&r.saida_v.trim());
+  const temDestino = !!(r.destino && r.destino.trim());
+  const temSaidaV  = !!(r.saida_v && r.saida_v.trim());
+  const kmFechado  = (r.kmChegada || 0) > 0;
+  return temDestino && temSaidaV && !kmFechado;
+}
+// Viagem finalizada = destino + saida + KM chegada preenchido
+function isViagemFinalizada(r){
+  return !!(r.destino && r.destino.trim() && r.saida_v && r.saida_v.trim() && (r.kmChegada || 0) > 0);
 }
 
 // ===================== INIT =====================
@@ -551,7 +561,9 @@ function updateDashboard(rows,d){
 
 // ===================== INDICADOR TRANSITO =====================
 function updateIndicadorTransito(rows){
-  const total=rows.length,transito=rows.filter(isEmTransito).length;
+  const total=rows.length;
+  const transito=rows.filter(isEmTransito).length;
+  const finalizado=rows.filter(isViagemFinalizada).length;
   const pct=total>0?Math.round(transito/total*100):0;
   const numEl=document.getElementById('ind-tr-num');
   const barEl=document.getElementById('ind-tr-bar');
@@ -562,7 +574,10 @@ function updateIndicadorTransito(rows){
   if(pctEl)pctEl.textContent=total>0?pct+'%':'—';
   if(descEl){
     if(!total){descEl.textContent='Aguardando dados...';}
-    else{const sem=total-transito;descEl.textContent=transito+' de '+total+' rotas com destino + saída veíc. preenchidos · '+sem+' sem validação';}
+    else{
+      const semValidacao=total-transito-finalizado;
+      descEl.innerHTML=transito+' em trânsito · <span style="color:#5de88a">'+finalizado+' finalizado'+(finalizado!==1?'s':'')+'</span>'+(semValidacao>0?' · '+semValidacao+' s/ validação':'');
+    }
   }
 }
 
@@ -644,20 +659,38 @@ function renderDrivers(rows){
   const drivers=[...new Set(rows.map(r=>r.motorista))].filter(Boolean).sort();
   // Motoristas em transito primeiro
   drivers.sort((a,b)=>(driverTransito[b]?1:0)-(driverTransito[a]?1:0));
+  // Marca motoristas finalizados (KM fechado)
+  const driverFinalizado={};
+  rows.filter(isViagemFinalizada).forEach(r=>{driverFinalizado[r.motorista]=true;});
   const nMoT=Object.keys(driverTransito).length;
+  const nMoF=Object.keys(driverFinalizado).length;
   const badgeEl=document.getElementById('badge-mot-transito');
-  if(badgeEl){badgeEl.textContent='🚛 '+nMoT+' em trânsito';badgeEl.style.display=nMoT>0?'inline-block':'none';}
+  if(badgeEl){
+    if(nMoT>0||nMoF>0){
+      badgeEl.textContent='🚛 '+nMoT+' trânsito · ✅ '+nMoF+' finaliz.';
+      badgeEl.style.display='inline-block';
+    } else { badgeEl.style.display='none'; }
+  }
+  // Ordem: em transito > finalizado > resto
+  drivers.sort((a,b)=>{
+    const pa=driverTransito[a]?2:driverFinalizado[a]?1:0;
+    const pb=driverTransito[b]?2:driverFinalizado[b]?1:0;
+    return pb-pa;
+  });
   grid.innerHTML=drivers.map(name=>{
     const ini=name.split(' ').map(w=>w[0]||'').join('').substring(0,2);
     const ops=[...(driverOps[name]||[])].join(' · ');
     const nrotas=rows.filter(r=>r.motorista===name).length;
     const placa=rows.filter(r=>r.motorista===name)[0]?.veiculo||'—';
     const emT=!!driverTransito[name];
-    const borderColor=emT?'rgba(58,143,228,.7)':'var(--border)';
-    const dotColor=emT?'#5db0ff':'var(--green)';
-    const avBg=emT?'background:linear-gradient(135deg,#0d4a8a,#1a6fc4);border-color:#3a8fe4;':'';
-    const tBadge=emT?`<div style="margin-top:3px;"><span class="transito-badge"><span class="transito-dot"></span>em trânsito</span></div>`:'';
-    return`<div class="dr-card" style="border-color:${borderColor};"><div class="dr-av" style="${avBg}">${ini}</div><div class="dr-info"><div class="dr-name">${name}</div><div class="dr-ops">${ops} · ${nrotas} rota${nrotas!==1?'s':''}</div><div style="font-size:10px;color:var(--accent);margin-top:2px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.5px;">🚌 ${placa}</div>${tBadge}</div><div class="dr-dot" style="background:${dotColor};"></div></div>`;
+    const fin=!emT&&!!driverFinalizado[name];
+    const borderColor=emT?'rgba(58,143,228,.7)':fin?'rgba(39,174,96,.5)':'var(--border)';
+    const dotColor=emT?'#5db0ff':fin?'#5de88a':'var(--green)';
+    const avBg=emT?'background:linear-gradient(135deg,#0d4a8a,#1a6fc4);border-color:#3a8fe4;':fin?'background:linear-gradient(135deg,#0d3a1e,#1a6132);border-color:#27ae60;':'';
+    let statBadge='';
+    if(emT) statBadge=`<div style="margin-top:3px;"><span class="transito-badge"><span class="transito-dot"></span>em trânsito</span></div>`;
+    else if(fin) statBadge=`<div style="margin-top:3px;"><span style="display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:rgba(39,174,96,.2);border:1px solid rgba(39,174,96,.5);color:#5de88a;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;">✅ finalizado</span></div>`;
+    return`<div class="dr-card" style="border-color:${borderColor};"><div class="dr-av" style="${avBg}">${ini}</div><div class="dr-info"><div class="dr-name">${name}</div><div class="dr-ops">${ops} · ${nrotas} rota${nrotas!==1?'s':''}</div><div style="font-size:10px;color:var(--accent);margin-top:2px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.5px;">🚌 ${placa}</div>${statBadge}</div><div class="dr-dot" style="background:${dotColor};"></div></div>`;
   }).join('');
 }
 
@@ -666,13 +699,20 @@ function renderTable(rows){
   const tbody=document.getElementById('route-tbody');
   if(!rows.length){tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><div class="ei">📅</div><p>Selecione uma data para ver as rotas.</p></div></td></tr>';return;}
   const opMap={CV:'op-cv',LS:'op-ls',TL:'op-tl',HT:'op-ht',NL:'op-nl',GR:'op-gr'};
-  // Em transito primeiro
-  const sorted=[...rows].sort((a,b)=>(isEmTransito(b)?1:0)-(isEmTransito(a)?1:0));
+  // Ordem: em transito primeiro, finalizados depois, sem validacao por ultimo
+  const sorted=[...rows].sort((a,b)=>{
+    const pa=isEmTransito(a)?2:isViagemFinalizada(a)?1:0;
+    const pb=isEmTransito(b)?2:isViagemFinalizada(b)?1:0;
+    return pb-pa;
+  });
   tbody.innerHTML=sorted.map(r=>{
     const cls=opMap[r.op]||'op-cv';
-    const emT=isEmTransito(r);
-    const rowCls=emT?'em-transito':'';
-    const tCell=emT?`<span class="transito-badge"><span class="transito-dot"></span>em trânsito</span>`:`<span style="font-size:10px;color:var(--text3);">—</span>`;
+    const emT=isEmTransito(r), fin=isViagemFinalizada(r);
+    const rowCls=emT?'em-transito':fin?'viagem-finalizada':'';
+    let tCell;
+    if(emT) tCell=`<span class="transito-badge"><span class="transito-dot"></span>em trânsito</span>`;
+    else if(fin) tCell=`<span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(39,174,96,.2);border:1px solid rgba(39,174,96,.5);color:#5de88a;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;">✅ finalizado${r.km?' · '+r.km+' km':''}</span>`;
+    else tCell=`<span style="font-size:10px;color:var(--text3);">—</span>`;
     return`<tr class="${rowCls}"><td><span class="op-badge ${cls}">${r.op}</span></td><td>${r.veiculo}</td><td><strong>${r.motorista}</strong></td><td>${r.saida||'—'}</td><td>${r.prev||'—'}</td><td>${r.off||'—'}</td><td>${r.prox||'—'}</td><td style="max-width:280px;white-space:normal;font-size:11px;">${r.destino||'—'}</td><td>${r.saida_v||'—'}</td><td>${tCell}</td></tr>`;
   }).join('');
 }
@@ -741,18 +781,29 @@ function updateCharts(rows){
   if(panel){
     const opColors={CV:'#f5d800',LS:'#e84040',TL:'#2ed573',HT:'#27ae60',NL:'#ff2020'};
     const opBg={CV:'rgba(230,200,0,.1)',LS:'rgba(232,64,64,.08)',TL:'rgba(46,213,115,.08)',HT:'rgba(39,174,96,.1)',NL:'rgba(200,0,0,.1)',GR:'rgba(158,158,158,.08)'};
-    const byOpTotal={},byOpTransito={};
+    const byOpTotal={},byOpTransito={},byOpFinalizado={};
     rows.forEach(r=>{if(!byOpTotal[r.op])byOpTotal[r.op]=new Set();byOpTotal[r.op].add(r.veiculo);});
     transitoRows.forEach(r=>{if(!byOpTransito[r.op])byOpTransito[r.op]=[];if(!byOpTransito[r.op].find(v=>v.veiculo===r.veiculo))byOpTransito[r.op].push({veiculo:r.veiculo,destino:r.destino,saida_v:r.saida_v});});
+    rows.filter(isViagemFinalizada).forEach(r=>{if(!byOpFinalizado[r.op])byOpFinalizado[r.op]=[];if(!byOpFinalizado[r.op].find(v=>v.veiculo===r.veiculo))byOpFinalizado[r.op].push({veiculo:r.veiculo,km:r.km});});
     const ops=Object.keys(byOpTotal).sort();
     if(!ops.length){panel.innerHTML='<div style="color:var(--text3);font-size:12px;padding:16px;text-align:center;">Nenhuma rota neste dia.</div>';}
     else{
       panel.innerHTML=ops.map(op=>{
-        const tVeics=byOpTransito[op]||[];const totalVeics=byOpTotal[op]?byOpTotal[op].size:0;
+        const tVeics=byOpTransito[op]||[];
+        const fVeics=byOpFinalizado[op]||[];
+        const totalVeics=byOpTotal[op]?byOpTotal[op].size:0;
         const color=opColors[op]||'#aaa';const bg=opBg[op]||'rgba(255,255,255,.04)';
-        const tInfo=tVeics.length>0?`<span style="font-size:11px;color:${color};background:${color}22;border:1px solid ${color}55;padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">${tVeics.length} em trânsito</span>`:`<span style="font-size:11px;color:var(--text3);background:var(--border);padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;">0 em trânsito</span>`;
-        const veicsHtml=tVeics.length>0?tVeics.map(v=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;background:var(--bg3);border:1px solid ${color}33;border-radius:6px;padding:4px 10px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:0.5px;"><span class="transito-dot"></span><span>${v.veiculo}</span>${v.saida_v?`<span style="font-size:9px;color:var(--text3);font-weight:400;">saída ${v.saida_v}</span>`:''}</div>`).join(''):`<span style="font-size:11px;color:var(--text3);padding:4px;">Nenhum veículo com destino + saída do CD preenchidos.</span>`;
-        return`<div style="background:${bg};border:1px solid ${color}44;border-radius:10px;padding:12px 14px;margin-bottom:10px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><span style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:${color};letter-spacing:2px;line-height:1;">${op}</span>${tInfo}<span style="font-size:10px;color:var(--text3);margin-left:auto;">${totalVeics} total na escala</span></div><div style="display:flex;flex-wrap:wrap;gap:6px;">${veicsHtml}</div></div>`;
+        const tInfo=tVeics.length>0
+          ?`<span style="font-size:11px;color:${color};background:${color}22;border:1px solid ${color}55;padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">${tVeics.length} em trânsito</span>`
+          :`<span style="font-size:11px;color:var(--text3);background:var(--border);padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;">0 em trânsito</span>`;
+        const fInfo=fVeics.length>0
+          ?`<span style="font-size:11px;color:#5de88a;background:rgba(39,174,96,.15);border:1px solid rgba(39,174,96,.4);padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">✅ ${fVeics.length} finalizado${fVeics.length!==1?'s':''}</span>`:'';
+        const veicsEmT=tVeics.length>0
+          ?`<div style="margin-bottom:6px;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;">🔵 Em trânsito</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">${tVeics.map(v=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;background:var(--bg3);border:1px solid ${color}33;border-radius:6px;padding:4px 10px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:0.5px;"><span class="transito-dot"></span><span>${v.veiculo}</span>${v.saida_v?`<span style="font-size:9px;color:var(--text3);font-weight:400;">saída ${v.saida_v}</span>`:''}</div>`).join('')}</div>`:'' ;
+        const veicsFin=fVeics.length>0
+          ?`<div style="margin-bottom:6px;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;">✅ Finalizados (KM fechado)</div><div style="display:flex;flex-wrap:wrap;gap:6px;">${fVeics.map(v=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.3);border-radius:6px;padding:4px 10px;color:#5de88a;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:0.5px;"><span style="width:5px;height:5px;border-radius:50%;background:#5de88a;display:inline-block;flex-shrink:0;"></span><span>${v.veiculo}</span>${v.km?`<span style="font-size:9px;color:#5de88a99;font-weight:400;">${v.km} km</span>`:''}</div>`).join('')}</div>`:'';
+        const semNada=!tVeics.length&&!fVeics.length?`<span style="font-size:11px;color:var(--text3);padding:4px;">Nenhum veículo com destino + saída do CD preenchidos.</span>`:'';
+        return`<div style="background:${bg};border:1px solid ${color}44;border-radius:10px;padding:12px 14px;margin-bottom:10px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;"><span style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:${color};letter-spacing:2px;line-height:1;">${op}</span>${tInfo}${fInfo}<span style="font-size:10px;color:var(--text3);margin-left:auto;">${totalVeics} na escala</span></div>${veicsEmT}${veicsFin}${semNada}</div>`;
       }).join('');
     }
   }
@@ -812,7 +863,7 @@ function parseCSV(raw){
     const saida_v=(cols[iSaidaV]||'').trim();
     const kmS=parseInt((cols[iKmS]||'').replace(/[^\d]/g,''))||0;
     const kmC=parseInt((cols[iKmC]||'').replace(/[^\d]/g,''))||0;
-    result.push({data:dataNorm,dia:(cols[iDia]||'').trim(),op:(cols[iOp]||'').trim().toUpperCase(),veiculo:(cols[iVeic]||'').trim().toUpperCase(),motorista:(cols[iMot]||'').trim().toUpperCase(),saida:(cols[iSaida]||'').trim(),prev:(cols[iPrev]||'').trim(),off:iOff>=0?(cols[iOff]||'').trim():'',prox:iProx>=0?(cols[iProx]||'').trim():'',destino,saida_v,km:kmC>kmS?kmC-kmS:0,obs:iObs>=0?(cols[iObs]||'').trim().replace(/^"+|"+$/g,''):'',valido:true});
+    result.push({data:dataNorm,dia:(cols[iDia]||'').trim(),op:(cols[iOp]||'').trim().toUpperCase(),veiculo:(cols[iVeic]||'').trim().toUpperCase(),motorista:(cols[iMot]||'').trim().toUpperCase(),saida:(cols[iSaida]||'').trim(),prev:(cols[iPrev]||'').trim(),off:iOff>=0?(cols[iOff]||'').trim():'',prox:iProx>=0?(cols[iProx]||'').trim():'',destino,saida_v,km:kmC>kmS?kmC-kmS:0,kmChegada:kmC,valido:true,obs:iObs>=0?(cols[iObs]||'').trim().replace(/^"+|"+$/g,''):''});
   }
   return result;
 }
