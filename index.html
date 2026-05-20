@@ -108,6 +108,8 @@ main{padding:22px 28px;max-width:1600px;margin:0 auto;}
 .fleet-table tr:hover td{background:var(--card2);}
 .fleet-table tr.em-transito td{background:rgba(26,111,196,.07);}
 .fleet-table tr.em-transito:hover td{background:rgba(26,111,196,.13);}
+.fleet-table tr.programada td{background:rgba(245,166,35,.05);}
+.fleet-table tr.programada:hover td{background:rgba(245,166,35,.10);}
 .fleet-table tr.viagem-finalizada td{background:rgba(39,174,96,.05);}
 .fleet-table tr.viagem-finalizada:hover td{background:rgba(39,174,96,.1);}
 .op-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;}
@@ -117,9 +119,16 @@ main{padding:22px 28px;max-width:1600px;margin:0 auto;}
 .op-ht{background:rgba(39,174,96,.18);color:#27ae60;border:1px solid rgba(39,174,96,.45);}
 .op-nl{background:rgba(200,0,0,.2);color:#ff2020;border:1px solid rgba(200,0,0,.5);}
 .op-gr{background:rgba(158,158,158,.15);color:#9e9e9e;border:1px solid rgba(158,158,158,.4);}
+/* Em Trânsito */
 .transito-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(26,111,196,.25);border:1px solid rgba(58,143,228,.5);color:#5db0ff;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;white-space:nowrap;}
 .transito-dot{width:5px;height:5px;border-radius:50%;background:#5db0ff;display:inline-block;flex-shrink:0;animation:pulse-tdot 1.4s infinite;}
 @keyframes pulse-tdot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.4;transform:scale(.6);}}
+/* Programada */
+.prog-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(245,166,35,.18);border:1px solid rgba(245,166,35,.5);color:#f5a623;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;white-space:nowrap;}
+.prog-dot{width:5px;height:5px;border-radius:50%;background:#f5a623;display:inline-block;flex-shrink:0;}
+.reserva-badge{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(149,165,166,.15);border:1px solid rgba(149,165,166,.4);color:#95a5a6;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;white-space:nowrap;}
+.fleet-table tr.reserva td{background:rgba(149,165,166,.04);opacity:.75;}
+.fleet-table tr.reserva:hover td{background:rgba(149,165,166,.09);opacity:1;}
 #modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:500;align-items:center;justify-content:center;padding:16px;}
 #modal-overlay.open{display:flex;}
 #modal-box{background:var(--card);border:1px solid var(--border);border-radius:16px;width:100%;max-width:760px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.6);}
@@ -333,16 +342,16 @@ footer span{color:var(--blue-light);}
 
   <div class="kpi-grid">
     <div class="kpi-card" style="--kc:#3a8fe4"><div class="kpi-icon">🚌</div><div class="kpi-val" id="k-veic">—</div><div class="kpi-lbl">Veículos</div><div class="kpi-sub">No dia</div></div>
-    <div class="kpi-card" style="--kc:#1abc9c"><div class="kpi-icon">🚛</div><div class="kpi-val" id="k-transito">—</div><div class="kpi-lbl">Em Trânsito</div><div class="kpi-sub" id="k-transito-sub">Destino + saída veíc.</div></div>
+    <div class="kpi-card" style="--kc:#1abc9c"><div class="kpi-icon">🚛</div><div class="kpi-val" id="k-transito">—</div><div class="kpi-lbl">Em Trânsito</div><div class="kpi-sub" id="k-transito-sub">Saída já ocorreu</div></div>
+    <div class="kpi-card" style="--kc:#f5a623"><div class="kpi-icon">🕐</div><div class="kpi-val" id="k-programada">—</div><div class="kpi-lbl">Programadas</div><div class="kpi-sub" id="k-programada-sub">Aguardando saída</div></div>
     <div class="kpi-card" style="--kc:#27ae60"><div class="kpi-icon">👨‍✈️</div><div class="kpi-val" id="k-mot">—</div><div class="kpi-lbl">Motoristas</div><div class="kpi-sub">Ativos no dia</div></div>
     <div class="kpi-card" style="--kc:#f5a623"><div class="kpi-icon">📋</div><div class="kpi-val" id="k-rotas">—</div><div class="kpi-lbl">Rotas</div><div class="kpi-sub" id="k-data-sub">Selecione data</div></div>
-    <div class="kpi-card" style="--kc:#9b59b6"><div class="kpi-icon">🗺️</div><div class="kpi-val" id="k-ops">—</div><div class="kpi-lbl">Tipos OP</div><div class="kpi-sub" id="k-ops-sub">—</div></div>
     <div class="kpi-card" style="--kc:#e74c3c"><div class="kpi-icon">🏥</div><div class="kpi-val" id="k-afas">0</div><div class="kpi-lbl">Afastados</div><div class="kpi-sub">Fora da escala</div></div>
     <div class="kpi-card" style="--kc:#f39c12"><div class="kpi-icon">📅</div><div class="kpi-val" id="k-datas">—</div><div class="kpi-lbl">Dias no CSV</div><div class="kpi-sub">Total importado</div></div>
   </div>
 
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px;">
-    <div class="chart-card"><div class="ct">👥 Motoristas por OP <span class="badge" id="badge-mot-transito" style="display:none;background:rgba(26,111,196,.5);">🚛 0 em trânsito</span></div><div class="cw" style="height:300px;"><canvas id="cMot"></canvas></div></div>
+    <div class="chart-card"><div class="ct">👥 Motoristas por OP <span class="badge" id="badge-mot-transito" style="display:none;background:rgba(26,111,196,.5);">—</span></div><div class="cw" style="height:300px;"><canvas id="cMot"></canvas></div></div>
     <div class="chart-card"><div class="ct">📊 Situação Efetivo</div><div class="cw" style="height:300px;"><canvas id="cSit"></canvas></div></div>
   </div>
 
@@ -350,13 +359,13 @@ footer span{color:var(--blue-light);}
   <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:22px;">
     <div class="chart-card" id="op-card">
       <div class="ct" style="justify-content:space-between;">
-        <span>🔢 Distribuição por OP <span class="badge">veículos em trânsito</span></span>
+        <span>🔢 Distribuição por OP <span class="badge">trânsito · programados · finalizados</span></span>
         <button onclick="printOpPanel()" style="background:var(--blue);border:none;border-radius:7px;padding:5px 11px;color:white;font-size:11px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:5px;transition:background .2s;" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='var(--blue)'">🖨️ PRINT</button>
       </div>
       <div id="op-panel" style="overflow-y:auto;max-height:340px;"></div>
     </div>
     <div class="chart-card"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw"><canvas id="cHor"></canvas></div></div>
-    <div class="chart-card"><div class="ct">🚐 KM por Veículo <span class="badge" style="background:rgba(26,111,196,.4);">Azul = em trânsito</span></div><div class="cw"><canvas id="cKm"></canvas></div></div>
+    <div class="chart-card"><div class="ct">🚐 KM por Veículo <span class="badge" style="background:rgba(26,111,196,.4);">Azul=trânsito · Laranja=programado</span></div><div class="cw"><canvas id="cKm"></canvas></div></div>
   </div>
 
   <div class="sec">👨‍✈️ Motoristas — Dia Selecionado</div>
@@ -367,9 +376,8 @@ footer span{color:var(--blue-light);}
   <div class="bottom-grid">
     <div class="sp">
       <div class="ct">📡 Indicadores Operacionais</div>
-      <!-- Bloco dinâmico: Veículos em Trânsito -->
-      <div style="background:rgba(26,111,196,.1);border:1px solid rgba(58,143,228,.35);border-radius:9px;padding:11px 14px;margin-bottom:14px;">
-        <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px;">🚛 Veículos em Trânsito</div>
+      <div style="background:rgba(26,111,196,.1);border:1px solid rgba(58,143,228,.35);border-radius:9px;padding:11px 14px;margin-bottom:10px;">
+        <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px;">🚛 Em Trânsito <span style="color:#5db0ff;font-size:9px;font-weight:400;text-transform:none;letter-spacing:0;">(saída já ocorreu)</span></div>
         <div style="display:flex;align-items:center;gap:14px;">
           <div style="text-align:center;min-width:52px;">
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:#5db0ff;line-height:1;" id="ind-tr-num">—</div>
@@ -380,6 +388,20 @@ footer span{color:var(--blue-light);}
             <div style="font-size:10px;color:var(--text2);" id="ind-tr-desc">Aguardando dados...</div>
           </div>
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#5db0ff;min-width:42px;text-align:right;" id="ind-tr-pct">—</div>
+        </div>
+      </div>
+      <div style="background:rgba(245,166,35,.08);border:1px solid rgba(245,166,35,.3);border-radius:9px;padding:11px 14px;margin-bottom:14px;">
+        <div style="font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:8px;">🕐 Programadas <span style="color:#f5a623;font-size:9px;font-weight:400;text-transform:none;letter-spacing:0;">(saída ainda não ocorreu)</span></div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div style="text-align:center;min-width:52px;">
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:#f5a623;line-height:1;" id="ind-prog-num">—</div>
+            <div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;">programadas</div>
+          </div>
+          <div style="flex:1;">
+            <div class="prob-bw" style="height:7px;margin:0 0 6px 0;"><div class="prob-b" id="ind-prog-bar" style="width:0%;background:#f5a623;"></div></div>
+            <div style="font-size:10px;color:var(--text2);" id="ind-prog-desc">Aguardando dados...</div>
+          </div>
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;color:#f5a623;min-width:42px;text-align:right;" id="ind-prog-pct">—</div>
         </div>
       </div>
       <div class="prob-item"><span class="prob-lbl">Pontualidade saídas</span><div class="prob-bw"><div class="prob-b" id="pb1" style="width:87%;background:var(--green)"></div></div><span class="prob-pct" id="pp1" style="color:var(--green)">87%</span></div>
@@ -425,7 +447,7 @@ footer span{color:var(--blue-light);}
   <div class="tbl-wrap">
     <table class="fleet-table">
       <thead>
-        <tr><th>OP</th><th>Veículo</th><th>Motorista</th><th>Ponto ON</th><th>Prev. Refeição</th><th>Ponto OFF</th><th>Próx. Hora Disp.</th><th>Destino</th><th>Saída Veíc. CD</th><th>Trânsito</th></tr>
+        <tr><th>OP</th><th>Veículo</th><th>Motorista</th><th>Ponto ON</th><th>Prev. Refeição</th><th>Ponto OFF</th><th>Próx. Hora Disp.</th><th>Destino</th><th>Saída Veíc. CD</th><th>Status</th></tr>
       </thead>
       <tbody id="route-tbody">
         <tr><td colspan="10"><div class="empty-state"><div class="ei">📅</div><p>Selecione uma data após importar o CSV.</p></div></td></tr>
@@ -448,23 +470,67 @@ const SHEETS_URL_EFETIVO='https://script.google.com/macros/s/AKfycbyXFnFnYSIv3nb
 // ===================== STATE =====================
 let allRoutes=[],dateMap={},availDates=[],currentDate='',currentRoutes=[],charts={},manualRows=[],fileRaw='';
 
-// ===================== VALIDACAO EM TRANSITO =====================
-// Rota EM TRANSITO = destino preenchido + saida veic. CD preenchida + KM chegada NAO fechado
-// Se kmChegada > 0 = viagem finalizada, NAO conta como em transito
-function isEmTransito(r){
-  const temDestino = !!(r.destino && r.destino.trim());
-  const temSaidaV  = !!(r.saida_v && r.saida_v.trim());
-  const kmFechado  = (r.kmChegada || 0) > 0;
-  return temDestino && temSaidaV && !kmFechado;
+// ===================== TEMPO =====================
+// Converte "HH:MM" ou "HH:MM:SS" em minutos desde meia-noite. Retorna null se inválido.
+function timeToMin(s){
+  if(!s||!s.trim())return null;
+  const p=s.trim().split(':');
+  if(p.length<2)return null;
+  const h=parseInt(p[0]),m=parseInt(p[1]);
+  return isNaN(h)||isNaN(m)?null:h*60+m;
 }
-// Viagem finalizada = destino + saida + KM chegada preenchido
-function isViagemFinalizada(r){
-  return !!(r.destino && r.destino.trim() && r.saida_v && r.saida_v.trim() && (r.kmChegada || 0) > 0);
+// Minutos atuais desde meia-noite
+function nowMin(){const n=new Date();return n.getHours()*60+n.getMinutes();}
+// Verifica se a string de data corresponde a hoje
+function isHoje(dateStr){
+  if(!dateStr)return false;
+  const p=dateStr.split('/');if(p.length<3)return false;
+  const ano=p[2].length===4?parseInt(p[2]):2000+parseInt(p[2]);
+  const d=new Date(ano,parseInt(p[1])-1,parseInt(p[0]));
+  const n=new Date();
+  return d.getFullYear()===n.getFullYear()&&d.getMonth()===n.getMonth()&&d.getDate()===n.getDate();
 }
+
+// ===================== CLASSIFICACAO DE ROTAS =====================
+// Retorna: 'finalizada' | 'transito' | 'programada' | 'sem_destino'
+//
+// FINALIZADA  = KM chegada fechado (independe de horário)
+// RESERVA     = destino ou qualquer campo-chave contém "RESERVA" → nunca conta como em viagem
+// TRANSITO    = destino + saida_v preenchidos, KM aberto
+//               E (data != hoje  OU  horário saida_v já passou)
+// PROGRAMADA  = destino + saida_v preenchidos, KM aberto
+//               E data == hoje  E  horário saida_v ainda NÃO chegou
+// SEM_DESTINO = destino ou saida_v ausentes
+function isReserva(r){
+  // Considera RESERVA se destino, obs, veículo ou OP contiverem a palavra RESERVA
+  const campos=[r.destino,r.obs,r.veiculo,r.op,r.motorista];
+  return campos.some(c=>c&&/RESERVA/i.test(c));
+}
+function getStatus(r,dateStr){
+  const kmFechado=(r.kmChegada||0)>0;
+  if(kmFechado)return'finalizada';
+  // Veículo/rota marcado como RESERVA — nunca entra em trânsito
+  if(isReserva(r))return'reserva';
+  const temDest=!!(r.destino&&r.destino.trim());
+  const temSV=!!(r.saida_v&&r.saida_v.trim());
+  if(!temDest||!temSV)return'sem_destino';
+  // Tem destino + saida_v, KM aberto — verifica horário se for hoje
+  if(isHoje(dateStr)){
+    const svMin=timeToMin(r.saida_v);
+    if(svMin!==null&&nowMin()<svMin)return'programada';
+  }
+  return'transito';
+}
+
+function isEmTransito(r,d){return getStatus(r,d||currentDate)==='transito';}
+function isProgramada(r,d){return getStatus(r,d||currentDate)==='programada';}
+function isViagemFinalizada(r){return(r.kmChegada||0)>0;}
 
 // ===================== INIT =====================
 document.addEventListener('DOMContentLoaded',()=>{
   tick();setInterval(tick,1000);
+  // Atualiza status (programada→transito) a cada minuto
+  setInterval(()=>{if(currentRoutes.length)updateDashboard(currentRoutes,currentDate);},60000);
   try{
     const saved=localStorage.getItem(RKEY);
     if(saved){
@@ -496,7 +562,6 @@ function buildDateMap(){
   allRoutes.forEach(r=>{if(!dateMap[r.data])dateMap[r.data]=[];dateMap[r.data].push(r);});
   availDates=Object.keys(dateMap).filter(d=>/^\d{2}\/\d{2}\/\d{2,4}$/.test(d)).sort((a,b)=>parseDateStr(a)-parseDateStr(b));
 }
-
 function parseDateStr(d){const p=d.split('/');return new Date((p[2].length===4?parseInt(p[2]):2000+parseInt(p[2])),parseInt(p[1])-1,parseInt(p[0]));}
 function todayMidnight(){const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate());}
 
@@ -525,9 +590,12 @@ function populateDateSelect(){
     const dt=new Date(2000+parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));
     const dias=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
     const n=dateMap[d]?dateMap[d].length:0;
-    const nt=dateMap[d]?dateMap[d].filter(isEmTransito).length:0;
-    const tStr=nt>0?` · 🚛${nt}`:'';
-    opt.textContent=n===0?`${d} (${dias[dt.getDay()]}) — 🔒 Sem operação`:`${d} (${dias[dt.getDay()]}) — ${n} rota${n!==1?'s':''}${tStr}`;
+    const nt=dateMap[d]?dateMap[d].filter(r=>isEmTransito(r,d)).length:0;
+    const np=dateMap[d]?dateMap[d].filter(r=>isProgramada(r,d)).length:0;
+    let extra='';
+    if(nt>0)extra+=` · 🚛${nt}`;
+    if(np>0)extra+=` · 🕐${np}`;
+    opt.textContent=n===0?`${d} (${dias[dt.getDay()]}) — 🔒 Sem operação`:`${d} (${dias[dt.getDay()]}) — ${n} rota${n!==1?'s':''}${extra}`;
     sel.appendChild(opt);
   });
   document.getElementById('k-datas').textContent=availDates.length;
@@ -551,34 +619,48 @@ function updateDashboard(rows,d){
   currentRoutes=rows;
   checkClosedSystem(rows,d);
   updateKpis(rows,d);
-  updateIndicadorTransito(rows);
-  renderDrivers(rows);
-  renderTable(rows);
-  updateCharts(rows);
-  updateStatsRap(rows);
+  updateIndicadores(rows,d);
+  renderDrivers(rows,d);
+  renderTable(rows,d);
+  updateCharts(rows,d);
+  updateStatsRap(rows,d);
   updateBlocoCxM();
 }
 
-// ===================== INDICADOR TRANSITO =====================
-function updateIndicadorTransito(rows){
+// ===================== INDICADORES =====================
+function updateIndicadores(rows,d){
   const total=rows.length;
-  const transito=rows.filter(isEmTransito).length;
-  const finalizado=rows.filter(isViagemFinalizada).length;
-  const pct=total>0?Math.round(transito/total*100):0;
-  const numEl=document.getElementById('ind-tr-num');
-  const barEl=document.getElementById('ind-tr-bar');
-  const descEl=document.getElementById('ind-tr-desc');
-  const pctEl=document.getElementById('ind-tr-pct');
-  if(numEl)numEl.textContent=total>0?transito:'—';
-  if(barEl)barEl.style.width=pct+'%';
-  if(pctEl)pctEl.textContent=total>0?pct+'%':'—';
-  if(descEl){
-    if(!total){descEl.textContent='Aguardando dados...';}
-    else{
-      const semValidacao=total-transito-finalizado;
-      descEl.innerHTML=transito+' em trânsito · <span style="color:#5de88a">'+finalizado+' finalizado'+(finalizado!==1?'s':'')+'</span>'+(semValidacao>0?' · '+semValidacao+' s/ validação':'');
-    }
+  const nT=rows.filter(r=>isEmTransito(r,d)).length;
+  const nP=rows.filter(r=>isProgramada(r,d)).length;
+  const nF=rows.filter(isViagemFinalizada).length;
+  const pctT=total>0?Math.round(nT/total*100):0;
+  const pctP=total>0?Math.round(nP/total*100):0;
+
+  const sel=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  const w=(id,v)=>{const el=document.getElementById(id);if(el)el.style.width=v+'%';};
+
+  sel('ind-tr-num',total?nT:'—');
+  w('ind-tr-bar',pctT);
+  sel('ind-tr-pct',total?pctT+'%':'—');
+  const dT=document.getElementById('ind-tr-desc');
+  if(dT){
+    if(!total){dT.textContent='Aguardando dados...';}
+    else{const semV=total-nT-nP-nF;dT.innerHTML=nT+' saíram · <span style="color:#5de88a">'+nF+' finalizado'+(nF!==1?'s':'')+'</span>'+(semV>0?' · '+semV+' s/ destino':'');}
   }
+
+  sel('ind-prog-num',total?nP:'—');
+  w('ind-prog-bar',pctP);
+  sel('ind-prog-pct',total?pctP+'%':'—');
+  const dP=document.getElementById('ind-prog-desc');
+  if(dP){
+    if(!total){dP.textContent='Aguardando dados...';}
+    else if(!isHoje(d)){dP.textContent='Datas passadas/futuras: sem distinção de horário.';}
+    else{dP.textContent='Aguardando hora da saída do CD para mudar para trânsito.';}
+  }
+  // Reservas
+  const nR2=rows.filter(r=>getStatus(r,d)==='reserva').length;
+  const resEl=document.getElementById('ind-res-num');
+  if(resEl)resEl.textContent=total?nR2:'—';
 }
 
 // ===================== SISTEMA FECHADO =====================
@@ -591,7 +673,7 @@ function checkClosedSystem(rows,d){
     overlay.classList.add('show');
     const futuras=availDates.filter(dt=>parseDateStr(dt)>hoje);
     if(futuras.length){const prox=futuras[0],ptProx=parseDateStr(prox);const dias=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];const nr=dateMap[prox]?dateMap[prox].length:0;hintEl.innerHTML='📅 Próxima data: <strong>'+prox+' — '+dias[ptProx.getDay()]+' ('+nr+' rota'+(nr!==1?'s':'')+')</strong>';}
-    else{hintEl.innerHTML='⏳ Nenhuma data futura disponível. Aguarde o lançamento ou sincronize.';}
+    else{hintEl.innerHTML='⏳ Nenhuma data futura disponível.';}
   }else{overlay.classList.remove('show');}
 }
 
@@ -600,36 +682,43 @@ function updateKpis(rows,d){
   const veics=new Set(rows.map(r=>r.veiculo)).size;
   const mots=new Set(rows.map(r=>r.motorista)).size;
   const ops=[...new Set(rows.map(r=>r.op))].filter(Boolean);
-  const kmTotal=rows.reduce((a,r)=>a+(r.km||0),0);
-  const transitoRows=rows.filter(isEmTransito);
-  const nTransito=transitoRows.length;
-  const pctT=rows.length>0?Math.round(nTransito/rows.length*100):0;
+  const nT=rows.filter(r=>isEmTransito(r,d)).length;
+  const nP=rows.filter(r=>isProgramada(r,d)).length;
+  const nR=rows.filter(r=>getStatus(r,d)==='reserva').length;
+  const pctT=rows.length>0?Math.round(nT/rows.length*100):0;
 
   document.getElementById('k-veic').textContent=veics||'—';
-  document.getElementById('k-transito').textContent=rows.length?nTransito:'—';
-  document.getElementById('k-transito-sub').textContent=rows.length?(pctT+'% das rotas · destino + saída'):'Destino + saída veíc.';
+  document.getElementById('k-transito').textContent=rows.length?nT:'—';
+  document.getElementById('k-transito-sub').textContent=rows.length?pctT+'% · saída já ocorreu':'Saída já ocorreu';
+  document.getElementById('k-programada').textContent=rows.length?nP:'—';
+  document.getElementById('k-programada-sub').textContent=isHoje(d)?'Aguardando saída':'Apenas para hoje';
   document.getElementById('k-mot').textContent=mots||'—';
   document.getElementById('k-rotas').textContent=rows.length||'—';
   document.getElementById('k-ops').textContent=ops.length||'—';
-  document.getElementById('k-ops-sub').textContent=ops.join(' · ');
-  document.getElementById('k-km')||(()=>{})();
-  try{document.getElementById('k-km').textContent=kmTotal>0?kmTotal.toLocaleString('pt-BR'):'—';}catch(e){}
   document.getElementById('k-datas').textContent=availDates.length;
 
-  // OP STRIP com contagem em transito
+  // OP STRIP
   const opStripEl=document.getElementById('op-strip');
   if(opStripEl){
-    const opCount={},opTransito={};
-    rows.forEach(r=>{if(r.op){opCount[r.op]=(opCount[r.op]||0)+1;if(isEmTransito(r))opTransito[r.op]=(opTransito[r.op]||0)+1;}});
+    const opCount={},opT={},opP={},opR={};
+    rows.forEach(r=>{
+      if(!r.op)return;
+      opCount[r.op]=(opCount[r.op]||0)+1;
+      if(isEmTransito(r,d))opT[r.op]=(opT[r.op]||0)+1;
+      if(isProgramada(r,d))opP[r.op]=(opP[r.op]||0)+1;
+      if(getStatus(r,d)==='reserva')opR[r.op]=(opR[r.op]||0)+1;
+    });
     const OP_ORDER=['CV','LS','TL','HT','NL','GR'];
-    const opKeys=Object.keys(opCount).sort((a,b)=>{const ia=OP_ORDER.indexOf(a),ib=OP_ORDER.indexOf(b);return(ia===-1?99:ia)-(ib===-1?99:ib);});
+    const opKeys=Object.keys(opCount).sort((a,b)=>{const ia=OP_ORDER.indexOf(a),ib=OP_ORDER.indexOf(b);return(ia<0?99:ia)-(ib<0?99:ib);});
     if(!opKeys.length){opStripEl.innerHTML='<div class="op-strip-empty">Importe um CSV para ver a distribuição do dia.</div>';}
     else{
       const total=Object.values(opCount).reduce((a,b)=>a+b,0);
       opStripEl.innerHTML=opKeys.map(op=>{
-        const n=opCount[op],t=opTransito[op]||0,color=OP_COLORS[op]||'#aaa',pct=Math.round(n/total*100);
-        const tLine=t>0?`<div class="op-strip-sub" style="color:${color}bb;">🚛 ${t} em trânsito</div>`:'<div class="op-strip-sub" style="color:var(--text3);">—</div>';
-        return`<div class="op-strip-item"><div class="op-strip-sig" style="color:${color}">${op}</div><div class="op-strip-num" style="color:${color}">${n}</div><div class="op-strip-lbl">rotas · ${pct}%</div>${tLine}<div class="op-strip-bar" style="background:${color}33;"><div style="height:100%;width:${pct}%;background:${color};border-radius:2px;transition:width .6s;"></div></div></div>`;
+        const n=opCount[op],t=opT[op]||0,p=opP[op]||0,rv=opR[op]||0,color=OP_COLORS[op]||'#aaa',pct=Math.round(n/total*100);
+        const tLine=t>0?`<div class="op-strip-sub" style="color:${color}bb;">🚛 ${t} trânsito</div>`:'<div class="op-strip-sub" style="color:var(--text3);">—</div>';
+        const pLine=p>0?`<div class="op-strip-sub" style="color:#f5a623;">🕐 ${p} prog.</div>`:'';
+        const rLine=rv>0?`<div class="op-strip-sub" style="color:#95a5a6;">🅿️ ${rv} reserva</div>`:'';
+        return`<div class="op-strip-item"><div class="op-strip-sig" style="color:${color}">${op}</div><div class="op-strip-num" style="color:${color}">${n}</div><div class="op-strip-lbl">rotas · ${pct}%</div>${tLine}${pLine}${rLine}<div class="op-strip-bar" style="background:${color}33;"><div style="height:100%;width:${pct}%;background:${color};border-radius:2px;transition:width .6s;"></div></div></div>`;
       }).join('');
     }
   }
@@ -638,7 +727,7 @@ function updateKpis(rows,d){
     const p=d.split('/');const dt=new Date(2000+parseInt(p[2]),parseInt(p[1])-1,parseInt(p[0]));
     const dias=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
     document.getElementById('k-data-sub').textContent=dias[dt.getDay()];
-    document.getElementById('date-info').innerHTML=`Exibindo <strong>${rows.length} rotas</strong> de ${d} · <strong style="color:#5db0ff">${nTransito} em trânsito</strong>`;
+    document.getElementById('date-info').innerHTML=`Exibindo <strong>${rows.length} rotas</strong> de ${d} · <strong style="color:#5db0ff">${nT} em trânsito</strong> · <strong style="color:#f5a623">${nP} programadas</strong>`+(nR>0?` · <strong style="color:#95a5a6">${nR} reserva${nR!==1?'s':''}</strong>`:'');
   }
   const st=loadStatus();
   const afas=(st.ferias||0)+(st.licenca||0)+(st.afastado||0)+(st.suspensao||0)+(st.outros||0);
@@ -647,72 +736,85 @@ function updateKpis(rows,d){
 }
 
 // ===================== DRIVERS =====================
-function renderDrivers(rows){
+function renderDrivers(rows,d){
   const grid=document.getElementById('driver-grid');
   if(!rows.length){grid.innerHTML='<div class="empty-state" style="grid-column:span 5"><div class="ei">📅</div><p>Selecione uma data para ver os motoristas.</p></div>';return;}
-  const driverOps={},driverTransito={};
+  const driverOps={},drT={},drP={},drF={},drR={};
   rows.forEach(r=>{
     if(!driverOps[r.motorista])driverOps[r.motorista]=new Set();
     driverOps[r.motorista].add(r.op);
-    if(isEmTransito(r))driverTransito[r.motorista]=true;
+    const st=getStatus(r,d);
+    if(st==='transito')drT[r.motorista]=true;
+    else if(st==='programada')drP[r.motorista]=true;
+    else if(st==='finalizada')drF[r.motorista]=true;
+    else if(st==='reserva')drR[r.motorista]=true;
   });
-  const drivers=[...new Set(rows.map(r=>r.motorista))].filter(Boolean).sort();
-  // Motoristas em transito primeiro
-  drivers.sort((a,b)=>(driverTransito[b]?1:0)-(driverTransito[a]?1:0));
-  // Marca motoristas finalizados (KM fechado)
-  const driverFinalizado={};
-  rows.filter(isViagemFinalizada).forEach(r=>{driverFinalizado[r.motorista]=true;});
-  const nMoT=Object.keys(driverTransito).length;
-  const nMoF=Object.keys(driverFinalizado).length;
-  const badgeEl=document.getElementById('badge-mot-transito');
-  if(badgeEl){
-    if(nMoT>0||nMoF>0){
-      badgeEl.textContent='🚛 '+nMoT+' trânsito · ✅ '+nMoF+' finaliz.';
-      badgeEl.style.display='inline-block';
-    } else { badgeEl.style.display='none'; }
-  }
-  // Ordem: em transito > finalizado > resto
+  const drivers=[...new Set(rows.map(r=>r.motorista))].filter(Boolean);
+  // Ordem: trânsito > programado > finalizado > reserva > outros
   drivers.sort((a,b)=>{
-    const pa=driverTransito[a]?2:driverFinalizado[a]?1:0;
-    const pb=driverTransito[b]?2:driverFinalizado[b]?1:0;
+    const pa=drT[a]?4:drP[a]?3:drF[a]?2:drR[a]?0:1;
+    const pb=drT[b]?4:drP[b]?3:drF[b]?2:drR[b]?0:1;
     return pb-pa;
   });
+  const nMoT=Object.keys(drT).length,nMoP=Object.keys(drP).length,nMoF=Object.keys(drF).length,nMoR=Object.keys(drR).length;
+  const badgeEl=document.getElementById('badge-mot-transito');
+  if(badgeEl){
+    const parts=[];
+    if(nMoT)parts.push('🚛 '+nMoT+' trânsito');
+    if(nMoP)parts.push('🕐 '+nMoP+' program.');
+    if(nMoF)parts.push('✅ '+nMoF+' finaliz.');
+    if(nMoR)parts.push('🅿️ '+nMoR+' reserva');
+    if(parts.length){badgeEl.textContent=parts.join(' · ');badgeEl.style.display='inline-block';}
+    else{badgeEl.style.display='none';}
+  }
   grid.innerHTML=drivers.map(name=>{
     const ini=name.split(' ').map(w=>w[0]||'').join('').substring(0,2);
     const ops=[...(driverOps[name]||[])].join(' · ');
     const nrotas=rows.filter(r=>r.motorista===name).length;
-    const placa=rows.filter(r=>r.motorista===name)[0]?.veiculo||'—';
-    const emT=!!driverTransito[name];
-    const fin=!emT&&!!driverFinalizado[name];
-    const borderColor=emT?'rgba(58,143,228,.7)':fin?'rgba(39,174,96,.5)':'var(--border)';
-    const dotColor=emT?'#5db0ff':fin?'#5de88a':'var(--green)';
-    const avBg=emT?'background:linear-gradient(135deg,#0d4a8a,#1a6fc4);border-color:#3a8fe4;':fin?'background:linear-gradient(135deg,#0d3a1e,#1a6132);border-color:#27ae60;':'';
+    const placa=rows.find(r=>r.motorista===name)?.veiculo||'—';
+    const emT=!!drT[name],prog=!emT&&!!drP[name],fin=!emT&&!prog&&!!drF[name],res=!emT&&!prog&&!fin&&!!drR[name];
+    const borderColor=emT?'rgba(58,143,228,.7)':prog?'rgba(245,166,35,.6)':fin?'rgba(39,174,96,.5)':res?'rgba(149,165,166,.3)':'var(--border)';
+    const dotColor=emT?'#5db0ff':prog?'#f5a623':fin?'#5de88a':res?'#95a5a6':'var(--text3)';
+    const avBg=emT?'background:linear-gradient(135deg,#0d4a8a,#1a6fc4);border-color:#3a8fe4;':prog?'background:linear-gradient(135deg,#3a2a00,#7a5200);border-color:#f5a623;':fin?'background:linear-gradient(135deg,#0d3a1e,#1a6132);border-color:#27ae60;':res?'background:linear-gradient(135deg,#1a1a1a,#2e3232);border-color:#95a5a6;opacity:.8;':'';
     let statBadge='';
-    if(emT) statBadge=`<div style="margin-top:3px;"><span class="transito-badge"><span class="transito-dot"></span>em trânsito</span></div>`;
-    else if(fin) statBadge=`<div style="margin-top:3px;"><span style="display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:rgba(39,174,96,.2);border:1px solid rgba(39,174,96,.5);color:#5de88a;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;">✅ finalizado</span></div>`;
+    if(emT)statBadge=`<div style="margin-top:3px;"><span class="transito-badge"><span class="transito-dot"></span>em trânsito</span></div>`;
+    else if(prog){
+      const sv=rows.find(r=>r.motorista===name&&isProgramada(r,d))?.saida_v||'';
+      const svMin=timeToMin(sv);const falta=svMin!==null?svMin-nowMin():null;
+      const fStr=falta!==null&&falta>0?` · em ${falta}min`:'';
+      statBadge=`<div style="margin-top:3px;"><span class="prog-badge"><span class="prog-dot"></span>programada${fStr}</span></div>`;
+    }
+    else if(fin)statBadge=`<div style="margin-top:3px;"><span style="display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:rgba(39,174,96,.2);border:1px solid rgba(39,174,96,.5);color:#5de88a;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;">✅ finalizado</span></div>`;
+    else if(res)statBadge=`<div style="margin-top:3px;"><span class="reserva-badge">🅿️ reserva</span></div>`;
     return`<div class="dr-card" style="border-color:${borderColor};"><div class="dr-av" style="${avBg}">${ini}</div><div class="dr-info"><div class="dr-name">${name}</div><div class="dr-ops">${ops} · ${nrotas} rota${nrotas!==1?'s':''}</div><div style="font-size:10px;color:var(--accent);margin-top:2px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:0.5px;">🚌 ${placa}</div>${statBadge}</div><div class="dr-dot" style="background:${dotColor};"></div></div>`;
   }).join('');
 }
 
 // ===================== TABLE =====================
-function renderTable(rows){
+function renderTable(rows,d){
   const tbody=document.getElementById('route-tbody');
   if(!rows.length){tbody.innerHTML='<tr><td colspan="10"><div class="empty-state"><div class="ei">📅</div><p>Selecione uma data para ver as rotas.</p></div></td></tr>';return;}
   const opMap={CV:'op-cv',LS:'op-ls',TL:'op-tl',HT:'op-ht',NL:'op-nl',GR:'op-gr'};
-  // Ordem: em transito primeiro, finalizados depois, sem validacao por ultimo
-  const sorted=[...rows].sort((a,b)=>{
-    const pa=isEmTransito(a)?2:isViagemFinalizada(a)?1:0;
-    const pb=isEmTransito(b)?2:isViagemFinalizada(b)?1:0;
-    return pb-pa;
-  });
+  const order={transito:4,programada:3,finalizada:2,sem_destino:1,reserva:0};
+  const sorted=[...rows].sort((a,b)=>(order[getStatus(b,d)]||0)-(order[getStatus(a,d)]||0));
   tbody.innerHTML=sorted.map(r=>{
     const cls=opMap[r.op]||'op-cv';
-    const emT=isEmTransito(r), fin=isViagemFinalizada(r);
-    const rowCls=emT?'em-transito':fin?'viagem-finalizada':'';
+    const st=getStatus(r,d);
+    const rowCls=st==='transito'?'em-transito':st==='programada'?'programada':st==='finalizada'?'viagem-finalizada':st==='reserva'?'reserva':'';
     let tCell;
-    if(emT) tCell=`<span class="transito-badge"><span class="transito-dot"></span>em trânsito</span>`;
-    else if(fin) tCell=`<span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(39,174,96,.2);border:1px solid rgba(39,174,96,.5);color:#5de88a;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;">✅ finalizado${r.km?' · '+r.km+' km':''}</span>`;
-    else tCell=`<span style="font-size:10px;color:var(--text3);">—</span>`;
+    if(st==='transito'){
+      tCell=`<span class="transito-badge"><span class="transito-dot"></span>em trânsito</span>`;
+    }else if(st==='programada'){
+      const svMin=timeToMin(r.saida_v);const falta=svMin!==null?svMin-nowMin():null;
+      const fStr=falta!==null&&falta>0?` · em ${falta}min`:'';
+      tCell=`<span class="prog-badge"><span class="prog-dot"></span>programada${fStr}</span>`;
+    }else if(st==='finalizada'){
+      tCell=`<span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;padding:2px 7px;border-radius:10px;background:rgba(39,174,96,.2);border:1px solid rgba(39,174,96,.5);color:#5de88a;font-family:'Barlow Condensed',sans-serif;letter-spacing:.5px;">✅ finalizado${r.km?' · '+r.km+' km':''}</span>`;
+    }else if(st==='reserva'){
+      tCell=`<span class="reserva-badge">🅿️ reserva</span>`;
+    }else{
+      tCell=`<span style="font-size:10px;color:var(--text3);">—</span>`;
+    }
     return`<tr class="${rowCls}"><td><span class="op-badge ${cls}">${r.op}</span></td><td>${r.veiculo}</td><td><strong>${r.motorista}</strong></td><td>${r.saida||'—'}</td><td>${r.prev||'—'}</td><td>${r.off||'—'}</td><td>${r.prox||'—'}</td><td style="max-width:280px;white-space:normal;font-size:11px;">${r.destino||'—'}</td><td>${r.saida_v||'—'}</td><td>${tCell}</td></tr>`;
   }).join('');
 }
@@ -720,90 +822,109 @@ function renderTable(rows){
 // ===================== CHARTS =====================
 function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
 
-function updateCharts(rows){
-  const transitoRows=rows.filter(isEmTransito);
+function updateCharts(rows,d){
+  const tRows=rows.filter(r=>isEmTransito(r,d));
+  const pRows=rows.filter(r=>isProgramada(r,d));
   const opCount={};rows.forEach(r=>{if(r.op)opCount[r.op]=(opCount[r.op]||0)+1;});
   const opKeys=Object.keys(opCount);
 
-  // Motoristas: total vs em transito por OP
-  const dAllOps={},dTrOps={};
-  rows.forEach(r=>{if(!dAllOps[r.motorista])dAllOps[r.motorista]=new Set();dAllOps[r.motorista].add(r.op);});
-  transitoRows.forEach(r=>{if(!dTrOps[r.motorista])dTrOps[r.motorista]=new Set();dTrOps[r.motorista].add(r.op);});
+  // Motoristas por OP: total, trânsito, programados
+  const dAll={},dTr={},dPr={};
+  rows.forEach(r=>{if(!dAll[r.motorista])dAll[r.motorista]=new Set();dAll[r.motorista].add(r.op);});
+  tRows.forEach(r=>{if(!dTr[r.motorista])dTr[r.motorista]=new Set();dTr[r.motorista].add(r.op);});
+  pRows.forEach(r=>{if(!dPr[r.motorista])dPr[r.motorista]=new Set();dPr[r.motorista].add(r.op);});
   const drAll=[...new Set(rows.map(r=>r.motorista))].filter(Boolean);
-  const drTr=[...new Set(transitoRows.map(r=>r.motorista))].filter(Boolean);
+  const drTr=[...new Set(tRows.map(r=>r.motorista))].filter(Boolean);
+  const drPr=[...new Set(pRows.map(r=>r.motorista))].filter(Boolean);
 
   destroyChart('cMot');
   charts['cMot']=new Chart(document.getElementById('cMot'),{
     type:'bar',
-    data:{
-      labels:opKeys,
-      datasets:[
-        {label:'Total na escala',data:opKeys.map(op=>drAll.filter(d=>dAllOps[d]&&dAllOps[d].has(op)).length),backgroundColor:opKeys.map(k=>(OP_COLORS[k]||'#888')+'44'),borderColor:opKeys.map(k=>(OP_COLORS[k]||'#888')+'99'),borderWidth:2,borderRadius:4},
-        {label:'Em trânsito',data:opKeys.map(op=>drTr.filter(d=>dTrOps[d]&&dTrOps[d].has(op)).length),backgroundColor:opKeys.map(k=>(OP_COLORS[k]||'#888')+'CC'),borderColor:opKeys.map(k=>OP_COLORS[k]||'#888'),borderWidth:2,borderRadius:4}
-      ]
-    },
+    data:{labels:opKeys,datasets:[
+      {label:'Total na escala',data:opKeys.map(op=>drAll.filter(x=>dAll[x]&&dAll[x].has(op)).length),backgroundColor:opKeys.map(k=>(OP_COLORS[k]||'#888')+'33'),borderColor:opKeys.map(k=>(OP_COLORS[k]||'#888')+'77'),borderWidth:2,borderRadius:4},
+      {label:'Em trânsito',data:opKeys.map(op=>drTr.filter(x=>dTr[x]&&dTr[x].has(op)).length),backgroundColor:opKeys.map(k=>(OP_COLORS[k]||'#888')+'CC'),borderColor:opKeys.map(k=>OP_COLORS[k]||'#888'),borderWidth:2,borderRadius:4},
+      {label:'Programados',data:opKeys.map(op=>drPr.filter(x=>dPr[x]&&dPr[x].has(op)).length),backgroundColor:'rgba(245,166,35,.45)',borderColor:'#f5a623',borderWidth:2,borderRadius:4}
+    ]},
     options:{...CHART_BASE,scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',stepSize:1},grid:{color:'#2a3d5e'}}}}
   });
 
-  // Horarios
+  // Saídas por horário
   const hourBuckets={};
   rows.forEach(r=>{if(r.saida){const h=parseInt(r.saida.split(':')[0]);const lb=String(h).padStart(2,'0')+'h';hourBuckets[lb]=(hourBuckets[lb]||0)+1;}});
   const hrs=Object.keys(hourBuckets).sort();
   destroyChart('cHor');
   charts['cHor']=new Chart(document.getElementById('cHor'),{type:'line',data:{labels:hrs,datasets:[{label:'Saídas',data:hrs.map(h=>hourBuckets[h]),borderColor:'#3a8fe4',backgroundColor:'rgba(58,143,228,.1)',tension:.4,fill:true,pointBackgroundColor:'#3a8fe4',pointRadius:5,pointHoverRadius:8,borderWidth:2}]},options:{...CHART_BASE,scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',stepSize:1},grid:{color:'#2a3d5e'}}}}});
 
-  // KM por veiculo — azul=em transito
+  // KM por veículo — azul=trânsito, laranja=programado, roxo=outros
   const kmVeic={};rows.forEach(r=>{if(r.km&&r.veiculo)kmVeic[r.veiculo]=(kmVeic[r.veiculo]||0)+r.km;});
   const topV=Object.entries(kmVeic).sort((a,b)=>b[1]-a[1]).slice(0,8);
-  const veicsEmT=new Set(transitoRows.map(r=>r.veiculo));
+  const veicsT=new Set(tRows.map(r=>r.veiculo));
+  const veicsP=new Set(pRows.map(r=>r.veiculo));
   destroyChart('cKm');
   const kmWrapper=document.getElementById('cKm')?.parentElement;
   if(kmWrapper){const prev=kmWrapper.querySelector('.km-empty-msg');if(prev)prev.remove();}
   if(topV.length>0){
     charts['cKm']=new Chart(document.getElementById('cKm'),{
       type:'bar',
-      data:{labels:topV.map(v=>v[0]),datasets:[{label:'KM',data:topV.map(v=>v[1]),backgroundColor:topV.map(v=>veicsEmT.has(v[0])?'rgba(58,143,228,.85)':'rgba(155,89,182,.6)'),borderColor:topV.map(v=>veicsEmT.has(v[0])?'#3a8fe4':'#9b59b6'),borderWidth:2,borderRadius:6}]},
-      options:{...CHART_BASE,plugins:{...CHART_BASE.plugins,tooltip:{callbacks:{label:ctx=>' '+(ctx.parsed.x)+' km'+(veicsEmT.has(ctx.label)?' 🚛 em trânsito':'')}}},indexAxis:'y',scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',font:{size:10}},grid:{color:'#2a3d5e'}}}}
+      data:{labels:topV.map(v=>v[0]),datasets:[{label:'KM',data:topV.map(v=>v[1]),
+        backgroundColor:topV.map(v=>veicsT.has(v[0])?'rgba(58,143,228,.85)':veicsP.has(v[0])?'rgba(245,166,35,.75)':'rgba(155,89,182,.6)'),
+        borderColor:topV.map(v=>veicsT.has(v[0])?'#3a8fe4':veicsP.has(v[0])?'#f5a623':'#9b59b6'),borderWidth:2,borderRadius:6}]},
+      options:{...CHART_BASE,plugins:{...CHART_BASE.plugins,tooltip:{callbacks:{label:ctx=>{const lbl=veicsT.has(ctx.label)?' 🚛 em trânsito':veicsP.has(ctx.label)?' 🕐 programado':'';return' '+(ctx.parsed.x)+' km'+lbl;}}}},indexAxis:'y',scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',font:{size:10}},grid:{color:'#2a3d5e'}}}}
     });
   }else{
     const veicCount={};rows.forEach(r=>{if(r.veiculo)veicCount[r.veiculo]=(veicCount[r.veiculo]||0)+1;});
     const topVC=Object.entries(veicCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
     const el=document.getElementById('cKm');
     if(topVC.length>0){
-      charts['cKm']=new Chart(el,{type:'bar',data:{labels:topVC.map(v=>v[0]),datasets:[{label:'Rotas',data:topVC.map(v=>v[1]),backgroundColor:topVC.map(v=>veicsEmT.has(v[0])?'rgba(58,143,228,.85)':'rgba(155,89,182,.6)'),borderColor:topVC.map(v=>veicsEmT.has(v[0])?'#3a8fe4':'#9b59b6'),borderWidth:2,borderRadius:6}]},options:{...CHART_BASE,plugins:{...CHART_BASE.plugins,title:{display:true,text:'Rotas por Veículo · Azul = em trânsito',color:'#5db0ff',font:{size:10}}},indexAxis:'y',scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',font:{size:10}},grid:{color:'#2a3d5e'}}}}});
+      charts['cKm']=new Chart(el,{type:'bar',data:{labels:topVC.map(v=>v[0]),datasets:[{label:'Rotas',data:topVC.map(v=>v[1]),
+        backgroundColor:topVC.map(v=>veicsT.has(v[0])?'rgba(58,143,228,.85)':veicsP.has(v[0])?'rgba(245,166,35,.75)':'rgba(155,89,182,.6)'),
+        borderColor:topVC.map(v=>veicsT.has(v[0])?'#3a8fe4':veicsP.has(v[0])?'#f5a623':'#9b59b6'),borderWidth:2,borderRadius:6}]},
+        options:{...CHART_BASE,plugins:{...CHART_BASE.plugins,title:{display:true,text:'Rotas por Veículo · Azul=trânsito · Laranja=programado',color:'#5db0ff',font:{size:10}}},indexAxis:'y',scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',font:{size:10}},grid:{color:'#2a3d5e'}}}}});
+    }else if(st==='reserva'){
+      tCell=`<span class="reserva-badge">🅿️ reserva</span>`;
     }else{
       if(kmWrapper){const msg=document.createElement('div');msg.className='km-empty-msg';msg.style.cssText='display:flex;align-items:center;justify-content:center;height:100%;color:var(--text3);font-size:12px;text-align:center;padding:20px;';msg.innerHTML='Sem dados de KM no CSV.<br>Adicione colunas KM_SAIDA e KM_CHEGADA.';kmWrapper.appendChild(msg);}
     }
   }
 
-  // OP PANEL — veiculos em transito por OP
+  // OP PANEL
   const panel=document.getElementById('op-panel');
   if(panel){
     const opColors={CV:'#f5d800',LS:'#e84040',TL:'#2ed573',HT:'#27ae60',NL:'#ff2020'};
     const opBg={CV:'rgba(230,200,0,.1)',LS:'rgba(232,64,64,.08)',TL:'rgba(46,213,115,.08)',HT:'rgba(39,174,96,.1)',NL:'rgba(200,0,0,.1)',GR:'rgba(158,158,158,.08)'};
-    const byOpTotal={},byOpTransito={},byOpFinalizado={};
+    const byOpTotal={},byOpT={},byOpP={},byOpF={};
     rows.forEach(r=>{if(!byOpTotal[r.op])byOpTotal[r.op]=new Set();byOpTotal[r.op].add(r.veiculo);});
-    transitoRows.forEach(r=>{if(!byOpTransito[r.op])byOpTransito[r.op]=[];if(!byOpTransito[r.op].find(v=>v.veiculo===r.veiculo))byOpTransito[r.op].push({veiculo:r.veiculo,destino:r.destino,saida_v:r.saida_v});});
-    rows.filter(isViagemFinalizada).forEach(r=>{if(!byOpFinalizado[r.op])byOpFinalizado[r.op]=[];if(!byOpFinalizado[r.op].find(v=>v.veiculo===r.veiculo))byOpFinalizado[r.op].push({veiculo:r.veiculo,km:r.km});});
+    tRows.forEach(r=>{if(!byOpT[r.op])byOpT[r.op]=[];if(!byOpT[r.op].find(v=>v.veiculo===r.veiculo))byOpT[r.op].push({veiculo:r.veiculo,saida_v:r.saida_v});});
+    pRows.forEach(r=>{if(!byOpP[r.op])byOpP[r.op]=[];if(!byOpP[r.op].find(v=>v.veiculo===r.veiculo))byOpP[r.op].push({veiculo:r.veiculo,saida_v:r.saida_v});});
+    const rRows2=rows.filter(r=>getStatus(r,d)==='reserva');
+    const byOpRes={};
+    rRows2.forEach(r=>{if(!byOpRes[r.op])byOpRes[r.op]=[];if(!byOpRes[r.op].find(v=>v.veiculo===r.veiculo))byOpRes[r.op].push({veiculo:r.veiculo});});
+    rows.filter(isViagemFinalizada).forEach(r=>{if(!byOpF[r.op])byOpF[r.op]=[];if(!byOpF[r.op].find(v=>v.veiculo===r.veiculo))byOpF[r.op].push({veiculo:r.veiculo,km:r.km});});
     const ops=Object.keys(byOpTotal).sort();
     if(!ops.length){panel.innerHTML='<div style="color:var(--text3);font-size:12px;padding:16px;text-align:center;">Nenhuma rota neste dia.</div>';}
     else{
       panel.innerHTML=ops.map(op=>{
-        const tVeics=byOpTransito[op]||[];
-        const fVeics=byOpFinalizado[op]||[];
-        const totalVeics=byOpTotal[op]?byOpTotal[op].size:0;
+        const tV=byOpT[op]||[],pV=byOpP[op]||[],fV=byOpF[op]||[];
+        const totalV=byOpTotal[op]?byOpTotal[op].size:0;
         const color=opColors[op]||'#aaa';const bg=opBg[op]||'rgba(255,255,255,.04)';
-        const tInfo=tVeics.length>0
-          ?`<span style="font-size:11px;color:${color};background:${color}22;border:1px solid ${color}55;padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">${tVeics.length} em trânsito</span>`
+        const tBadge=tV.length>0
+          ?`<span style="font-size:11px;color:${color};background:${color}22;border:1px solid ${color}55;padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">${tV.length} em trânsito</span>`
           :`<span style="font-size:11px;color:var(--text3);background:var(--border);padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;">0 em trânsito</span>`;
-        const fInfo=fVeics.length>0
-          ?`<span style="font-size:11px;color:#5de88a;background:rgba(39,174,96,.15);border:1px solid rgba(39,174,96,.4);padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">✅ ${fVeics.length} finalizado${fVeics.length!==1?'s':''}</span>`:'';
-        const veicsEmT=tVeics.length>0
-          ?`<div style="margin-bottom:6px;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;">🔵 Em trânsito</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">${tVeics.map(v=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;background:var(--bg3);border:1px solid ${color}33;border-radius:6px;padding:4px 10px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:0.5px;"><span class="transito-dot"></span><span>${v.veiculo}</span>${v.saida_v?`<span style="font-size:9px;color:var(--text3);font-weight:400;">saída ${v.saida_v}</span>`:''}</div>`).join('')}</div>`:'' ;
-        const veicsFin=fVeics.length>0
-          ?`<div style="margin-bottom:6px;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;">✅ Finalizados (KM fechado)</div><div style="display:flex;flex-wrap:wrap;gap:6px;">${fVeics.map(v=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.3);border-radius:6px;padding:4px 10px;color:#5de88a;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:0.5px;"><span style="width:5px;height:5px;border-radius:50%;background:#5de88a;display:inline-block;flex-shrink:0;"></span><span>${v.veiculo}</span>${v.km?`<span style="font-size:9px;color:#5de88a99;font-weight:400;">${v.km} km</span>`:''}</div>`).join('')}</div>`:'';
-        const semNada=!tVeics.length&&!fVeics.length?`<span style="font-size:11px;color:var(--text3);padding:4px;">Nenhum veículo com destino + saída do CD preenchidos.</span>`:'';
-        return`<div style="background:${bg};border:1px solid ${color}44;border-radius:10px;padding:12px 14px;margin-bottom:10px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;"><span style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:${color};letter-spacing:2px;line-height:1;">${op}</span>${tInfo}${fInfo}<span style="font-size:10px;color:var(--text3);margin-left:auto;">${totalVeics} na escala</span></div>${veicsEmT}${veicsFin}${semNada}</div>`;
+        const pBadge=pV.length>0
+          ?`<span style="font-size:11px;color:#f5a623;background:rgba(245,166,35,.15);border:1px solid rgba(245,166,35,.4);padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">🕐 ${pV.length} programado${pV.length!==1?'s':''}</span>`:'';
+        const rV=byOpRes[op]||[];
+        const resBadge=rV.length>0
+          ?`<span style="font-size:11px;color:#95a5a6;background:rgba(149,165,166,.12);border:1px solid rgba(149,165,166,.35);padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">🅿️ ${rV.length} reserva${rV.length!==1?'s':''}</span>`:'';
+        const htmlRes=rV.length>0?`<div style="margin-bottom:6px;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;">🅿️ Reservas (não contam como viagem)</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">${rV.map(v=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;background:rgba(149,165,166,.06);border:1px solid rgba(149,165,166,.25);border-radius:6px;padding:4px 10px;color:#95a5a6;font-family:'Barlow Condensed',sans-serif;font-weight:600;opacity:.8;"><span style="width:5px;height:5px;border-radius:50%;background:#95a5a6;display:inline-block;"></span><span>${v.veiculo}</span></div>`).join('')}</div>`:'';
+        const fBadge=fV.length>0
+          ?`<span style="font-size:11px;color:#5de88a;background:rgba(39,174,96,.15);border:1px solid rgba(39,174,96,.4);padding:3px 10px;border-radius:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;letter-spacing:1px;">✅ ${fV.length} finalizado${fV.length!==1?'s':''}</span>`:'';
+        const htmlT=tV.length>0
+          ?`<div style="margin-bottom:6px;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;">🔵 Em trânsito (saída já ocorreu)</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">${tV.map(v=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;background:var(--bg3);border:1px solid ${color}33;border-radius:6px;padding:4px 10px;color:var(--text);font-family:'Barlow Condensed',sans-serif;font-weight:600;"><span class="transito-dot"></span><span>${v.veiculo}</span>${v.saida_v?`<span style="font-size:9px;color:var(--text3);font-weight:400;">saída ${v.saida_v}</span>`:''}</div>`).join('')}</div>`:'';
+        const htmlP=pV.length>0?`<div style="margin-bottom:6px;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;">🟠 Programados (saída ainda não ocorreu)</div><div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;">${pV.map(v=>{const svMin=timeToMin(v.saida_v);const falta=svMin!==null?svMin-nowMin():null;const fStr=falta!==null&&falta>0?` · em ${falta}min`:'';return`<div style="display:flex;align-items:center;gap:6px;font-size:11px;background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.3);border-radius:6px;padding:4px 10px;color:#f5a623;font-family:'Barlow Condensed',sans-serif;font-weight:600;"><span class="prog-dot"></span><span>${v.veiculo}</span>${v.saida_v?`<span style="font-size:9px;color:#f5a62399;font-weight:400;">${v.saida_v}${fStr}</span>`:''}</div>`}).join('')}</div>`:'';
+        const htmlF=fV.length>0?`<div style="margin-bottom:6px;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;font-weight:700;">✅ Finalizados (KM fechado)</div><div style="display:flex;flex-wrap:wrap;gap:6px;">${fV.map(v=>`<div style="display:flex;align-items:center;gap:6px;font-size:11px;background:rgba(39,174,96,.08);border:1px solid rgba(39,174,96,.3);border-radius:6px;padding:4px 10px;color:#5de88a;font-family:'Barlow Condensed',sans-serif;font-weight:600;"><span style="width:5px;height:5px;border-radius:50%;background:#5de88a;display:inline-block;"></span><span>${v.veiculo}</span>${v.km?`<span style="font-size:9px;color:#5de88a99;font-weight:400;">${v.km} km</span>`:''}</div>`).join('')}</div>`:'';
+
+        const semNadaAtual=!tV.length&&!pV.length&&!fV.length&&!rV.length;
+        return`<div style="background:${bg};border:1px solid ${color}44;border-radius:10px;padding:12px 14px;margin-bottom:10px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;"><span style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:900;color:${color};letter-spacing:2px;line-height:1;">${op}</span>${tBadge}${pBadge}${fBadge}${resBadge}<span style="font-size:10px;color:var(--text3);margin-left:auto;">${totalV} na escala</span></div>${htmlT}${htmlP}${htmlF}${htmlRes}${semNadaAtual?`<span style="font-size:11px;color:var(--text3);">Nenhum veículo com destino + saída do CD preenchidos.</span>`:''}</div>`;
       }).join('');
     }
   }
@@ -819,7 +940,7 @@ function updateChartSituacao(){
 }
 
 // ===================== STATS RAPIDAS =====================
-function updateStatsRap(rows){
+function updateStatsRap(rows,d){
   if(!rows.length)return;
   const dCnt={};rows.forEach(r=>{dCnt[r.motorista]=(dCnt[r.motorista]||0)+1;});
   const topD=Object.entries(dCnt).sort((a,b)=>b[1]-a[1])[0];
@@ -827,13 +948,16 @@ function updateStatsRap(rows){
   const topOp=Object.entries(opCnt).sort((a,b)=>b[1]-a[1])[0];
   const totalKm=rows.reduce((a,r)=>a+(r.km||0),0);
   const kmMedia=rows.filter(r=>r.km).length?Math.round(totalKm/rows.filter(r=>r.km).length):0;
-  const nT=rows.filter(isEmTransito).length;
+  const nT=rows.filter(r=>isEmTransito(r,d)).length;
+  const nP=rows.filter(r=>isProgramada(r,d)).length;
+  const nRS=rows.filter(r=>getStatus(r,d)==='reserva').length;
   const pctT=rows.length?Math.round(nT/rows.length*100):0;
   document.getElementById('stats-rap').innerHTML=`
     <div class="r-item">Rotas no dia: <strong style="color:var(--text)">${rows.length}</strong></div>
     <div class="r-item">Em trânsito: <strong style="color:#5db0ff">${nT} (${pctT}%)</strong></div>
+    <div class="r-item">Programadas: <strong style="color:#f5a623">${nP}</strong></div>
+    <div class="r-item">Reservas: <strong style="color:#95a5a6">${nRS}</strong></div>
     <div class="r-item">OP mais freq.: <strong style="color:${OP_COLORS[topOp?.[0]]||'#fff'}">${topOp?topOp[0]+' ('+topOp[1]+')':'—'}</strong></div>
-    <div class="r-item">Mot. +ativo: <strong style="color:var(--text)">${topD?topD[0]:'—'}</strong></div>
     <div class="r-item">Total KM: <strong style="color:#1abc9c">${totalKm.toLocaleString('pt-BR')}</strong></div>
     <div class="r-item">KM médio/veíc.: <strong style="color:var(--text)">${kmMedia}</strong></div>
   `;
@@ -935,9 +1059,10 @@ function saveManual(){
 // ===================== PRINT =====================
 function printOpPanel(){
   const panel=document.getElementById('op-panel'),dateStr=currentDate||'sem data';
-  const nT=currentRoutes.filter(isEmTransito).length;
+  const nT=currentRoutes.filter(r=>isEmTransito(r,currentDate)).length;
+  const nP=currentRoutes.filter(r=>isProgramada(r,currentDate)).length;
   const pw=window.open('','_blank','width=620,height=750');
-  pw.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Em Transito por OP - ${dateStr}</title><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#0b1220;color:#e8eef8;font-family:'Barlow',sans-serif;padding:26px;}.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #1a6fc4;}.pt{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:#3a8fe4;letter-spacing:2px;text-transform:uppercase;}.ps{font-size:12px;color:#8ca0c0;margin-top:3px;}.pd{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:#f5a623;font-weight:700;text-align:right;}.pc{font-size:10px;color:#4a6080;text-align:right;margin-top:2px;}.pf{margin-top:20px;text-align:center;font-size:10px;color:#4a6080;border-top:1px solid #2a3d5e;padding-top:12px;}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style></head><body><div class="ph"><div><div class="pt">🚛 Veículos em Trânsito por OP</div><div class="ps">Destino + saída veículo preenchidos · ${nT} veículos em trânsito</div></div><div><div class="pd">📅 ${dateStr}</div><div class="pc">Juanil Transportes e Locações</div></div></div>${panel.innerHTML}<div class="pf">FleetControl Pro · Gerado em ${new Date().toLocaleString('pt-BR')}</div></body></html>`);
+  pw.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Status por OP - ${dateStr}</title><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;600&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#0b1220;color:#e8eef8;font-family:'Barlow',sans-serif;padding:26px;}.ph{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding-bottom:14px;border-bottom:2px solid #1a6fc4;}.pt{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:#3a8fe4;letter-spacing:2px;text-transform:uppercase;}.ps{font-size:12px;color:#8ca0c0;margin-top:3px;}.pd{font-family:'Barlow Condensed',sans-serif;font-size:15px;color:#f5a623;font-weight:700;text-align:right;}.pc{font-size:10px;color:#4a6080;text-align:right;margin-top:2px;}.pf{margin-top:20px;text-align:center;font-size:10px;color:#4a6080;border-top:1px solid #2a3d5e;padding-top:12px;}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}</style></head><body><div class="ph"><div><div class="pt">🚛 Status por OP</div><div class="ps">${nT} em trânsito · ${nP} programados</div></div><div><div class="pd">📅 ${dateStr}</div><div class="pc">Juanil Transportes e Locações</div></div></div>${panel.innerHTML}<div class="pf">FleetControl Pro · Gerado em ${new Date().toLocaleString('pt-BR')}</div></body></html>`);
   pw.document.close();pw.onload=()=>{pw.focus();pw.print();};
 }
 
