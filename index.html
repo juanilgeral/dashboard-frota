@@ -471,7 +471,6 @@ const SHEETS_URL_EFETIVO='https://script.google.com/macros/s/AKfycbyXFnFnYSIv3nb
 let allRoutes=[],dateMap={},availDates=[],currentDate='',currentRoutes=[],charts={},manualRows=[],fileRaw='';
 
 // ===================== TEMPO =====================
-// Converte "HH:MM" ou "HH:MM:SS" em minutos desde meia-noite. Retorna null se inválido.
 function timeToMin(s){
   if(!s||!s.trim())return null;
   const p=s.trim().split(':');
@@ -479,9 +478,7 @@ function timeToMin(s){
   const h=parseInt(p[0]),m=parseInt(p[1]);
   return isNaN(h)||isNaN(m)?null:h*60+m;
 }
-// Minutos atuais desde meia-noite
 function nowMin(){const n=new Date();return n.getHours()*60+n.getMinutes();}
-// Verifica se a string de data corresponde a hoje
 function isHoje(dateStr){
   if(!dateStr)return false;
   const p=dateStr.split('/');if(p.length<3)return false;
@@ -492,29 +489,17 @@ function isHoje(dateStr){
 }
 
 // ===================== CLASSIFICACAO DE ROTAS =====================
-// Retorna: 'finalizada' | 'transito' | 'programada' | 'sem_destino'
-//
-// FINALIZADA  = KM chegada fechado (independe de horário)
-// RESERVA     = destino ou qualquer campo-chave contém "RESERVA" → nunca conta como em viagem
-// TRANSITO    = destino + saida_v preenchidos, KM aberto
-//               E (data != hoje  OU  horário saida_v já passou)
-// PROGRAMADA  = destino + saida_v preenchidos, KM aberto
-//               E data == hoje  E  horário saida_v ainda NÃO chegou
-// SEM_DESTINO = destino ou saida_v ausentes
 function isReserva(r){
-  // Considera RESERVA se destino, obs, veículo ou OP contiverem a palavra RESERVA
   const campos=[r.destino,r.obs,r.veiculo,r.op,r.motorista];
   return campos.some(c=>c&&/RESERVA/i.test(c));
 }
 function getStatus(r,dateStr){
   const kmFechado=(r.kmChegada||0)>0;
   if(kmFechado)return'finalizada';
-  // Veículo/rota marcado como RESERVA — nunca entra em trânsito
   if(isReserva(r))return'reserva';
   const temDest=!!(r.destino&&r.destino.trim());
   const temSV=!!(r.saida_v&&r.saida_v.trim());
   if(!temDest||!temSV)return'sem_destino';
-  // Tem destino + saida_v, KM aberto — verifica horário se for hoje
   if(isHoje(dateStr)){
     const svMin=timeToMin(r.saida_v);
     if(svMin!==null&&nowMin()<svMin)return'programada';
@@ -529,7 +514,6 @@ function isViagemFinalizada(r){return(r.kmChegada||0)>0;}
 // ===================== INIT =====================
 document.addEventListener('DOMContentLoaded',()=>{
   tick();setInterval(tick,1000);
-  // Atualiza status (programada→transito) a cada minuto
   setInterval(()=>{if(currentRoutes.length)updateDashboard(currentRoutes,currentDate);},60000);
   try{
     const saved=localStorage.getItem(RKEY);
@@ -657,7 +641,6 @@ function updateIndicadores(rows,d){
     else if(!isHoje(d)){dP.textContent='Datas passadas/futuras: sem distinção de horário.';}
     else{dP.textContent='Aguardando hora da saída do CD para mudar para trânsito.';}
   }
-  // Reservas
   const nR2=rows.filter(r=>getStatus(r,d)==='reserva').length;
   const resEl=document.getElementById('ind-res-num');
   if(resEl)resEl.textContent=total?nR2:'—';
@@ -694,11 +677,12 @@ function updateKpis(rows,d){
   document.getElementById('k-programada-sub').textContent=isHoje(d)?'Aguardando saída':'Apenas para hoje';
   document.getElementById('k-mot').textContent=mots||'—';
   document.getElementById('k-rotas').textContent=rows.length||'—';
-  // k-ops removido — card substituído por k-programada
   const el_kops=document.getElementById('k-ops');if(el_kops)el_kops.textContent=ops.length||'—';
   document.getElementById('k-datas').textContent=availDates.length;
 
-  // OP STRIP
+  // ===================== OP STRIP — CORRIGIDO =====================
+  // REGRA: o número grande mostra apenas veículos COM destino+saida_v preenchidos
+  // (em trânsito + programados). Se nenhum tem destino/saída, mostra "—" e não conta.
   const opStripEl=document.getElementById('op-strip');
   if(opStripEl){
     const opCount={},opT={},opP={},opR={};
@@ -715,18 +699,46 @@ function updateKpis(rows,d){
     else{
       const total=Object.values(opCount).reduce((a,b)=>a+b,0);
       opStripEl.innerHTML=opKeys.map(op=>{
-        const n=opCount[op],t=opT[op]||0,p=opP[op]||0,rv=opR[op]||0,color=OP_COLORS[op]||'#aaa',pct=Math.round(n/total*100);
-        // Veículos com saída válida = em trânsito + programados (excluindo reservas e sem destino)
+        const n=opCount[op],t=opT[op]||0,p=opP[op]||0,rv=opR[op]||0;
+        const color=OP_COLORS[op]||'#aaa';
+        const pct=Math.round(n/total*100);
+
+        // comSaida = veículos que têm destino+saida_v preenchidos (em trânsito + programados)
+        // Reservas e sem_destino NÃO entram nessa conta
         const comSaida=t+p;
-        // Barra representa proporção do total geral do dia
-        const tLine=t>0?`<div class="op-strip-sub" style="color:${color}cc;font-weight:700;">🚛 ${t} trânsito</div>`:'<div class="op-strip-sub" style="color:var(--text3);">sem saída</div>';
+
+        // ---- CORREÇÃO PRINCIPAL ----
+        // Se comSaida === 0: nenhum veículo desta OP tem destino+saída preenchidos
+        // → número grande = "—" (não mostrar o total da escala como se fossem viagens)
+        // → cor acinzentada para indicar inatividade
+        // → label apenas "na escala · sem destino"
+        const numDisplay=comSaida>0?comSaida:'—';
+        const numColor=comSaida>0?color:'#3a3a4a';
+        const lbl=comSaida>0?`em viagem · ${n} na escala`:`na escala · sem destino`;
+
+        // Linha de trânsito: só mostra quando há veículos em trânsito;
+        // quando comSaida===0 mostra aviso neutro "sem destino preenchido"
+        const tLine=t>0
+          ?`<div class="op-strip-sub" style="color:${color}cc;font-weight:700;">🚛 ${t} trânsito</div>`
+          :(comSaida===0
+            ?`<div class="op-strip-sub" style="color:var(--text3);">sem destino</div>`
+            :'');
+
         const pLine=p>0?`<div class="op-strip-sub" style="color:#f5a623;">🕐 ${p} prog.</div>`:'';
         const rLine=rv>0?`<div class="op-strip-sub" style="color:#95a5a6;">🅿️ ${rv} reserva</div>`:'';
-        // Número grande = veículos com saída (em viagem ou programados); escala embaixo
-        const numDisplay=comSaida>0?comSaida:n;
-        const numColor=comSaida>0?color:'#4a6080';
-        const lbl=comSaida>0?`em viagem · ${n} na escala`:`na escala · sem destino`;
-        return`<div class="op-strip-item"><div class="op-strip-sig" style="color:${color}">${op}</div><div class="op-strip-num" style="color:${numColor}">${numDisplay}</div><div class="op-strip-lbl">${lbl}</div>${tLine}${pLine}${rLine}<div class="op-strip-bar" style="background:${color}22;"><div style="height:100%;width:${comSaida>0?Math.round(comSaida/n*100):0}%;background:${color};border-radius:2px;transition:width .6s;"></div></div></div>`;
+
+        // Barra de progresso: proporção de veículos com saída válida vs total da OP
+        const barPct=comSaida>0?Math.round(comSaida/n*100):0;
+
+        return`<div class="op-strip-item">
+          <div class="op-strip-sig" style="color:${color}">${op}</div>
+          <div class="op-strip-num" style="color:${numColor}">${numDisplay}</div>
+          <div class="op-strip-lbl">${lbl}</div>
+          ${tLine}${pLine}${rLine}
+          <div class="op-strip-bar" style="background:${color}22;">
+            <div style="height:100%;width:${barPct}%;background:${color};border-radius:2px;transition:width .6s;"></div>
+          </div>
+        </div>`;
       }).join('');
     }
   }
@@ -758,7 +770,6 @@ function renderDrivers(rows,d){
     else if(st==='reserva')drR[r.motorista]=true;
   });
   const drivers=[...new Set(rows.map(r=>r.motorista))].filter(Boolean);
-  // Ordem: trânsito > programado > finalizado > reserva > outros
   drivers.sort((a,b)=>{
     const pa=drT[a]?4:drP[a]?3:drF[a]?2:drR[a]?0:1;
     const pb=drT[b]?4:drP[b]?3:drF[b]?2:drR[b]?0:1;
@@ -836,7 +847,6 @@ function updateCharts(rows,d){
   const opCount={};rows.forEach(r=>{if(r.op)opCount[r.op]=(opCount[r.op]||0)+1;});
   const opKeys=Object.keys(opCount);
 
-  // Motoristas por OP: total, trânsito, programados
   const dAll={},dTr={},dPr={};
   rows.forEach(r=>{if(!dAll[r.motorista])dAll[r.motorista]=new Set();dAll[r.motorista].add(r.op);});
   tRows.forEach(r=>{if(!dTr[r.motorista])dTr[r.motorista]=new Set();dTr[r.motorista].add(r.op);});
@@ -856,14 +866,12 @@ function updateCharts(rows,d){
     options:{...CHART_BASE,scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',stepSize:1},grid:{color:'#2a3d5e'}}}}
   });
 
-  // Saídas por horário
   const hourBuckets={};
   rows.forEach(r=>{if(r.saida){const h=parseInt(r.saida.split(':')[0]);const lb=String(h).padStart(2,'0')+'h';hourBuckets[lb]=(hourBuckets[lb]||0)+1;}});
   const hrs=Object.keys(hourBuckets).sort();
   destroyChart('cHor');
   charts['cHor']=new Chart(document.getElementById('cHor'),{type:'line',data:{labels:hrs,datasets:[{label:'Saídas',data:hrs.map(h=>hourBuckets[h]),borderColor:'#3a8fe4',backgroundColor:'rgba(58,143,228,.1)',tension:.4,fill:true,pointBackgroundColor:'#3a8fe4',pointRadius:5,pointHoverRadius:8,borderWidth:2}]},options:{...CHART_BASE,scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',stepSize:1},grid:{color:'#2a3d5e'}}}}});
 
-  // KM por veículo — azul=trânsito, laranja=programado, roxo=outros
   const kmVeic={};rows.forEach(r=>{if(r.km&&r.veiculo)kmVeic[r.veiculo]=(kmVeic[r.veiculo]||0)+r.km;});
   const topV=Object.entries(kmVeic).sort((a,b)=>b[1]-a[1]).slice(0,8);
   const veicsT=new Set(tRows.map(r=>r.veiculo));
@@ -888,8 +896,6 @@ function updateCharts(rows,d){
         backgroundColor:topVC.map(v=>veicsT.has(v[0])?'rgba(58,143,228,.85)':veicsP.has(v[0])?'rgba(245,166,35,.75)':'rgba(155,89,182,.6)'),
         borderColor:topVC.map(v=>veicsT.has(v[0])?'#3a8fe4':veicsP.has(v[0])?'#f5a623':'#9b59b6'),borderWidth:2,borderRadius:6}]},
         options:{...CHART_BASE,plugins:{...CHART_BASE.plugins,title:{display:true,text:'Rotas por Veículo · Azul=trânsito · Laranja=programado',color:'#5db0ff',font:{size:10}}},indexAxis:'y',scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',font:{size:10}},grid:{color:'#2a3d5e'}}}}});
-    }else if(st==='reserva'){
-      tCell=`<span class="reserva-badge">🅿️ reserva</span>`;
     }else{
       if(kmWrapper){const msg=document.createElement('div');msg.className='km-empty-msg';msg.style.cssText='display:flex;align-items:center;justify-content:center;height:100%;color:var(--text3);font-size:12px;text-align:center;padding:20px;';msg.innerHTML='Sem dados de KM no CSV.<br>Adicione colunas KM_SAIDA e KM_CHEGADA.';kmWrapper.appendChild(msg);}
     }
