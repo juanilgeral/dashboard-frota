@@ -716,10 +716,17 @@ function updateKpis(rows,d){
       const total=Object.values(opCount).reduce((a,b)=>a+b,0);
       opStripEl.innerHTML=opKeys.map(op=>{
         const n=opCount[op],t=opT[op]||0,p=opP[op]||0,rv=opR[op]||0,color=OP_COLORS[op]||'#aaa',pct=Math.round(n/total*100);
-        const tLine=t>0?`<div class="op-strip-sub" style="color:${color}bb;">🚛 ${t} trânsito</div>`:'<div class="op-strip-sub" style="color:var(--text3);">—</div>';
+        // Veículos com saída válida = em trânsito + programados (excluindo reservas e sem destino)
+        const comSaida=t+p;
+        // Barra representa proporção do total geral do dia
+        const tLine=t>0?`<div class="op-strip-sub" style="color:${color}cc;font-weight:700;">🚛 ${t} trânsito</div>`:'<div class="op-strip-sub" style="color:var(--text3);">sem saída</div>';
         const pLine=p>0?`<div class="op-strip-sub" style="color:#f5a623;">🕐 ${p} prog.</div>`:'';
         const rLine=rv>0?`<div class="op-strip-sub" style="color:#95a5a6;">🅿️ ${rv} reserva</div>`:'';
-        return`<div class="op-strip-item"><div class="op-strip-sig" style="color:${color}">${op}</div><div class="op-strip-num" style="color:${color}">${n}</div><div class="op-strip-lbl">rotas · ${pct}%</div>${tLine}${pLine}${rLine}<div class="op-strip-bar" style="background:${color}33;"><div style="height:100%;width:${pct}%;background:${color};border-radius:2px;transition:width .6s;"></div></div></div>`;
+        // Número grande = veículos com saída (em viagem ou programados); escala embaixo
+        const numDisplay=comSaida>0?comSaida:n;
+        const numColor=comSaida>0?color:'#4a6080';
+        const lbl=comSaida>0?`em viagem · ${n} na escala`:`na escala · sem destino`;
+        return`<div class="op-strip-item"><div class="op-strip-sig" style="color:${color}">${op}</div><div class="op-strip-num" style="color:${numColor}">${numDisplay}</div><div class="op-strip-lbl">${lbl}</div>${tLine}${pLine}${rLine}<div class="op-strip-bar" style="background:${color}22;"><div style="height:100%;width:${comSaida>0?Math.round(comSaida/n*100):0}%;background:${color};border-radius:2px;transition:width .6s;"></div></div></div>`;
       }).join('');
     }
   }
