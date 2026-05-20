@@ -490,7 +490,9 @@ function isHoje(dateStr){
 
 // ===================== CLASSIFICACAO DE ROTAS =====================
 function isReserva(r){
-  const campos=[r.destino,r.obs,r.veiculo,r.op,r.motorista];
+  // RESERVA é identificado apenas quando o campo motorista OU veiculo contém "RESERVA"
+  // Não usar destino/obs pois destinos podem conter a palavra RESERVA sem ser uma linha de reserva
+  const campos=[r.veiculo,r.motorista];
   return campos.some(c=>c&&/RESERVA/i.test(c));
 }
 function getStatus(r,dateStr){
