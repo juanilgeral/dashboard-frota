@@ -694,7 +694,8 @@ function updateKpis(rows,d){
   document.getElementById('k-programada-sub').textContent=isHoje(d)?'Aguardando saída':'Apenas para hoje';
   document.getElementById('k-mot').textContent=mots||'—';
   document.getElementById('k-rotas').textContent=rows.length||'—';
-  document.getElementById('k-ops').textContent=ops.length||'—';
+  // k-ops removido — card substituído por k-programada
+  const el_kops=document.getElementById('k-ops');if(el_kops)el_kops.textContent=ops.length||'—';
   document.getElementById('k-datas').textContent=availDates.length;
 
   // OP STRIP
