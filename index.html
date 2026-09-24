@@ -29,7 +29,10 @@ header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
 .grid{flex:1;min-height:0;display:grid;grid-template-columns:1.4fr .6fr;gap:12px}
 .panel{min-height:0;display:flex;flex-direction:column;background:rgba(8,14,24,.9);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .panel h3{font-family:Orbitron,sans-serif;font-size:clamp(.78rem,1.05vw,.95rem);letter-spacing:.14em;color:var(--cyan);padding:10px 12px;border-bottom:1px solid var(--line)}
-.scroll,.feed{flex:1;min-height:0;overflow:auto}
+.scroll,.feed{flex:1;min-height:0;overflow:hidden;position:relative}
+.feed-track{display:block;animation:feedUp 36s linear infinite}
+.feed:hover .feed-track{animation-play-state:paused}
+@keyframes feedUp{from{transform:translateY(0)}to{transform:translateY(-50%)}}
 .tbl{width:100%;border-collapse:collapse;font-size:clamp(1.02rem,1.4vw,1.22rem)}
 .tbl th{text-align:left;font-size:.82rem;letter-spacing:.12em;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);position:sticky;top:0;background:#0b1220}
 .tbl td{padding:9px 10px;color:#f2f7ff;font-weight:600;border-bottom:1px solid rgba(255,255,255,.04)}
@@ -169,7 +172,8 @@ function pintar(){
   const recent=evs.slice(-40).reverse();
   const feed=recent.map(e=>{const info=mapaCtrl[e.placa]||{};return '<div class="ev '+clsEv(e.ev)+'"><time>'+(e.hora||'--:--')+'</time><div><b>'+e.ev.replace(/_/g,' ')+'</b><small>'+e.placa+(info.mot?' · '+info.mot:'')+(info.op?' · '+info.op:'')+'</small></div></div>';}).join('')||'<div class="empty">Sem eventos</div>';
   const fd=document.getElementById('feed');
-  if(fd && fd.innerHTML!==feed) fd.innerHTML=feed;
+  const feedWrap='<div class="feed-track">'+feed+feed+'</div>';
+  if(fd && fd.dataset.sig!==feed){ fd.dataset.sig=feed; fd.innerHTML=feedWrap; }
   const ticks=recent.filter(e=>['INICIO_VIAGEM','CHEGADA_CLIENTE','ABERTURA_BAU','INICIO_DESCARREGAMENTO','RETORNO','PARADA_REFEICAO','FIM_VIAGEM','FIM_FINAL'].includes(e.ev));
   const tickHtml=ticks.map(e=>{const info=mapaCtrl[e.placa]||{};return '<span class="tick '+clsEv(e.ev)+'"><time>'+e.hora+'</time><b>'+e.ev.replace(/_/g,' ')+'</b> '+e.placa+(info.mot?' · '+info.mot:'')+(info.op?' · '+info.op:'')+'</span>';}).join('');
   const tk=document.getElementById('ticker');
