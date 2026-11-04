@@ -413,6 +413,12 @@ footer span{color:var(--blue-light);}
     <div id="op-panel"></div>
   </div>
 
+  <div class="sec">🏆 Ranking Motoristas — Mês Atual</div>
+  <div class="chart-card" style="margin-bottom:8px;">
+    <div class="ct">Top 10 por Aproveitamento <span class="badge" id="rank-mes">carregando...</span></div>
+    <div id="rank-panel" style="padding:8px 0;min-height:80px;font-size:11px;color:var(--text2);">Carregando ranking...</div>
+  </div>
+
   <div class="sec">👨‍✈️ Motoristas — Dia Selecionado</div>
   <div class="driver-grid" id="driver-grid">
     <div class="empty-state" style="grid-column:1/-1"><div class="ei">📂</div><p>Importe um CSV e selecione uma data para ver os motoristas.</p><button class="btn-p" onclick="openModal()">⬆️ Importar Dados</button></div>
@@ -436,6 +442,7 @@ const OP_COLORS={CV:'#f5d800',LS:'#e84040',TL:'#2ed573',HT:'#27ae60',NL:'#ff2020
 const CHART_BASE={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8ca0c0',font:{family:'Barlow',size:11}}}},onHover:(e,el)=>{e.native.target.style.cursor=el.length?'pointer':'default'}};
 const SHEETS_URL_DEFAULT='https://script.google.com/macros/s/AKfycbyRUly618fpcqZYmK2chs6Uwq0G3oy3nX4rUz1TtW8kIxtKmum0t4QX9IBjLRdUMcrDEQ/exec';
 const SHEETS_URL_EFETIVO='https://docs.google.com/spreadsheets/d/e/2PACX-1vQU606Dbi9ZWn1RSpKGn9Daey3XAsTWRDgstXI3ARb6Na2UF-nZ1hkfB7EVFwzfvQ/pub?output=csv';
+const SHEETS_URL_RANKING='https://docs.google.com/spreadsheets/d/e/2PACX-1vTd77MkT5hd6gzTkMfzX2BVWY5Hqqfo3NluQY58mnOklN8--hPVIoe2CfzkbttnucJKbnJFiaPEWSmR/pub?gid=1559964021&single=true&output=csv';
 
 // ===================== STATE =====================
 let allRoutes=[],dateMap={},availDates=[],currentDate='',currentRoutes=[],charts={},manualRows=[],fileRaw='';
@@ -474,8 +481,10 @@ document.addEventListener('DOMContentLoaded',()=>{
   if(statusEl){statusEl.style.display='inline-block';statusEl.className='sync-status loading';statusEl.textContent='⏳ Conectando Sheets...';}
   setTimeout(()=>syncSheets(),2000);
   setTimeout(()=>syncEfetivo(),3000);
+  setTimeout(()=>loadRanking(),4000);
   setupSheetsTimer();
   setInterval(()=>syncEfetivo(),3*60*1000);
+  setInterval(()=>loadRanking(),10*60*1000);
 });
 
 function tick(){
@@ -882,7 +891,110 @@ function printOpPanel(){
 
 // ===================== STATUS EFETIVO =====================
 function loadStatus(){try{const r=localStorage.getItem(SKEY);if(r)return JSON.parse(r);}catch(e){}return{totalCaminhoes:44,carrosNaAtiva:35,totalEmpresa:39,totalEscala:33,ativo:33,ferias:3,licenca:3,demitido:12,treinamento:0,suspensao:0,outros:0};}
-async function syncEfetivo(){
+async function loadRanking(){
+  const panel=document.getElementById('rank-panel');
+  const badge=document.getElementById('rank-mes');
+  if(!panel)return;
+  const PESO_VEICULO={'TRUCK':1.3,'TOCO':1.1,'3/4':1.0};
+  const VEICULOS_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vTd77MkT5hd6gzTkMfzX2BVWY5Hqqfo3NluQY58mnOklN8--hPVIoe2CfzkbttnucJKbnJFiaPEWSmR/pub?gid=1445766214&single=true&output=csv';
+  try{
+    // Load vehicle types
+    const mapaVeiculos={};
+    try{
+      const vRes=await fetch(VEICULOS_URL,{cache:'no-store'});
+      if(vRes.ok){
+        const vText=await vRes.text();
+        vText.split(/\r?\n/).slice(1).forEach(line=>{
+          const cols=line.split(',').map(c=>c.trim().replace(/^"|"$/g,''));
+          if(cols.length>=5){
+            const placa=(cols[2]||'').toUpperCase();
+            const tipo=(cols[4]||'').toUpperCase();
+            if(placa&&PESO_VEICULO[tipo])mapaVeiculos[placa]=tipo;
+          }
+        });
+      }
+    }catch(e){}
+    // Load ranking data
+    const res=await fetch(SHEETS_URL_RANKING,{cache:'no-store'});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const text=await res.text();
+    const lines=text.split(/\r?\n/).filter(l=>l.trim());
+    if(lines.length<2){panel.innerHTML='<div style="text-align:center;padding:12px;">Sem dados de ranking.</div>';return;}
+    const headers=lines[0].split(',').map(h=>h.trim().replace(/^"|"$/g,''));
+    const idx=name=>headers.findIndex(h=>h.toUpperCase().includes(name));
+    const iMot=idx('MOTORISTA'),iDest=idx('DESTINO'),iKm=idx('KM'),iData=idx('DATA'),iVeic=idx('VEICULO'),iRes=idx('RESERVA');
+    const data=[];
+    lines.slice(1).forEach(line=>{
+      const cols=line.split(',').map(c=>c.trim().replace(/^"|"$/g,''));
+      const mot=(cols[iMot]||'').trim().toUpperCase();
+      if(!mot)return;
+      const destStr=(cols[iDest]||'').toString();
+      const destCount=Math.max(1,destStr.split(/\s*\/\s*/).filter(p=>p.trim()).length);
+      const destUpper=destStr.toUpperCase();
+      const isRepos=/GARAG[AE]?M|TELERIO|TELE\s*RIO|LASA|C&V|MANUTEN|TESTE DE DIREÇÃO|CD QUEIMADOS|COBRANÇA DEVIDA|GARAGEM/.test(destUpper);
+      const placa=(cols[iVeic]||'').toUpperCase();
+      const tipoVeiculo=mapaVeiculos[placa]||'';
+      const pesoVeiculo=PESO_VEICULO[tipoVeiculo]||1.0;
+      let km=0;
+      try{km=parseFloat(String(cols[iKm]||'0').replace(',','.'));if(isNaN(km)||km<0||km>500)km=0;}catch(e){km=0;}
+      const isReserva=/RESERVA/i.test(cols[iRes]||'')||/RESERVA/i.test(destUpper);
+      data.push({motorista:mot,destinos:destCount,km,data:(cols[iData]||'').trim(),isRepos,pesoVeiculo,isReserva});
+    });
+    // Compute stats (same logic as original)
+    const byDriver={},daysByDriver={},destByDriver={},reservaByDriver={},weightedTrips={},weightedDest={},weightedKm={},realDays={};
+    data.forEach(r=>{
+      if(!byDriver[r.motorista]){
+        byDriver[r.motorista]=0;daysByDriver[r.motorista]=new Set();destByDriver[r.motorista]=0;
+        reservaByDriver[r.motorista]=0;weightedTrips[r.motorista]=0;weightedDest[r.motorista]=0;
+        weightedKm[r.motorista]=0;realDays[r.motorista]=new Set();
+      }
+      byDriver[r.motorista]++;
+      destByDriver[r.motorista]+=r.destinos||1;
+      if(r.isReserva)reservaByDriver[r.motorista]++;
+      if(r.data)daysByDriver[r.motorista].add(r.data);
+      const wRepos=r.isRepos?0.1:1.0;
+      const w=wRepos*(r.pesoVeiculo||1.0);
+      weightedTrips[r.motorista]+=w;
+      weightedDest[r.motorista]+=(r.destinos||1)*w;
+      weightedKm[r.motorista]+=(r.km||0)*w;
+      if(!r.isRepos&&r.data)realDays[r.motorista].add(r.data);
+    });
+    const multiDays={};
+    const dayTrips={},dayHasReal={};
+    data.forEach(r=>{
+      const key=r.motorista+'|'+r.data;
+      dayTrips[key]=(dayTrips[key]||0)+1;
+      if(!r.isRepos)dayHasReal[key]=true;
+    });
+    Object.keys(dayTrips).forEach(key=>{
+      const [mot]=key.split('|');
+      if(dayTrips[key]>1&&dayHasReal[key])multiDays[mot]=(multiDays[mot]||0)+1;
+    });
+    const maxTrips=Math.max(...Object.values(weightedTrips),1);
+    const maxDestinos=Math.max(...Object.values(weightedDest),1);
+    const maxKm=Math.max(...Object.values(weightedKm),1);
+    const maxMulti=Math.max(...Object.values(multiDays),1);
+    const list=Object.keys(byDriver).map(mot=>{
+      const wTrips=weightedTrips[mot]||0,wDest=weightedDest[mot]||0,wKm=weightedKm[mot]||0,multi=multiDays[mot]||0;
+      const scoreTrips=(wTrips/maxTrips)*100,scoreDest=(wDest/maxDestinos)*100,scoreKm=(wKm/maxKm)*100,scoreMulti=(multi/maxMulti)*100;
+      const combinado=(scoreTrips+scoreDest+scoreKm+scoreMulti)/4;
+      return{motorista:mot,trips:byDriver[mot],destinos:destByDriver[mot],km:Math.round(weightedKm[mot]||0),multi,combinado};
+    }).sort((a,b)=>b.combinado-a.combinado).slice(0,10);
+    const maxScore=list[0]?.combinado||1;
+    badge.textContent='mês atual';
+    panel.innerHTML=list.map((r,i)=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--border);">
+        <div style="width:18px;text-align:center;font-weight:700;color:${i<3?'#f5d800':'var(--text2)'}">${i+1}</div>
+        <div style="flex:1;font-weight:600;color:var(--text);">${r.motorista}</div>
+        <div style="width:50px;text-align:right;color:#5db0ff;">${r.trips}v</div>
+        <div style="width:50px;text-align:right;color:#f5a623;">${r.destinos}d</div>
+        <div style="width:55px;text-align:right;color:#27ae60;">${r.km}km</div>
+        <div style="width:70px;text-align:right;font-weight:700;color:${i<3?'#f5d800':'#3a8fe4'};">${r.combinado.toFixed(1)}%</div>
+      </div>`).join('');
+  }catch(e){
+    panel.innerHTML='<div style="text-align:center;padding:12px;color:var(--text3);">Não foi possível carregar o ranking.</div>';
+  }
+}
   try{
     const res=await fetch(SHEETS_URL_EFETIVO,{cache:'no-store'});
     if(!res.ok)throw new Error('HTTP '+res.status);
