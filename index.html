@@ -215,7 +215,7 @@ kbd{background:var(--border);color:var(--text);padding:1px 4px;border-radius:3px
 footer{border-top:1px solid var(--border);padding:10px 14px;text-align:center;font-size:9px;color:var(--text3);letter-spacing:.5px;}
 footer span{color:var(--blue-light);}
 @media(max-width:1400px){.kpi-grid{grid-template-columns:repeat(4,1fr);}}
-@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(3,1fr);}.bottom-grid,.chart-row{grid-template-columns:1fr;}.mfg{grid-template-columns:1fr 1fr;}.mfg .full{grid-column:span 2;}}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(3,1fr);}.bottom-grid,.chart-row{grid-template-columns:1fr;}#op-card{grid-column:1/-1;}.mfg{grid-template-columns:1fr 1fr;}.mfg .full{grid-column:span 2;}}
 @media(max-width:600px){header{padding:0 10px;}.sys-title h1{font-size:16px;}main{padding:8px;}.kpi-grid{grid-template-columns:repeat(2,1fr);}}
 </style>
 </head>
@@ -404,13 +404,15 @@ footer span{color:var(--blue-light);}
   </div>
 
   <div class="sec">📈 Gráficos e Análises</div>
-  <div class="chart-card" id="op-card" style="margin-bottom:8px;width:100%;">
-    <div class="ct" style="justify-content:space-between;"><span>🔢 Distribuição por OP <span class="badge">trânsito · programados · finalizados</span></span><button onclick="printOpPanel()" style="background:var(--blue);border:none;border-radius:6px;padding:4px 9px;color:white;font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background .2s;" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='var(--blue)'">🖨️ PRINT</button></div>
-    <div id="op-panel" style="overflow-y:auto;max-height:320px;"></div>
-  </div>
-  <div class="chart-row">
-    <div class="chart-card"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw"><canvas id="cHor"></canvas></div></div>
-    <div class="chart-card"><div class="ct">🚐 KM por Veículo <span class="badge" style="background:rgba(26,111,196,.4);">Azul=trânsito · Laranja=programado</span></div><div class="cw"><canvas id="cKm"></canvas></div></div>
+  <div style="display:grid;grid-template-columns:minmax(280px,380px) 1fr;gap:8px;margin-bottom:8px;align-items:start;">
+    <div class="chart-card" id="op-card">
+      <div class="ct" style="justify-content:space-between;"><span>🔢 Distribuição por OP <span class="badge">trânsito · programados · finalizados</span></span><button onclick="printOpPanel()" style="background:var(--blue);border:none;border-radius:6px;padding:4px 9px;color:white;font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background .2s;" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='var(--blue)'">🖨️ PRINT</button></div>
+      <div id="op-panel" style="overflow-y:auto;max-height:480px;"></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <div class="chart-card"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw"><canvas id="cHor"></canvas></div></div>
+      <div class="chart-card"><div class="ct">🚐 KM por Veículo <span class="badge" style="background:rgba(26,111,196,.4);">Azul=trânsito · Laranja=programado</span></div><div class="cw"><canvas id="cKm"></canvas></div></div>
+    </div>
   </div>
 
   <div class="sec">👨‍✈️ Motoristas — Dia Selecionado</div>
