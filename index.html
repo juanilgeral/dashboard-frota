@@ -400,12 +400,11 @@ footer span{color:var(--blue-light);}
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#95a5a6"></div>📋 Outros</div><div class="st-val"><input type="number" id="st-o" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
       </div>
       <div style="margin-top:12px;background:var(--bg3);border-radius:8px;padding:10px;border:1px solid var(--border);"><div style="font-size:9px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:700;">📌 Resumo</div><div class="resumo-grid" id="resumo-ef"></div></div>
+      <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px;">
+        <div class="chart-card" style="margin:0;"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw" style="height:140px;"><canvas id="cHor"></canvas></div></div>
+        <div class="chart-card" style="margin:0;"><div class="ct">🚐 KM por Veículo <span class="badge" style="background:rgba(26,111,196,.4);">Azul=trânsito · Laranja=programado</span></div><div class="cw" style="height:140px;"><canvas id="cKm"></canvas></div></div>
+      </div>
     </div>
-  </div>
-
-  <div class="chart-row">
-    <div class="chart-card"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw"><canvas id="cHor"></canvas></div></div>
-    <div class="chart-card"><div class="ct">🚐 KM por Veículo <span class="badge" style="background:rgba(26,111,196,.4);">Azul=trânsito · Laranja=programado</span></div><div class="cw"><canvas id="cKm"></canvas></div></div>
   </div>
 
   <div class="sec">📈 Gráficos e Análises</div>
