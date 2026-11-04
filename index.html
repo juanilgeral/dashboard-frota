@@ -59,8 +59,8 @@ header{background:linear-gradient(135deg,var(--blue-dark) 0%,#0a3060 60%,#081a3a
 .date-info strong{color:var(--accent);}
 #no-data-msg{display:none;background:rgba(231,76,60,.1);border:1px solid rgba(231,76,60,.3);color:#ff9090;border-radius:7px;padding:6px 12px;font-size:11px;}
 main{padding:12px 14px;width:100%;}
-.sec{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue-light);margin-bottom:10px;padding-left:8px;border-left:3px solid var(--blue);}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:12px;}
+.sec{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--blue-light);margin-bottom:6px;padding-left:8px;border-left:3px solid var(--blue);}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin-bottom:8px;}
 .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:7px 9px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;}
 .kpi-card:hover{transform:translateY(-2px);border-color:var(--blue-light);}
 .kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--kc,var(--blue));}
@@ -72,9 +72,9 @@ main{padding:12px 14px;width:100%;}
 .chart-card:hover{border-color:var(--blue);transform:translateY(-1px);}
 .ct{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:11px;display:flex;align-items:center;gap:7px;}
 .ct .badge{font-size:9px;background:var(--blue);color:white;padding:2px 5px;border-radius:9px;font-weight:600;}
-.chart-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;margin-bottom:12px;}
+.chart-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-bottom:8px;}
 .cw{position:relative;height:220px;}
-.bottom-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:10px;margin-bottom:12px;}
+.bottom-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin-bottom:8px;}
 .prob-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
 .prob-lbl{font-size:11px;color:var(--text2);}
 .prob-bw{flex:1;margin:0 8px;height:5px;background:var(--border);border-radius:3px;overflow:hidden;}
@@ -94,7 +94,7 @@ main{padding:12px 14px;width:100%;}
 .st-dot{width:8px;height:8px;border-radius:50%;}
 .st-val input{width:52px;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:4px 6px;color:var(--text);font-size:13px;font-weight:700;text-align:center;font-family:'Barlow Condensed',sans-serif;outline:none;}
 .st-val input:focus{border-color:var(--blue);}
-.driver-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:7px;margin-bottom:16px;}
+.driver-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:5px;margin-bottom:8px;}
 .dr-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px 10px;display:flex;align-items:center;gap:8px;transition:border-color .2s,transform .2s;}
 .dr-card:hover{border-color:var(--blue);transform:translateY(-1px);}
 .dr-av{width:33px;height:33px;border-radius:50%;background:linear-gradient(135deg,var(--blue-dark),var(--blue));display:flex;align-items:center;justify-content:center;font-family:'Barlow Condensed',sans-serif;font-size:13px;font-weight:700;color:white;flex-shrink:0;border:2px solid var(--blue-light);}
@@ -102,7 +102,7 @@ main{padding:12px 14px;width:100%;}
 .dr-name{font-size:11px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .dr-ops{font-size:9px;color:var(--text2);margin-top:1px;}
 .dr-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:14px;margin-bottom:16px;overflow-x:auto;}
+.tbl-wrap{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:8px;overflow-x:auto;}
 .fleet-table{width:100%;border-collapse:collapse;font-size:11px;}
 .fleet-table th{font-family:'Barlow Condensed',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text2);padding:6px 8px;border-bottom:2px solid var(--border);text-align:left;white-space:nowrap;}
 .fleet-table td{padding:7px 8px;border-bottom:1px solid var(--border);color:var(--text);white-space:nowrap;}
@@ -349,8 +349,8 @@ footer span{color:var(--blue-light);}
   </div>
 
   <div class="chart-row">
-    <div class="chart-card"><div class="ct">👥 Motoristas por OP <span class="badge" id="badge-mot-transito" style="display:none;background:rgba(26,111,196,.5);">—</span></div><div class="cw" style="height:200px;"><canvas id="cMot"></canvas></div></div>
-    <div class="chart-card"><div class="ct">📊 Situação Efetivo</div><div class="cw" style="height:200px;"><canvas id="cSit"></canvas></div></div>
+    <div class="chart-card"><div class="ct">👥 Motoristas por OP <span class="badge" id="badge-mot-transito" style="display:none;background:rgba(26,111,196,.5);">—</span></div><div class="cw" style="height:180px;"><canvas id="cMot"></canvas></div></div>
+    <div class="chart-card"><div class="ct">📊 Situação Efetivo</div><div class="cw" style="height:180px;"><canvas id="cSit"></canvas></div></div>
   </div>
 
   <div class="bottom-grid">
@@ -408,7 +408,7 @@ footer span{color:var(--blue-light);}
   <div class="chart-row">
     <div class="chart-card" id="op-card">
       <div class="ct" style="justify-content:space-between;"><span>🔢 Distribuição por OP <span class="badge">trânsito · programados · finalizados</span></span><button onclick="printOpPanel()" style="background:var(--blue);border:none;border-radius:6px;padding:4px 9px;color:white;font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background .2s;" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='var(--blue)'">🖨️ PRINT</button></div>
-      <div id="op-panel" style="overflow-y:auto;max-height:300px;"></div>
+      <div id="op-panel" style="overflow-y:auto;max-height:220px;"></div>
     </div>
     <div class="chart-card"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw"><canvas id="cHor"></canvas></div></div>
     <div class="chart-card"><div class="ct">🚐 KM por Veículo <span class="badge" style="background:rgba(26,111,196,.4);">Azul=trânsito · Laranja=programado</span></div><div class="cw"><canvas id="cKm"></canvas></div></div>
