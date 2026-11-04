@@ -395,7 +395,6 @@ footer span{color:var(--blue-light);}
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#27ae60"></div>✅ Motoristas Ativos</div><div class="st-val"><input type="number" id="st-a" min="0" value="23" readonly style="cursor:default;opacity:.85;"></div></div>
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#3a8fe4"></div>🌴 Motoristas em Férias</div><div class="st-val"><input type="number" id="st-f" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#f39c12"></div>🏥 Lic. Médica</div><div class="st-val"><input type="number" id="st-l" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
-      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#e74c3c"></div>🚫 Demitidos</div><div class="st-val"><input type="number" id="st-af" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#9b59b6"></div>📚 Treinamento</div><div class="st-val"><input type="number" id="st-t" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#e67e22"></div>⚠️ Suspensão</div><div class="st-val"><input type="number" id="st-s" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#95a5a6"></div>📋 Outros</div><div class="st-val"><input type="number" id="st-o" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
@@ -639,7 +638,7 @@ function updateKpis(rows,d){
     document.getElementById('date-info').innerHTML=`Exibindo <strong>${rowsValidos.length} rotas</strong> de ${d} · <strong style="color:#5db0ff">${nT} em trânsito</strong> · <strong style="color:#f5a623">${nP} programadas</strong>`+(nR>0?` · <strong style="color:#95a5a6">${nR} reserva${nR!==1?'s':''}</strong>`:'');
   }
   const st=loadStatus();
-  const afas=(st.ferias||0)+(st.licenca||0)+(st.afastado||0)+(st.suspensao||0)+(st.outros||0);
+  const afas=(st.ferias||0)+(st.licenca||0);
   document.getElementById('k-afas').textContent=afas;
   if(mots>0&&st.totalEmpresa>0){const pct=Math.min(100,Math.round(mots/st.totalEmpresa*100));document.getElementById('pb2').style.width=pct+'%';document.getElementById('pp2').textContent=pct+'%';}
 }
@@ -782,9 +781,9 @@ function updateCharts(rows,d){
 
 function updateChartSituacao(){
   const st=loadStatus();
-  const allLabels=['Ativos','Férias','Licença','Demitidos','Trein.','Suspensão','Outros'];
-  const allData=[st.ativo||0,st.ferias||0,st.licenca||0,st.demitido||0,st.treinamento||0,st.suspensao||0,st.outros||0];
-  const allColors=['#27ae60','#3a8fe4','#f39c12','#e74c3c','#9b59b6','#e67e22','#95a5a6'];
+  const allLabels=['Ativos','Férias','Licença','Trein.','Suspensão','Outros'];
+  const allData=[st.ativo||0,st.ferias||0,st.licenca||0,st.treinamento||0,st.suspensao||0,st.outros||0];
+  const allColors=['#27ae60','#3a8fe4','#f39c12','#9b59b6','#e67e22','#95a5a6'];
   destroyChart('cSit');
   charts['cSit']=new Chart(document.getElementById('cSit'),{type:'pie',data:{labels:allLabels,datasets:[{data:allData.map(v=>v===0?0.001:v),backgroundColor:allColors,borderColor:'#1a2540',borderWidth:3}]},options:{...CHART_BASE,plugins:{legend:{labels:{color:'#8ca0c0',font:{family:'Barlow',size:11}}},tooltip:{callbacks:{label:ctx=>' '+ctx.label+': '+allData[ctx.dataIndex]}}}}});
 }
@@ -946,7 +945,7 @@ async function syncEfetivo(){
     localStorage.setItem(SKEY,JSON.stringify(st));
     applyStatus(st);
     updateChartSituacao();
-    const afas=(st.ferias||0)+(st.licenca||0)+(st.demitido||0);
+    const afas=(st.ferias||0)+(st.licenca||0);
     const afEl=document.getElementById('k-afas');
     if(afEl)afEl.textContent=afas;
     console.log('Efetivo sincronizado:',st);
@@ -961,7 +960,6 @@ function applyStatus(st){
   sv('st-a',st.ativo);
   sv('st-f',st.ferias);
   sv('st-l',st.licenca);
-  sv('st-af',st.demitido);
   sv('st-t',st.treinamento);
   sv('st-s',st.suspensao);
   sv('st-o',st.outros);
@@ -969,7 +967,7 @@ function applyStatus(st){
   updateBlocoCxM();
 }
 function updateResumo(st){
-  const tot=(st.ativo||0)+(st.ferias||0)+(st.licenca||0)+(st.demitido||0)+(st.treinamento||0)+(st.suspensao||0)+(st.outros||0);
+  const tot=(st.ativo||0)+(st.ferias||0)+(st.licenca||0)+(st.treinamento||0)+(st.suspensao||0)+(st.outros||0);
   const items=[
     {l:'🚛 Veículos no total',v:st.totalCaminhoes,c:'var(--blue-light)'},
     {l:'🟢 Carros na ativa',v:st.carrosNaAtiva,c:'var(--green)'},
@@ -977,7 +975,6 @@ function updateResumo(st){
     {l:'✅ Mot. na ativa',v:st.totalEscala,c:'var(--green)'},
     {l:'🌴 Férias',v:st.ferias,c:'#3a8fe4'},
     {l:'🏥 Licença',v:st.licenca,c:'var(--yellow)'},
-    {l:'🚫 Demitidos',v:st.demitido,c:'var(--red)'},
     {l:'📚 Treinamento',v:st.treinamento,c:'#9b59b6'},
     {l:'∑ Total situações',v:tot,c:'var(--text)'}
   ];
