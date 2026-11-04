@@ -392,7 +392,7 @@ footer span{color:var(--blue-light);}
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#27ae60"></div>✅ Motoristas Ativos</div><div class="st-val"><input type="number" id="st-a" min="0" value="23" readonly style="cursor:default;opacity:.85;"></div></div>
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#3a8fe4"></div>🌴 Motoristas em Férias</div><div class="st-val"><input type="number" id="st-f" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#f39c12"></div>🏥 Lic. Médica</div><div class="st-val"><input type="number" id="st-l" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
-      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#e74c3c"></div>🚫 Afastado INSS</div><div class="st-val"><input type="number" id="st-af" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
+      <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#e74c3c"></div>🚫 Demitidos</div><div class="st-val"><input type="number" id="st-af" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#9b59b6"></div>📚 Treinamento</div><div class="st-val"><input type="number" id="st-t" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#e67e22"></div>⚠️ Suspensão</div><div class="st-val"><input type="number" id="st-s" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
       <div class="st-row"><div class="st-lbl"><div class="st-dot" style="background:#95a5a6"></div>📋 Outros</div><div class="st-val"><input type="number" id="st-o" min="0" value="0" readonly style="cursor:default;opacity:.85;"></div></div>
@@ -432,7 +432,7 @@ const RKEY='juanil_all_routes_v2',SKEY='juanil_status_v2',DKEY='juanil_last_date
 const OP_COLORS={CV:'#f5d800',LS:'#e84040',TL:'#2ed573',HT:'#27ae60',NL:'#ff2020',GR:'#9e9e9e'};
 const CHART_BASE={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#8ca0c0',font:{family:'Barlow',size:11}}}},onHover:(e,el)=>{e.native.target.style.cursor=el.length?'pointer':'default'}};
 const SHEETS_URL_DEFAULT='https://script.google.com/macros/s/AKfycbyRUly618fpcqZYmK2chs6Uwq0G3oy3nX4rUz1TtW8kIxtKmum0t4QX9IBjLRdUMcrDEQ/exec';
-const SHEETS_URL_EFETIVO='https://script.google.com/macros/s/AKfycbyXFnFnYSIv3nbcDvgZHa1iMI5nYWYFOAdnLhSMqAF_eFjIgxlEIfI7D-anH_7UvnYJaQ/exec?tipo=efetivo';
+const SHEETS_URL_EFETIVO='https://docs.google.com/spreadsheets/d/e/2PACX-1vQU606Dbi9ZWn1RSpKGn9Daey3XAsTWRDgstXI3ARb6Na2UF-nZ1hkfB7EVFwzfvQ/pub?output=csv';
 
 // ===================== STATE =====================
 let allRoutes=[],dateMap={},availDates=[],currentDate='',currentRoutes=[],charts={},manualRows=[],fileRaw='';
@@ -778,8 +778,8 @@ function updateCharts(rows,d){
 
 function updateChartSituacao(){
   const st=loadStatus();
-  const allLabels=['Ativos','Férias','Lic.Med.','Afastados','Trein.','Suspensão','Outros'];
-  const allData=[st.ativo,st.ferias,st.licenca,st.afastado,st.treinamento,st.suspensao,st.outros];
+  const allLabels=['Ativos','Férias','Licença','Demitidos','Trein.','Suspensão','Outros'];
+  const allData=[st.ativo||0,st.ferias||0,st.licenca||0,st.demitido||0,st.treinamento||0,st.suspensao||0,st.outros||0];
   const allColors=['#27ae60','#3a8fe4','#f39c12','#e74c3c','#9b59b6','#e67e22','#95a5a6'];
   destroyChart('cSit');
   charts['cSit']=new Chart(document.getElementById('cSit'),{type:'pie',data:{labels:allLabels,datasets:[{data:allData.map(v=>v===0?0.001:v),backgroundColor:allColors,borderColor:'#1a2540',borderWidth:3}]},options:{...CHART_BASE,plugins:{legend:{labels:{color:'#8ca0c0',font:{family:'Barlow',size:11}}},tooltip:{callbacks:{label:ctx=>' '+ctx.label+': '+allData[ctx.dataIndex]}}}}});
@@ -787,7 +787,10 @@ function updateChartSituacao(){
 
 // ===================== STATS RAPIDAS — exclui reservas =====================
 function updateStatsRap(rows,d){
-  if(!rows.length)return;
+  if(!rows.length){
+    document.getElementById('stats-rap').innerHTML='<div class="r-item" style="color:var(--text3)">Importe um CSV de rotas...</div>';
+    return;
+  }
   const rowsValidos = rows.filter(r => getStatus(r,d) !== 'reserva');
   if(!rowsValidos.length)return;
   const dCnt={};rowsValidos.forEach(r=>{dCnt[r.motorista]=(dCnt[r.motorista]||0)+1;});
@@ -800,6 +803,12 @@ function updateStatsRap(rows,d){
   const nP=rowsValidos.filter(r=>isProgramada(r,d)).length;
   const nRS=rows.filter(r=>getStatus(r,d)==='reserva').length;
   const pctT=rowsValidos.length?Math.round(nT/rowsValidos.length*100):0;
+  let st=null;try{st=JSON.parse(localStorage.getItem(SKEY));}catch(e){}
+  const efetivoHtml=st?`
+    <div class="r-item" style="margin-top:6px;border-top:1px solid var(--border);padding-top:6px;">Mot. ativos: <strong style="color:#27ae60">${st.ativo||0}</strong></div>
+    <div class="r-item">Em férias: <strong style="color:#3a8fe4">${st.ferias||0}</strong> · Licença: <strong style="color:#f39c12">${st.licenca||0}</strong></div>
+    <div class="r-item">Carros na ativa: <strong style="color:var(--blue-light)">${st.carrosNaAtiva||0}</strong> / ${st.totalCaminhoes||0}</div>
+  `:'';
   document.getElementById('stats-rap').innerHTML=`
     <div class="r-item">Rotas no dia: <strong style="color:var(--text)">${rowsValidos.length}</strong></div>
     <div class="r-item">Em trânsito: <strong style="color:#5db0ff">${nT} (${pctT}%)</strong></div>
@@ -808,6 +817,7 @@ function updateStatsRap(rows,d){
     <div class="r-item">OP mais freq.: <strong style="color:${OP_COLORS[topOp?.[0]]||'#fff'}">${topOp?topOp[0]+' ('+topOp[1]+')':'—'}</strong></div>
     <div class="r-item">Total KM: <strong style="color:#1abc9c">${totalKm.toLocaleString('pt-BR')}</strong></div>
     <div class="r-item">KM médio/veíc.: <strong style="color:var(--text)">${kmMedia}</strong></div>
+    ${efetivoHtml}
   `;
 }
 
@@ -871,12 +881,104 @@ function printOpPanel(){
 }
 
 // ===================== STATUS EFETIVO =====================
-function loadStatus(){try{const r=localStorage.getItem(SKEY);if(r)return JSON.parse(r);}catch(e){}return{totalCaminhoes:44,carrosNaAtiva:33,totalEmpresa:32,totalEscala:29,ativo:29,ferias:3,licenca:4,afastado:0,treinamento:2,suspensao:0,outros:0};}
+function loadStatus(){try{const r=localStorage.getItem(SKEY);if(r)return JSON.parse(r);}catch(e){}return{totalCaminhoes:44,carrosNaAtiva:35,totalEmpresa:39,totalEscala:33,ativo:33,ferias:3,licenca:3,demitido:12,treinamento:0,suspensao:0,outros:0};}
 async function syncEfetivo(){
-  try{const res=await fetch(SHEETS_URL_EFETIVO,{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);const csv=await res.text();if(!csv||csv.length<10)throw new Error('Resposta vazia');const lines=csv.split(/\r?\n/).filter(l=>l.trim());const sep=lines[0].includes('\t')?'\t':',';const headers=lines[0].split(sep).map(h=>h.trim().toUpperCase().replace(/[^A-Z0-9_]/g,'_'));const values=lines[1].split(sep).map(v=>parseInt(v.trim())||0);const get=nome=>{const idx=headers.findIndex(h=>h.includes(nome));return idx>=0?values[idx]:0;};const st={totalCaminhoes:get('VE_CULOS_NO_TOTAL')||get('VE_CULO')||get('VEICULOS_NO_TOTAL')||get('TOTAL'),carrosNaAtiva:get('CARROS_NA_ATIVA')||get('CARROS'),totalEscala:get('MOT__NA_ATIVA')||get('MOT_NA_ATIVA')||get('MOT__NA')||get('MOT_NA'),totalEmpresa:get('MOTORISTAS'),treinamento:get('TREINAMENTO')||get('TREIN'),licenca:get('LICEN_A')||get('LICENCA')||get('LICEN')||get('LIC'),ferias:get('F_RIAS')||get('FERIAS'),ativo:get('MOT__NA_ATIVA')||get('MOT_NA_ATIVA')||get('MOT__NA')||get('MOT_NA'),afastado:0,suspensao:0,outros:0};localStorage.setItem(SKEY,JSON.stringify(st));applyStatus(st);updateChartSituacao();document.getElementById('k-afas').textContent=(st.ferias||0)+(st.licenca||0)+(st.afastado||0)+(st.suspensao||0)+(st.outros||0);}catch(e){console.warn('Efetivo sync falhou:',e.message);}
+  try{
+    const res=await fetch(SHEETS_URL_EFETIVO,{cache:'no-store'});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const csv=await res.text();
+    if(!csv||csv.length<20)throw new Error('Resposta vazia');
+    const lines=csv.split(/\r?\n/).filter(l=>l.trim());
+    const sep=lines[0].includes('\t')?'\t':',';
+    // Summary is usually on line 1 (index 1)
+    let summary={};
+    if(lines.length>1){
+      const h=lines[0].split(sep).map(x=>x.trim().toUpperCase());
+      const v=lines[1].split(sep);
+      h.forEach((key,i)=>{
+        const num=parseInt((v[i]||'').replace(/[^\d]/g,''))||0;
+        if(key.includes('CARROS')&&key.includes('ATIVA'))summary.carrosNaAtiva=num;
+        else if(key.includes('VE')&&key.includes('TOTAL'))summary.totalCaminhoes=num;
+        else if(key.includes('MOT')&&key.includes('ATIVA'))summary.totalEscala=num;
+        else if(key.includes('MOTORISTA')&&!key.includes('ATIVA'))summary.totalEmpresa=num;
+        else if(key.includes('FERIAS')||key.includes('FÉRIAS'))summary.ferias=num;
+        else if(key.includes('LICEN'))summary.licenca=num;
+        else if(key.includes('TREIN'))summary.treinamento=num;
+      });
+    }
+    // Parse employee list (data starts ~col 9)
+    const employees=[];
+    for(let i=2;i<lines.length;i++){
+      const cols=lines[i].split(sep);
+      if(cols.length<15)continue;
+      const nome=(cols[9]||'').trim();
+      if(!nome)continue;
+      employees.push({
+        nome,
+        mat:(cols[10]||'').trim(),
+        funcao:(cols[11]||'').trim().toUpperCase(),
+        guerra:(cols[12]||'').trim().toUpperCase(),
+        situacao:(cols[14]||'').trim().toUpperCase()
+      });
+    }
+    const motoristas=employees.filter(e=>e.funcao.includes('MOTORISTA'));
+    const cnt=sit=>motoristas.filter(e=>e.situacao===sit||e.situacao.includes(sit)).length;
+    const st={
+      totalCaminhoes:summary.totalCaminhoes||44,
+      carrosNaAtiva:summary.carrosNaAtiva||35,
+      totalEmpresa:summary.totalEmpresa||motoristas.filter(e=>e.situacao!=='DEMITIDO').length,
+      totalEscala:summary.totalEscala||cnt('ATIVO'),
+      ativo:cnt('ATIVO'),
+      ferias:cnt('FÉRIAS')||cnt('FERIAS'),
+      licenca:cnt('LICENÇA')||cnt('LICENCA'),
+      demitido:cnt('DEMITIDO'),
+      treinamento:summary.treinamento||0,
+      suspensao:0,
+      outros:0,
+      motoristasList:motoristas.map(m=>({guerra:m.guerra||m.nome,situacao:m.situacao}))
+    };
+    // Prefer calculated counts if summary is missing
+    if(!st.totalEmpresa)st.totalEmpresa=st.ativo+st.ferias+st.licenca;
+    localStorage.setItem(SKEY,JSON.stringify(st));
+    applyStatus(st);
+    updateChartSituacao();
+    const afas=(st.ferias||0)+(st.licenca||0)+(st.demitido||0);
+    const afEl=document.getElementById('k-afas');
+    if(afEl)afEl.textContent=afas;
+    console.log('Efetivo sincronizado:',st);
+  }catch(e){console.warn('Efetivo sync falhou:',e.message);}
 }
-function applyStatus(st){const sv=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??0;};sv('te-cam-total',st.totalCaminhoes??44);sv('te-cam-ativa',st.carrosNaAtiva??33);sv('te',st.totalEmpresa??32);sv('tesc',st.totalEscala??29);sv('st-a',st.ativo??29);sv('st-f',st.ferias??3);sv('st-l',st.licenca??4);sv('st-af',st.afastado??0);sv('st-t',st.treinamento??2);sv('st-s',st.suspensao??0);sv('st-o',st.outros??0);updateResumo(st);updateBlocoCxM();}
-function updateResumo(st){const tot=(st.ativo||0)+(st.ferias||0)+(st.licenca||0)+(st.afastado||0)+(st.treinamento||0)+(st.suspensao||0)+(st.outros||0);const bate=tot===(st.totalEmpresa||0);const items=[{l:'🚛 Veículos no total',v:st.totalCaminhoes,c:'var(--blue-light)'},{l:'🟢 Carros na ativa',v:st.carrosNaAtiva,c:'var(--green)'},{l:'👥 Total mot. empresa',v:st.totalEmpresa,c:'var(--text)'},{l:'✅ Mot. na ativa',v:st.totalEscala,c:'var(--green)'},{l:'🌴 Férias',v:st.ferias,c:'#3a8fe4'},{l:'🏥 Licença',v:st.licenca,c:'var(--yellow)'},{l:'📚 Treinamento',v:st.treinamento,c:'#9b59b6'},{l:'🚫 Afastados',v:st.afastado,c:'var(--red)'},{l:'⚠️ Suspensão',v:st.suspensao,c:'#e67e22'},{l:'📋 Outros',v:st.outros,c:'#95a5a6'},{l:'∑ Total situações',v:tot,c:bate?'var(--green)':'var(--red)'}];document.getElementById('resumo-ef').innerHTML=items.map(i=>`<div class="r-item">${i.l}: <strong style="color:${i.c}">${i.v??0}</strong></div>`).join('');}
+function applyStatus(st){
+  const sv=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v??0;};
+  sv('te-cam-total',st.totalCaminhoes);
+  sv('te-cam-ativa',st.carrosNaAtiva);
+  sv('te',st.totalEmpresa);
+  sv('tesc',st.totalEscala);
+  sv('st-a',st.ativo);
+  sv('st-f',st.ferias);
+  sv('st-l',st.licenca);
+  sv('st-af',st.demitido);
+  sv('st-t',st.treinamento);
+  sv('st-s',st.suspensao);
+  sv('st-o',st.outros);
+  updateResumo(st);
+  updateBlocoCxM();
+}
+function updateResumo(st){
+  const tot=(st.ativo||0)+(st.ferias||0)+(st.licenca||0)+(st.demitido||0)+(st.treinamento||0)+(st.suspensao||0)+(st.outros||0);
+  const items=[
+    {l:'🚛 Veículos no total',v:st.totalCaminhoes,c:'var(--blue-light)'},
+    {l:'🟢 Carros na ativa',v:st.carrosNaAtiva,c:'var(--green)'},
+    {l:'👥 Total mot. empresa',v:st.totalEmpresa,c:'var(--text)'},
+    {l:'✅ Mot. na ativa',v:st.totalEscala,c:'var(--green)'},
+    {l:'🌴 Férias',v:st.ferias,c:'#3a8fe4'},
+    {l:'🏥 Licença',v:st.licenca,c:'var(--yellow)'},
+    {l:'🚫 Demitidos',v:st.demitido,c:'var(--red)'},
+    {l:'📚 Treinamento',v:st.treinamento,c:'#9b59b6'},
+    {l:'∑ Total situações',v:tot,c:'var(--text)'}
+  ];
+  document.getElementById('resumo-ef').innerHTML=items.map(i=>`<div class="r-item">${i.l}: <strong style="color:${i.c}">${i.v??0}</strong></div>`).join('');
+}
 function updateBlocoCxM(){const el=document.getElementById('bloco-cxm');if(!el)return;let st;try{st=JSON.parse(localStorage.getItem(SKEY));}catch(e){st=null;}if(!st){el.innerHTML='<div class="r-item" style="color:var(--text3)">Sincronize o efetivo para ver.</div>';return;}const cam=st.carrosNaAtiva||0,motE=st.totalEscala||0,tCam=st.totalCaminhoes||0,tMot=st.totalEmpresa||0;if(cam===0&&motE===0){el.innerHTML='<div class="r-item" style="color:var(--text3)">Sincronize e selecione uma data.</div>';return;}const diff=motE-cam;let alerta='',ac=diff<0?'var(--red)':diff>0?'var(--green)':'var(--blue-light)';if(diff<0){const n=Math.abs(diff);alerta=`<div style="margin-top:7px;background:rgba(231,76,60,.13);border:1px solid rgba(231,76,60,.4);border-radius:6px;padding:7px 9px;"><div style="font-size:9px;font-weight:700;color:#ff7070;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;">⚠️ Déficit de Motoristas</div><div style="font-size:11px;color:#ff9090;">Faltam <strong style="color:#ff5555;font-size:14px;">${n}</strong> motorista${n>1?'s':''} para cobrir os carros na ativa.</div></div>`;}else if(diff>0){alerta=`<div style="margin-top:7px;background:rgba(39,174,96,.1);border:1px solid rgba(39,174,96,.3);border-radius:6px;padding:7px 9px;"><div style="font-size:9px;font-weight:700;color:#5de88a;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;">✅ Motoristas em Folga / Reserva</div><div style="font-size:11px;color:#7fe8a0;">Sobram <strong style="color:#5de88a;font-size:14px;">${diff}</strong> motorista${diff>1?'s':''} em relação aos carros na ativa.</div></div>`;}else{alerta=`<div style="margin-top:7px;background:rgba(26,111,196,.1);border:1px solid rgba(26,111,196,.3);border-radius:6px;padding:7px 9px;"><div style="font-size:9px;font-weight:700;color:#5db0ff;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px;">🎯 Proporção Exata</div><div style="font-size:11px;color:#88c8ff;">Motoristas e carros na ativa em proporção 1:1 perfeita.</div></div>`;}el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:5px;"><div style="text-align:center;background:var(--card);border-radius:6px;padding:7px 4px;border:1px solid var(--border);"><div style="font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">🚛 Carros na Ativa</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:var(--blue-light);">${cam}</div><div style="font-size:8px;color:var(--text3);">de ${tCam} no total</div></div><div style="text-align:center;background:var(--card);border-radius:6px;padding:7px 4px;border:1px solid var(--border);"><div style="font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">👨‍✈️ Mot. na Ativa</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:var(--green);">${motE}</div><div style="font-size:8px;color:var(--text3);">de ${tMot} na empresa</div></div><div style="text-align:center;background:var(--card);border-radius:6px;padding:7px 4px;border:1px solid ${ac}55;"><div style="font-size:8px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">⚖️ Saldo</div><div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:900;color:${ac};">${diff>0?'+':''}${diff}</div><div style="font-size:8px;color:var(--text3);">mot. vs carros</div></div></div>${alerta}`;}
 
 // ===================== HELPERS =====================
