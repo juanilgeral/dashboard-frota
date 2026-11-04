@@ -73,7 +73,7 @@ main{padding:12px 14px;width:100%;}
 .ct{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:11px;display:flex;align-items:center;gap:7px;}
 .ct .badge{font-size:9px;background:var(--blue);color:white;padding:2px 5px;border-radius:9px;font-weight:600;}
 .chart-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-bottom:8px;}
-.cw{position:relative;height:220px;}
+.cw{position:relative;height:160px;}
 .bottom-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:8px;margin-bottom:8px;}
 .prob-item{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
 .prob-lbl{font-size:11px;color:var(--text2);}
@@ -404,15 +404,13 @@ footer span{color:var(--blue-light);}
   </div>
 
   <div class="sec">📈 Gráficos e Análises</div>
-  <div style="display:grid;grid-template-columns:minmax(280px,380px) 1fr;gap:8px;margin-bottom:8px;align-items:start;">
+  <div style="display:grid;grid-template-columns:minmax(260px,340px) 1fr 1fr;gap:8px;margin-bottom:8px;align-items:start;">
     <div class="chart-card" id="op-card">
       <div class="ct" style="justify-content:space-between;"><span>🔢 Distribuição por OP <span class="badge">trânsito · programados · finalizados</span></span><button onclick="printOpPanel()" style="background:var(--blue);border:none;border-radius:6px;padding:4px 9px;color:white;font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background .2s;" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='var(--blue)'">🖨️ PRINT</button></div>
-      <div id="op-panel" style="overflow-y:auto;max-height:480px;"></div>
+      <div id="op-panel" style="overflow-y:auto;max-height:380px;"></div>
     </div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <div class="chart-card"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw"><canvas id="cHor"></canvas></div></div>
-      <div class="chart-card"><div class="ct">🚐 KM por Veículo <span class="badge" style="background:rgba(26,111,196,.4);">Azul=trânsito · Laranja=programado</span></div><div class="cw"><canvas id="cKm"></canvas></div></div>
-    </div>
+    <div class="chart-card"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw"><canvas id="cHor"></canvas></div></div>
+    <div class="chart-card"><div class="ct">🚐 KM por Veículo <span class="badge" style="background:rgba(26,111,196,.4);">Azul=trânsito · Laranja=programado</span></div><div class="cw"><canvas id="cKm"></canvas></div></div>
   </div>
 
   <div class="sec">👨‍✈️ Motoristas — Dia Selecionado</div>
@@ -729,21 +727,18 @@ function updateCharts(rows,d){
   destroyChart('cHor');
   charts['cHor']=new Chart(document.getElementById('cHor'),{type:'line',data:{labels:hrs,datasets:[{label:'Saídas',data:hrs.map(h=>hourBuckets[h]),borderColor:'#3a8fe4',backgroundColor:'rgba(58,143,228,.1)',tension:.4,fill:true,pointBackgroundColor:'#3a8fe4',pointRadius:5,pointHoverRadius:8,borderWidth:2}]},options:{...CHART_BASE,scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',stepSize:1},grid:{color:'#2a3d5e'}}}}});
 
-  // KM por veículo — usa todos (incluindo reservas se tiverem KM)
-  const kmVeic={};rows.forEach(r=>{if(r.km&&r.veiculo)kmVeic[r.veiculo]=(kmVeic[r.veiculo]||0)+r.km;});
-  const topV=Object.entries(kmVeic).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  // KM por veículo — mostra todos os veículos do dia (com ou sem KM)
+  const kmVeic={};const allVeics=new Set();
+  rows.forEach(r=>{if(r.veiculo){allVeics.add(r.veiculo);if(r.km)kmVeic[r.veiculo]=(kmVeic[r.veiculo]||0)+r.km;}});
+  const topV=Array.from(allVeics).map(v=>[v,kmVeic[v]||0]).sort((a,b)=>b[1]-a[1]).slice(0,12);
   const veicsT=new Set(tRows.map(r=>r.veiculo));const veicsP=new Set(pRows.map(r=>r.veiculo));
   destroyChart('cKm');
   const kmWrapper=document.getElementById('cKm')?.parentElement;
   if(kmWrapper){const prev=kmWrapper.querySelector('.km-empty-msg');if(prev)prev.remove();}
   if(topV.length>0){
-    charts['cKm']=new Chart(document.getElementById('cKm'),{type:'bar',data:{labels:topV.map(v=>v[0]),datasets:[{label:'KM',data:topV.map(v=>v[1]),backgroundColor:topV.map(v=>veicsT.has(v[0])?'rgba(58,143,228,.85)':veicsP.has(v[0])?'rgba(245,166,35,.75)':'rgba(155,89,182,.6)'),borderColor:topV.map(v=>veicsT.has(v[0])?'#3a8fe4':veicsP.has(v[0])?'#f5a623':'#9b59b6'),borderWidth:2,borderRadius:6}]},options:{...CHART_BASE,plugins:{...CHART_BASE.plugins,tooltip:{callbacks:{label:ctx=>{const lbl=veicsT.has(ctx.label)?' 🚛 em trânsito':veicsP.has(ctx.label)?' 🕐 programado':'';return' '+(ctx.parsed.x)+' km'+lbl;}}}},indexAxis:'y',scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',font:{size:10}},grid:{color:'#2a3d5e'}}}}});
+    charts['cKm']=new Chart(document.getElementById('cKm'),{type:'bar',data:{labels:topV.map(v=>v[0]),datasets:[{label:'KM',data:topV.map(v=>v[1]),backgroundColor:topV.map(v=>veicsT.has(v[0])?'rgba(58,143,228,.85)':veicsP.has(v[0])?'rgba(245,166,35,.75)':'rgba(155,89,182,.6)'),borderColor:topV.map(v=>veicsT.has(v[0])?'#3a8fe4':veicsP.has(v[0])?'#f5a623':'#9b59b6'),borderWidth:2,borderRadius:6}]},options:{...CHART_BASE,plugins:{...CHART_BASE.plugins,tooltip:{callbacks:{label:ctx=>{const lbl=veicsT.has(ctx.label)?' 🚛 em trânsito':veicsP.has(ctx.label)?' 🕐 programado':'';return' '+(ctx.parsed.x)+' km'+lbl;}}}},indexAxis:'y',scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'},beginAtZero:true},y:{ticks:{color:'#8ca0c0',font:{size:9}},grid:{color:'#2a3d5e'}}}}});
   }else{
-    const veicCount={};rowsValidos.forEach(r=>{if(r.veiculo)veicCount[r.veiculo]=(veicCount[r.veiculo]||0)+1;});
-    const topVC=Object.entries(veicCount).sort((a,b)=>b[1]-a[1]).slice(0,10);
-    const el=document.getElementById('cKm');
-    if(topVC.length>0){charts['cKm']=new Chart(el,{type:'bar',data:{labels:topVC.map(v=>v[0]),datasets:[{label:'Rotas',data:topVC.map(v=>v[1]),backgroundColor:topVC.map(v=>veicsT.has(v[0])?'rgba(58,143,228,.85)':veicsP.has(v[0])?'rgba(245,166,35,.75)':'rgba(155,89,182,.6)'),borderColor:topVC.map(v=>veicsT.has(v[0])?'#3a8fe4':veicsP.has(v[0])?'#f5a623':'#9b59b6'),borderWidth:2,borderRadius:6}]},options:{...CHART_BASE,plugins:{...CHART_BASE.plugins,title:{display:true,text:'Rotas por Veículo · Azul=trânsito · Laranja=programado',color:'#5db0ff',font:{size:10}}},indexAxis:'y',scales:{x:{ticks:{color:'#8ca0c0'},grid:{color:'#2a3d5e'}},y:{ticks:{color:'#8ca0c0',font:{size:10}},grid:{color:'#2a3d5e'}}}}});}
-    else{if(kmWrapper){const msg=document.createElement('div');msg.className='km-empty-msg';msg.style.cssText='display:flex;align-items:center;justify-content:center;height:100%;color:var(--text3);font-size:11px;text-align:center;padding:16px;';msg.innerHTML='Sem dados de KM no CSV.<br>Adicione colunas KM_SAIDA e KM_CHEGADA.';kmWrapper.appendChild(msg);}}
+    if(kmWrapper){const msg=document.createElement('div');msg.className='km-empty-msg';msg.style.cssText='display:flex;align-items:center;justify-content:center;height:100%;color:var(--text3);font-size:11px;text-align:center;padding:16px;';msg.innerHTML='Sem dados de veículos neste dia.';kmWrapper.appendChild(msg);}
   }
 
   // OP PANEL — usa rowsValidos
