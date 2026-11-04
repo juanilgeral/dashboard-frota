@@ -404,13 +404,13 @@ footer span{color:var(--blue-light);}
   </div>
 
   <div class="sec">📈 Gráficos e Análises</div>
-  <div style="display:grid;grid-template-columns:minmax(260px,340px) 1fr 1fr;gap:8px;margin-bottom:8px;align-items:start;">
-    <div class="chart-card" id="op-card">
-      <div class="ct" style="justify-content:space-between;"><span>🔢 Distribuição por OP <span class="badge">trânsito · programados · finalizados</span></span><button onclick="printOpPanel()" style="background:var(--blue);border:none;border-radius:6px;padding:4px 9px;color:white;font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background .2s;" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='var(--blue)'">🖨️ PRINT</button></div>
-      <div id="op-panel" style="overflow-y:auto;max-height:380px;"></div>
-    </div>
+  <div class="chart-row">
     <div class="chart-card"><div class="ct">🕐 Saídas por Horário <span class="badge">dia selecionado</span></div><div class="cw"><canvas id="cHor"></canvas></div></div>
     <div class="chart-card"><div class="ct">🚐 KM por Veículo <span class="badge" style="background:rgba(26,111,196,.4);">Azul=trânsito · Laranja=programado</span></div><div class="cw"><canvas id="cKm"></canvas></div></div>
+  </div>
+  <div class="chart-card" id="op-card" style="margin-bottom:8px;">
+    <div class="ct" style="justify-content:space-between;"><span>🔢 Distribuição por OP <span class="badge">trânsito · programados · finalizados</span></span><button onclick="printOpPanel()" style="background:var(--blue);border:none;border-radius:6px;padding:4px 9px;color:white;font-size:10px;font-family:'Barlow Condensed',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;display:flex;align-items:center;gap:4px;transition:background .2s;" onmouseover="this.style.background='var(--blue-light)'" onmouseout="this.style.background='var(--blue)'">🖨️ PRINT</button></div>
+    <div id="op-panel"></div>
   </div>
 
   <div class="sec">👨‍✈️ Motoristas — Dia Selecionado</div>
